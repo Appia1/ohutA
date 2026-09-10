@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
-<!-- <link rel="stylesheet" href="nav.css"> -->
+<link rel="stylesheet" href="nav.css">
 
 </head>
 <body>
@@ -36,77 +36,6 @@
   animation: flashRed 1s ease-out;
 }
 
-
-
-   /* Ensure Bottom Navigation Bar Icons Are Always Visible */
-.bm {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  max-width: 450px;
-  margin: 0 auto;
-  background-color: #111111;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 0;
-  z-index: 9999;
-  border-top: 1px solid #222;
-}
-
-.bm button.set, .bm button.tradeSet {
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  flex: 1;
-  text-align: center;
-  padding: 4px 0;
-}
-
-.bm button.set a, .bm button.tradeSet a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  color: #888888;
-  font-size: 11px;
-}
-
-.bm button.set i, .bm button.tradeSet i {
-  font-size: 18px;
-  margin-bottom: 4px;
-  display: inline-block;
-  color: #aaaaaa;
-}
-
-/* Active Tab Highlight (Home) */
-.bm button.set.active a,
-.bm button.set.active i {
-  color: #00ccff !important;
-}
-
-/* Trade Center Button */
-.tradeBtn {
-  background-color: #ff3b30;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 2px;
-  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
-}
-
-.tradeBtn i {
-  color: #ffffff !important;
-  font-size: 13px !important;
-  margin: 0 1px !important;
-}
 
       </style>
 <!-- Notification Sound Element -->
@@ -224,17 +153,18 @@
 
 
 
+
 <div class="bm">
   <button class="set active">
     <a href="dashboard.html">
-      <i class="fa-solid fa-house"></i>
+      <i class="fa fa-home"></i>
       <span>Home</span>
     </a>
   </button>
 
   <button class="set">
     <a href="Markets.html">
-      <i class="fa-solid fa-chart-line"></i>
+      <i class="fa fa-chart-line"></i>
       <span>Market</span>
     </a>
   </button>
@@ -242,8 +172,8 @@
   <button class="tradeSet">
     <a href="trade.html">
       <div class="tradeBtn">
-        <i class="fa-solid fa-arrow-up"></i>
-        <i class="fa-solid fa-arrow-down"></i>
+        <i class="fa fa-long-arrow-up"></i>
+        <i class="fa fa-long-arrow-down"></i>
       </div>
       <span>Trade</span>
     </a>
@@ -263,6 +193,8 @@
     </a>
   </button>
 </div>
+
+
 <!-- Floating Image -->
 <a href="referral.html"><div id="floatingImage">
 
