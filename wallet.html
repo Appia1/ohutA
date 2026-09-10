@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
 
   <!-- TON Connect UI SDK (v2 is standard and supports programmatic modal control) -->
   <script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js"></script>
@@ -162,7 +162,6 @@
       color: #333;                   /* LIGHT */
     }
 
-    /* Close button turns dark in light mode */
     body.light-mode .ton-close {
       color: #000;
       opacity: 0.5;
@@ -171,7 +170,6 @@
       opacity: 1;
     }
 
-    /* Button styling stays similar, but slightly lighter in light mode */
     body.light-mode .ton-continue {
       background: #00b8ee;
       color: #fff;
@@ -180,7 +178,6 @@
     body.light-mode .ton-continue:hover {
       background: #009fcc;
     }
-
 
 /* Force TON Connect SDK elements above your custom sidebar layers */
 tc-root,
@@ -193,11 +190,9 @@ div[data-tc-root],
   position: relative;
 }
 
-/* Ensure that when the TON selector opens, it overrides hidden click zones */
 body .tc-root {
   z-index: 100000 !important;
 }
-
   </style>
 </head>
 <body>
@@ -348,7 +343,6 @@ body .tc-root {
 </div>
 
 <!-- Overlay -->
-
 <div class="overlay" id="overlay"></div>
 
 <div class="sidebar" id="sidebar">
@@ -403,7 +397,6 @@ body .tc-root {
     <!-- Connect container if needed on Android -->
     <div id="tonconnect-ui" style="margin: 15px auto; display: none;"></div>
 
-    <!-- Native button that serves both as "Connect" and "Continue" depending on platform state -->
     <button id="tonContinueBtn" class="ton-continue">Continue</button>
   </div>
 </div>
@@ -466,6 +459,53 @@ body .tc-root {
 
 <!-- UI Balance & Firestore State Listeners -->
 <script>
+  // 🛡️ Safe Auto-Refund Engine: Checks if user had pending withdrawals that reached 10 minutes while offline
+  async function checkExpiredWithdrawals(uid) {
+    if (!uid) return;
+    const nowMs = Date.now();
+
+    try {
+      const snap = await firebaseDB.collection("withdrawals")
+        .where("userId", "==", uid)
+        .where("status", "in", ["pending", "in_progress"])
+        .get();
+
+      snap.forEach(async (docSnap) => {
+        const data = docSnap.data();
+        const createdAtMs = data.createdAtMs || (data.createdAt ? data.createdAt.toDate().getTime() : nowMs);
+        const expiresAtMs = data.expiresAt || (createdAtMs + 10 * 60 * 1000);
+
+        // If 10 minutes have passed and not already refunded:
+        if (nowMs >= expiresAtMs && !data.reversed) {
+          const docRef = firebaseDB.collection("withdrawals").doc(docSnap.id);
+          const userRef = firebaseDB.collection("users").doc(uid);
+
+          await firebaseDB.runTransaction(async (tx) => {
+            const fresh = await tx.get(docRef);
+            if (fresh.exists && !fresh.data().reversed && (fresh.data().status === "pending" || fresh.data().status === "in_progress")) {
+              const refundAmt = parseFloat(fresh.data().amount || 0);
+
+              // 1. Atomic Refund to funding balance
+              tx.update(userRef, {
+                fundingBalance: firebase.firestore.FieldValue.increment(refundAmt)
+              });
+
+              // 2. Mark cancelled & reversed permanently
+              tx.update(docRef, {
+                status: "cancelled",
+                reversed: true,
+                cancelReason: "Request expired after 10 minutes without approval (Auto-reversed).",
+                cancelledAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            }
+          });
+        }
+      });
+    } catch (e) {
+      console.warn("Auto-refund check notice:", e);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     const balanceValue = document.getElementById("balance-value");
     const toggleBtn = document.getElementById("toggleVisibility");
@@ -548,6 +588,9 @@ body .tc-root {
 
     firebaseAuth.onAuthStateChanged((user) => {
       if (user) {
+        // Run auto-refund check immediately upon authentication
+        checkExpiredWithdrawals(user.uid);
+
         const userRef = firebaseDB.collection("users").doc(user.uid);
         userRef.onSnapshot((doc) => {
           if (doc.exists) {
@@ -575,26 +618,6 @@ body .tc-root {
       }
     });
   });
-
-/*  function showLoader() {
-    const loader = document.getElementById('loader');
-    if(loader) loader.style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-  }
-
-  function hideLoader() {
-    const loader = document.getElementById('loader');
-    if(loader) loader.style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-  }
-
-  window.addEventListener('load', () => {
-    showLoader();
-    setTimeout(() => {
-      hideLoader();
-    }, 1500);
-  });*/
-
 </script>
 
 <!-- Mining System Script -->
@@ -777,7 +800,6 @@ body .tc-root {
 
 <!-- === MAIN PLATFORM AND WEB3 TRANSFERS === -->
 <script>
-// Simple device helper
 function getDeviceType() {
   const ua = navigator.userAgent || navigator.vendor || window.opera || "";
   const isAndroid = /Android/i.test(ua);
@@ -792,7 +814,7 @@ function getDeviceType() {
 const merchantAddress = "UQA_XTik4qqp8Ondqfd8CBembbu7dMzqxjTHrfD24_kHHx64";
 let maxBalance = 0;
 let user = null;
-let tonFee = 1; // default, loaded from Firestore
+let tonFee = 1;
 
 const amountInput = document.getElementById("amount");
 const availableBalanceDisplay = document.getElementById("available-balance");
@@ -898,13 +920,11 @@ let tonConnectUI = null;
 function initTonConnect() {
   if (tonConnectUI) return tonConnectUI;
 
-  // Uses UI SDK loaded in header for programmatic modal triggers
   tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: 'https://ohtexchange.netlify.app/tonconnect-manifest.json',
-    buttonRootId: 'tonconnect-ui' // Loads connect button dynamically inside modal
+    buttonRootId: 'tonconnect-ui'
   });
 
-  // Track status to change button programmatically
   tonConnectUI.onStatusChange((wallet) => {
     const continueBtn = document.getElementById("tonContinueBtn");
     if (continueBtn) {
@@ -942,7 +962,7 @@ function openTonConfirm() {
 
   if (isAndroid) {
     initTonConnect();
-    tonConnectUiDiv.style.display = "block"; // Show the connect button container
+    tonConnectUiDiv.style.display = "block";
     if (!tonConnectUI.connected) {
       continueBtn.textContent = "Connect Wallet";
     } else {
@@ -958,25 +978,6 @@ document.getElementById("tonCloseBtn").onclick = () => {
   document.getElementById("tonConfirmModal").style.display = "none";
 };
 
-/*document.getElementById("tonContinueBtn").onclick = async () => {
-  const { isAndroid } = getDeviceType();
-
-  if (isAndroid) {
-    const tc = initTonConnect();
-    if (!tc.connected) {
-      try {
-        await tc.openModal(); // Trigger native TON Connect Wallet Picker popup
-      } catch (err) {
-        console.error("Failed to open connection selector:", err);
-      }
-      return; // Stop here and await connection status change
-    }
-  }
-
-  document.getElementById("tonConfirmModal").style.display = "none";
-  buyProduct(); 
-};*/
-
 document.getElementById("tonContinueBtn").onclick = async () => {
   const { isAndroid } = getDeviceType();
 
@@ -984,14 +985,10 @@ document.getElementById("tonContinueBtn").onclick = async () => {
     const tc = initTonConnect();
     if (!tc.connected) {
       try {
-        // Temporarily hide our warning modal so the TON picker is completely unobstructed
         document.getElementById("tonConfirmModal").style.display = "none";
-        
-        // Open the native wallet picker popup
         await tc.openModal(); 
       } catch (err) {
         console.error("Failed to open connection selector:", err);
-        // Fallback: Restore our warning modal if the user cancels out
         document.getElementById("tonConfirmModal").style.display = "flex";
       }
       return; 
@@ -1017,19 +1014,17 @@ async function buyProduct() {
 
   try {
     if (isAndroid) {
-      // Android Web3 Automated Payment
       const tc = initTonConnect();
       if (!tc.connected) throw new Error("Wallet not connected");
 
       const amountNano = BigInt(Math.round(tonFee * 1e9));
       const tx = {
-        validUntil: Math.floor(Date.now() / 1000) + 360, // Valid 6 mins
+        validUntil: Math.floor(Date.now() / 1000) + 360,
         messages: [
           {
             address: merchantAddress,
             amount: amountNano.toString(),
-            // Secure Base64 payload matching correct UI package calls
-            payload: "te6cckEBAQEADgAAGE5ldHdvcmsgZ2FzIGZlZf6R364=" // Precompiled comment: "Network gas fee"
+            payload: "te6cckEBAQEADgAAGE5ldHdvcmsgZ2FzIGZlZf6R364="
           }
         ]
       };
@@ -1039,7 +1034,6 @@ async function buyProduct() {
       openWithdrawPasswordModal();
 
     } else {
-      // iOS / Desktop direct transfer link (backward compatible)
       const tonAmountToSend = tonFee;
       const message = "Network gas fee";
       const tonNano = tonAmountToSend * 1e9;
@@ -1072,7 +1066,7 @@ async function buyProduct() {
   } catch (err) {
     console.error("TON flow failed:", err);
     spinner.style.display = "none";
-    alert("Unable to process automated wallet transaction. Ensure  your wallet is properly set up or use the manual payout interface below.");
+    alert("Unable to process automated wallet transaction. Ensure your wallet is properly set up or use the manual payout interface below.");
     
     const tonNano = tonFee * 1e9;
     const fallbackLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent("Network gas fee")}`;
@@ -1092,7 +1086,7 @@ async function buyProduct() {
 }
 
 /**********************************************
- * PAY CONFIRMATION (AFTER PIN)
+ * PAY CONFIRMATION (AFTER PIN) - 10-MIN AUTO-CANCEL ENGINE
  **********************************************/
 async function confirmPayment() {
   if (!user) return alert("You must be logged in.");
@@ -1106,14 +1100,20 @@ async function confirmPayment() {
   if (amount > maxBalance) return alert("Insufficient balance.");
 
   try {
+    const nowMs = Date.now();
+    const tenMinutesInMs = 10 * 60 * 1000; // 10 minutes
+    const expiresAtMs = nowMs + tenMinutesInMs;
+
+    // 1. Deduct balance from user in Firestore atomically
     const newBalance = maxBalance - amount;
     await firebaseDB.collection("users").doc(user.uid).update({
-      fundingBalance: newBalance,
+      fundingBalance: firebase.firestore.FieldValue.increment(-amount)
     });
 
     maxBalance = newBalance;
     updateAvailableBalanceDisplay(newBalance);
 
+    // Update localStorage cache
     localStorage.setItem(
       "userData",
       JSON.stringify({
@@ -1122,21 +1122,30 @@ async function confirmPayment() {
       })
     );
 
-    await firebaseDB.collection("withdrawals").add({
+    // 2. Add withdrawal record with 10-min expiry & double-refund protection flag
+    const docRef = await firebaseDB.collection("withdrawals").add({
       userId: user.uid,
-      email,
-      address,
-      amount,
+      email: email,
+      address: address,
+      amount: amount,
       currency: "USDT",
       method: "TON",
-      status: "in_progress",
+      status: "pending",
+      reversed: false, // Prevents duplicate refund
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      expiryAt: firebase.firestore.Timestamp.fromDate(
-        new Date(Date.now() + 24 * 60 * 60 * 1000)
-      ),
+      createdAtMs: nowMs,
+      expiresAt: expiresAtMs
     });
 
-    window.location.href = "successfully.html";
+    // 3. Clear inputs & close sidebar
+    document.getElementById("address").value = "";
+    amountInput.value = "";
+    if (sidebar) sidebar.classList.remove("open");
+    if (overlay) overlay.classList.remove("show");
+
+    // 4. Redirect to the progress bar tracking page with the new ID
+    window.location.href = `progressBar.html?id=${docRef.id}`;
+
   } catch (err) {
     console.error("Payment confirm error:", err);
     alert("Something went wrong. Please try again.");
