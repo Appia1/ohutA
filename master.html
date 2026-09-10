@@ -1457,18 +1457,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
-<script>
+
+  
+  <script>
 document.addEventListener("DOMContentLoaded", () => {
   const db = firebase.firestore();
 
   // DOM elements
   const withdrawalTable = document.getElementById("withdrawalTable");
-  const tbody = withdrawalTable.querySelector("tbody");
+  const tbody = withdrawalTable ? withdrawalTable.querySelector("tbody") : null;
   const toggle = document.getElementById("toggleLock");
   const statusText = document.getElementById("status");
   const adminMessageDiv = document.getElementById("adminMessage");
 
-  // Helper: Format Firestore Timestamp
   function formatDate(ts) {
     return ts ? ts.toDate().toLocaleString() : "—";
   }
@@ -1482,33 +1483,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = doc.data();
 
       if (data?.locked) {
-        toggle.checked = true;
-        statusText.textContent = "Withdrawals are currently LOCKED.";
+        if (toggle) toggle.checked = true;
+        if (statusText) statusText.textContent = "Withdrawals are currently LOCKED.";
       } else {
-        toggle.checked = false;
-        statusText.textContent = "Withdrawals are currently UNLOCKED.";
+        if (toggle) toggle.checked = false;
+        if (statusText) statusText.textContent = "Withdrawals are currently UNLOCKED.";
       }
     } catch (err) {
       console.error("Error loading status:", err);
     }
   }
 
-  toggle.addEventListener("change", async () => {
-    const newStatus = toggle.checked;
-
-    try {
-      await db.collection("settings").doc("withdrawal_control").set({
-        locked: newStatus
-      });
-      statusText.textContent = newStatus
-        ? "Withdrawals are currently LOCKED."
-        : "Withdrawals are currently UNLOCKED.";
-      showAdminMessage("Withdrawal lock status updated!");
-    } catch (err) {
-      console.error(err);
-      showAdminMessage("Failed to update lock.", true);
-    }
-  });
+  if (toggle) {
+    toggle.addEventListener("change", async () => {
+      const newStatus = toggle.checked;
+      try {
+        await db.collection("settings").doc("withdrawal_control").set({ locked: newStatus });
+        statusText.textContent = newStatus
+          ? "Withdrawals are currently LOCKED."
+          : "Withdrawals are currently UNLOCKED.";
+        showAdminMessage("Withdrawal lock status updated!");
+      } catch (err) {
+        console.error(err);
+        showAdminMessage("Failed to update lock.", true);
+      }
+    });
+  }
 
   // =========================
   // Safe Atomic Status Update (Approve / Decline)
@@ -1524,52 +1524,59 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = freshDoc.data();
         const currentStatus = (data.status || "").toLowerCase();
 
-        // Prevent double processing if already updated or cancelled
-        if (currentStatus === newStatus || currentStatus === "cancelled" || currentStatus === "disbursed") {
-          return;
+        if (currentStatus === "cancelled" || currentStatus === "disbursed") {
+          throw new Error("This request has already been finalized.");
         }
 
-        // Update withdrawal status
-        tx.update(docRef, {
-          status: newStatus,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        // 1. If Admin Approves (disbursed): Funds stay permanently deducted
+        if (newStatus === "disbursed") {
+          tx.update(docRef, {
+            status: "disbursed",
+            reversed: false,
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
 
-        // Refund balance ONLY if declining/cancelling
+        // 2. If Admin Declines (cancelled): Refund only if not already reversed
         if (newStatus === "cancelled") {
-          const amount = parseFloat(data.amount) || 0;
-          const userRef = db.collection("users").doc(data.userId);
-          const userDoc = await tx.get(userRef);
-
-          if (userDoc.exists) {
-            const prevBalance = parseFloat(userDoc.data().fundingBalance || 0);
-            tx.update(userRef, { fundingBalance: prevBalance + amount });
+          if (!data.reversed) {
+            const amount = parseFloat(data.amount) || 0;
+            const userRef = db.collection("users").doc(data.userId);
+            tx.update(userRef, { fundingBalance: firebase.firestore.FieldValue.increment(amount) });
           }
+
+          tx.update(docRef, {
+            status: "cancelled",
+            reversed: true,
+            cancelReason: "Declined by Admin.",
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
         }
       });
 
       showAdminMessage(`Status updated to "${newStatus}"!`);
     } catch (err) {
       console.error(err);
-      showAdminMessage("Failed to update status: " + err.message, true);
+      showAdminMessage("Failed: " + err.message, true);
     }
   }
   window.updateStatus = updateStatus;
 
   // =========================
-  // Render withdrawals with 10-Minute Rule
+  // Render withdrawals with 10-Minute Expiry Rule
   // =========================
   function renderWithdrawals() {
+    if (!tbody) return;
+
     db.collection("withdrawals")
       .orderBy("createdAt", "desc")
       .onSnapshot(async snap => {
-        const now = new Date();
+        const nowMs = Date.now();
         tbody.innerHTML = "";
 
         for (const doc of snap.docs) {
           const data = doc.data();
-
-          // Skip soft-deleted admin records
           if (data.deletedByAdmin) continue;
 
           const id = doc.id;
@@ -1583,43 +1590,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const method = data.method || "—";
 
-          // Automatic 10-Minute Cancellation
-          const autoCancelMs = 10 * 60 * 1000; // 10 minutes
-          if (status === "pending" && createdAt && (now - createdAt > autoCancelMs)) {
+          const createdAtMs = data.createdAtMs || (createdAt ? createdAt.getTime() : nowMs);
+          const expiresAtMs = data.expiresAt || (createdAtMs + 10 * 60 * 1000);
+          const isExpired = nowMs >= expiresAtMs;
+
+          // Auto-cancel expired pending requests safely
+          if (status === "pending" && isExpired && !data.reversed) {
             try {
               const docRef = db.collection("withdrawals").doc(id);
+              const userRef = db.collection("users").doc(data.userId);
 
               await db.runTransaction(async (tx) => {
                 const freshDoc = await tx.get(docRef);
-                if (!freshDoc.exists) return;
-
-                const freshData = freshDoc.data();
-                if ((freshData.status || "").toLowerCase() !== "pending") return;
-
-                const userRef = db.collection("users").doc(freshData.userId);
-                const userDoc = await tx.get(userRef);
-                if (!userDoc.exists) return;
-
-                const prevBalance = parseFloat(userDoc.data().fundingBalance || 0);
-                const refundAmount = parseFloat(freshData.amount || 0);
-
-                // Perform atomic status change and refund simultaneously
-                tx.update(docRef, {
-                  status: "cancelled",
-                  cancelReason: "Request expired after 10 minutes.",
-                  updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                tx.update(userRef, { fundingBalance: prevBalance + refundAmount });
+                if (freshDoc.exists && freshDoc.data().status === "pending" && !freshDoc.data().reversed) {
+                  tx.update(userRef, { fundingBalance: firebase.firestore.FieldValue.increment(amount) });
+                  tx.update(docRef, {
+                    status: "cancelled",
+                    reversed: true,
+                    cancelReason: "Request expired after 10 minutes (Auto-reversed).",
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                  });
+                }
               });
+              status = "cancelled";
             } catch (err) {
-              console.error("Auto-cancel transaction failed:", err);
+              console.error("Auto-cancel failed:", err);
             }
-
-            continue; // Skip rendering action buttons for expired rows
           }
 
-          // Render Row
+          let actionButtons = "—";
+          if (status === "pending" && !isExpired) {
+            actionButtons = `
+              <button class="approve-btn" onclick="updateStatus('${id}', 'disbursed')">Approve</button>
+              <button class="cancel-btn" onclick="updateStatus('${id}', 'cancelled')">Decline</button>
+            `;
+          } else if (status === "cancelled") {
+            actionButtons = `<span style="color:#ff6b6b;">Reversed</span>`;
+          } else if (status === "disbursed") {
+            actionButtons = `<span style="color:#51cf66;">Completed</span>`;
+          }
+
+          const statusColor = status === 'disbursed' ? '#51cf66' : status === 'cancelled' ? '#ff6b6b' : '#fcc419';
+
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${data.email || "-"}</td>
@@ -1629,51 +1641,44 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${method}</td>
             <td>${type}</td>
             <td>${dateStr}</td>
-            <td>${status}</td>
-            <td>
-              ${status === "pending"
-                ? `<button class="approve-btn" onclick="updateStatus('${id}', 'disbursed')">Approve</button>
-                   <button class="cancel-btn" onclick="updateStatus('${id}', 'cancelled')">Decline</button>`
-                : "—"}
-            </td>
+            <td><b style="color:${statusColor}">${status.toUpperCase()}</b></td>
+            <td>${actionButtons}</td>
           `;
           tbody.appendChild(row);
         }
       });
   }
 
-  // =========================
-  // Clear all withdrawals (soft delete)
-  // =========================
-  document.getElementById("clearAllWithdrawals").addEventListener("click", async () => {
-    if (!confirm("Are you sure you want to remove all withdrawal requests from the admin view? This will NOT delete them from users' history.")) return;
+  // Clear all withdrawals from admin view (soft delete)
+  const clearBtn = document.getElementById("clearAllWithdrawals");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to remove all withdrawal requests from the admin view?")) return;
 
-    try {
-      const snapshot = await db.collection("withdrawals")
-        .where("deletedByAdmin", "==", false)
-        .get();
+      try {
+        const snapshot = await db.collection("withdrawals")
+          .where("deletedByAdmin", "==", false)
+          .get();
 
-      if (snapshot.empty) {
-        showAdminMessage("No withdrawals to remove.", true);
-        return;
+        if (snapshot.empty) {
+          showAdminMessage("No withdrawals to remove.", true);
+          return;
+        }
+
+        const batch = db.batch();
+        snapshot.forEach(doc => batch.update(doc.ref, { deletedByAdmin: true }));
+        await batch.commit();
+
+        showAdminMessage("All withdrawals removed from admin view!");
+      } catch (err) {
+        console.error(err);
+        showAdminMessage("Failed to remove withdrawals: " + err.message, true);
       }
+    });
+  }
 
-      const batch = db.batch();
-      snapshot.forEach(doc => batch.update(doc.ref, { deletedByAdmin: true }));
-      await batch.commit();
-
-      showAdminMessage("All withdrawals removed from admin view successfully!");
-      renderWithdrawals();
-    } catch (err) {
-      console.error(err);
-      showAdminMessage("Failed to remove withdrawals: " + err.message, true);
-    }
-  });
-
-  // =========================
-  // Show admin messages
-  // =========================
   function showAdminMessage(msg, isError = false) {
+    if (!adminMessageDiv) return;
     adminMessageDiv.textContent = msg;
     adminMessageDiv.style.display = "block";
     adminMessageDiv.style.color = isError ? "red" : "green";
@@ -1681,16 +1686,15 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => { adminMessageDiv.style.display = "none"; }, 4000);
   }
 
-  // Initialize
   loadStatus();
   renderWithdrawals();
-
-  // Check every 30 seconds to catch expired 10-minute requests promptly
-  setInterval(() => { renderWithdrawals(); }, 30 * 1000);
 });
 </script>
-
-<script>
+  
+  
+  
+  
+  <script>
   const form = document.getElementById("message-form");
   const recipientSelect = document.getElementById("recipient");
   const emailField = document.getElementById("email-field");
