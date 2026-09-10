@@ -299,6 +299,7 @@
 
           const selectedDate = filterDateInput.value;
           let hasDocs = false;
+          const nowMs = Date.now();
 
           snapshot.forEach(doc => {
             const data = doc.data();
@@ -317,18 +318,31 @@
             const address = data.address || '';
             const currency = data.currency || 'USDT';
             const rawStatus = (data.status || 'pending').toLowerCase();
-            const now = new Date();
 
-            let displayStatus = rawStatus;
+            const createdAtMs = data.createdAtMs || txnDate.getTime();
+            const expiresAtMs = data.expiresAt || (createdAtMs + 10 * 60 * 1000);
+            const isExpired = nowMs >= expiresAtMs;
 
-            // 10-Minute Auto-Cancel Rule for pending status
-            if (rawStatus === 'pending' || rawStatus === 'in_progress') {
-              const TEN_MINUTES_MS = 10 * 60 * 1000;
-              if (now - txnDate > TEN_MINUTES_MS) {
-                displayStatus = 'canceled';
-              }
+            // 🛡️ OFFLINE AUTO-REVERSE: If user opened history after 10 mins passed, refund now
+            if ((rawStatus === 'pending' || rawStatus === 'in_progress') && isExpired && !data.reversed) {
+              const docRef = firebaseDB.collection("withdrawals").doc(doc.id);
+              const userRef = firebaseDB.collection("users").doc(user.uid);
+
+              firebaseDB.runTransaction(async (tx) => {
+                const fresh = await tx.get(docRef);
+                if (fresh.exists && !fresh.data().reversed && (fresh.data().status === "pending" || fresh.data().status === "in_progress")) {
+                  tx.update(userRef, { fundingBalance: firebase.firestore.FieldValue.increment(amount) });
+                  tx.update(docRef, {
+                    status: "cancelled",
+                    reversed: true,
+                    cancelReason: "Request expired after 10 minutes without approval (Auto-reversed).",
+                    cancelledAt: firebase.firestore.FieldValue.serverTimestamp()
+                  });
+                }
+              }).catch(console.error);
             }
 
+            let displayStatus = (rawStatus === 'pending' && isExpired) ? 'canceled' : rawStatus;
             let statusClass = 'in-progress';
             let statusLabel = 'In Progress';
             let showTrackBtn = true;
@@ -336,11 +350,11 @@
             if (displayStatus === 'disbursed' || displayStatus === 'approved' || displayStatus === 'completed' || displayStatus === 'successful') {
               statusClass = 'disbursed';
               statusLabel = 'Disbursed';
-              showTrackBtn = false; // Hide tracking button when completed/disbursed
+              showTrackBtn = false;
             } else if (displayStatus === 'canceled' || displayStatus === 'cancelled') {
               statusClass = 'canceled';
-              statusLabel = 'Canceled';
-              showTrackBtn = false; // Hide tracking button when canceled
+              statusLabel = 'Canceled (Reversed)';
+              showTrackBtn = false;
             }
 
             const row = document.createElement("div");
@@ -353,10 +367,9 @@
             row.innerHTML = `
               <div class="history-item"><strong>Status:</strong> <span class="status ${statusClass}">${statusLabel}</span></div>
               <div class="history-item"><strong>Txn ID:</strong> ${doc.id}</div>
-              <div class="history-item"><strong>Amount:</strong> ${amount.toFixed(2)}</div>
+              <div class="history-item"><strong>Amount:</strong> ${amount.toFixed(2)} ${currency}</div>
               <div class="history-item"><strong>Charge:</strong> ${charge.toFixed(2)}</div>
               <div class="history-item"><strong>Final:</strong> ${final.toFixed(2)}</div>
-              <div class="history-item"><strong>Currency:</strong> ${currency}</div>
               <div class="history-item"><strong>Method:</strong> ${data.method || ''}</div>
               <div class="history-item"><strong>Address:</strong> ${address}</div>
               <div class="history-item"><strong>Date:</strong> ${txnDate.toLocaleString()}</div>
