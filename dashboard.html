@@ -17,6 +17,67 @@
 </head>
 <body>
 <style>
+
+   /* 1. Universal Box-Sizing to prevent padding from expanding past screen width */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden; /* Stops any unwanted right-side scroll/whitespace */
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Fix the wrapper so it stays neatly centered without right-side leakage */
+.GeneralcontainerBox {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 12px; /* Clean symmetric gutter on left and right */
+  overflow-x: hidden;
+}
+
+/* 3. Fix the Email & Account ID alignment so it doesn't push off the right side */
+#pcontainer {
+  color: #ff3b30;
+  margin: 8px 0 2px 70px !important; /* Adjusted margin */
+  font-size: 12px;
+}
+
+#email-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px 70px !important;
+  font-size: 12px;
+  color: #999;
+}
+
+/* 4. Fix Logout Button positioning so it stays neatly inside the card */
+.blurBackground {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  margin-top: -125px;
+  position: relative;
+  margin-bottom: 70px;
+}
+
+.createBtn {
+  position: static !important; /* Remove hardcoded right: 10% */
+  margin: 0 !important;
+}
+
+/* 5. Fix Quick Access grid to be exactly 2 columns without overflowing */
+.viewLog {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
    /* Live price flash animation */
 @keyframes flashGreen {
   0% { background-color: rgba(39, 174, 96, 0.4); color: #2ecc71; }
