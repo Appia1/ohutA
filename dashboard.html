@@ -927,21 +927,23 @@ setInterval(slideImage, 3000);
     setInterval(fetchCryptoData, 20000);
     fetchCryptoData();
 </script>
- --><script>
+ --><
+
+       <script>
 // Real-time market symbols to track
 const cryptoCoins = [
-  { symbol: 'BTCUSDT', name: 'Bitcoin', code: 'BTC', logo: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png' },
-  { symbol: 'ETHUSDT', name: 'Ethereum', code: 'ETH', logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png' },
-  { symbol: 'BNBUSDT', name: 'BNB', code: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
-  { symbol: 'SOLUSDT', name: 'Solana', code: 'SOL', logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png' },
-  { symbol: 'XRPUSDT', name: 'XRP', code: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png' },
-  { symbol: 'DOGEUSDT', name: 'Dogecoin', code: 'DOGE', logo: 'https://assets.coingecko.com/coins/images/5/small/dogecoin.png' },
-  { symbol: 'ADAUSDT', name: 'Cardano', code: 'ADA', logo: 'https://assets.coingecko.com/coins/images/975/small/cardano.png' }
+  { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', logo: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png' },
+  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png' },
+  { id: 'binance-coin', symbol: 'BNB', name: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
+  { id: 'solana', symbol: 'SOL', name: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png' },
+  { id: 'ripple', symbol: 'XRP', name: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png' },
+  { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', logo: 'https://assets.coingecko.com/coins/images/5/small/dogecoin.png' },
+  { id: 'cardano', symbol: 'ADA', name: 'Cardano', logo: 'https://assets.coingecko.com/coins/images/975/small/cardano.png' }
 ];
 
 let lastPrices = {};
 
-// 1. Build initial table rows
+// 1. Build initial table structure immediately
 function initCryptoTable() {
   const tbody = document.querySelector('#cryptoTable tbody');
   if (!tbody) return;
@@ -955,75 +957,99 @@ function initCryptoTable() {
       <td><img src="${coin.logo}" alt="${coin.name}" width="32" height="32" style="border-radius:50%; vertical-align:middle;"></td>
       <td>
         <div style="font-weight:bold;">${coin.name}</div>
-        <div style="font-size:11px; color:#888;">${coin.code}</div>
+        <div style="font-size:11px; color:#888;">${coin.symbol}</div>
       </td>
-      <td class="price" id="price-${coin.symbol}">Loading...</td>
-      <td class="change" id="change-${coin.symbol}">--</td>
+      <td class="price" id="price-${coin.symbol}" style="font-size:15px; font-weight:bold;">...</td>
+      <td class="change" id="change-${coin.symbol}" style="font-size:13px; font-weight:bold;">--</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// 2. Connect to real-time Binance 24hr ticker WebSocket
-function startRealtimeMarketStream() {
-  const streams = cryptoCoins.map(c => `${c.symbol.toLowerCase()}@ticker`).join('/');
-  const wsUrl = `wss://stream.binance.com:9443/ws/${streams}`;
-  const socket = new WebSocket(wsUrl);
+// 2. Helper to update a row with live tick animation
+function updateRow(symbol, price, changePercent) {
+  const priceCell = document.getElementById(`price-${symbol}`);
+  const changeCell = document.getElementById(`change-${symbol}`);
 
-  socket.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      const symbol = data.s; // e.g. BTCUSDT
-      const price = parseFloat(data.c); // current price
-      const changePercent = parseFloat(data.P); // 24h percent change
+  if (priceCell) {
+    const formattedPrice = price < 1 
+      ? `$${price.toFixed(4)}` 
+      : `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-      const priceCell = document.getElementById(`price-${symbol}`);
-      const changeCell = document.getElementById(`change-${symbol}`);
+    const prev = lastPrices[symbol];
+    priceCell.classList.remove('price-flash-up', 'price-flash-down');
+    void priceCell.offsetWidth; // trigger reflow for animation
 
-      if (priceCell) {
-        const formattedPrice = price < 1 ? `$${price.toFixed(4)}` : `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        
-        // Flash Green or Red based on live tick
-        const prev = lastPrices[symbol];
-        priceCell.classList.remove('price-flash-up', 'price-flash-down');
-        void priceCell.offsetWidth; // trigger reflow for animation
-
-        if (prev !== undefined) {
-          if (price > prev) {
-            priceCell.classList.add('price-flash-up');
-          } else if (price < prev) {
-            priceCell.classList.add('price-flash-down');
-          }
-        }
-        priceCell.textContent = formattedPrice;
-        lastPrices[symbol] = price;
+    if (prev !== undefined && price !== prev) {
+      if (price > prev) {
+        priceCell.classList.add('price-flash-up');
+      } else {
+        priceCell.classList.add('price-flash-down');
       }
-
-      if (changeCell) {
-        changeCell.textContent = `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
-        changeCell.className = `change ${changePercent >= 0 ? 'positive-change' : 'negative-change'}`;
-      }
-    } catch (err) {
-      console.error("Stream parse error:", err);
     }
-  };
+    priceCell.textContent = formattedPrice;
+    lastPrices[symbol] = price;
+  }
 
-  socket.onerror = (err) => {
-    console.warn("WebSocket error, reconnecting in 5s...", err);
-  };
-
-  socket.onclose = () => {
-    setTimeout(startRealtimeMarketStream, 5000);
-  };
+  if (changeCell) {
+    const sign = changePercent >= 0 ? '+' : '';
+    changeCell.textContent = `${sign}${changePercent.toFixed(2)}%`;
+    changeCell.className = `change ${changePercent >= 0 ? 'positive-change' : 'negative-change'}`;
+  }
 }
 
-// Run on page load
+// 3. Instant Multi-Provider Fetch (Guaranteed to bypass restrictions)
+async function fetchPricesNow() {
+  // Provider A: CoinCap API (Fast, no API key needed, global CORS open)
+  try {
+    const ids = cryptoCoins.map(c => c.id).join(',');
+    const response = await fetch(`https://api.coincap.io/v2/assets?ids=${ids}`);
+    if (response.ok) {
+      const json = await response.json();
+      if (json && json.data) {
+        json.data.forEach(item => {
+          const matched = cryptoCoins.find(c => c.id === item.id || c.symbol === item.symbol);
+          if (matched) {
+            updateRow(matched.symbol, parseFloat(item.priceUsd), parseFloat(item.changePercent24Hr || 0));
+          }
+        });
+        return; // Success!
+      }
+    }
+  } catch (err) {
+    console.warn("Provider A failed, trying Provider B...", err);
+  }
+
+  // Provider B: Binance Public REST (Direct fallback)
+  try {
+    const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+    if (response.ok) {
+      const data = await response.json();
+      cryptoCoins.forEach(coin => {
+        const item = data.find(d => d.symbol === `${coin.symbol}USDT`);
+        if (item) {
+          updateRow(coin.symbol, parseFloat(item.lastPrice), parseFloat(item.priceChangePercent));
+        }
+      });
+    }
+  } catch (err) {
+    console.error("All live price providers failed:", err);
+  }
+}
+
+// Run on load and poll every 3 seconds for continuous real-time updates
 document.addEventListener('DOMContentLoaded', () => {
   initCryptoTable();
-  startRealtimeMarketStream();
+  fetchPricesNow(); // load instantly
+  setInterval(fetchPricesNow, 3000); // live updates every 3s
 });
+
+// Also trigger immediately in case DOM is already loaded
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  initCryptoTable();
+  fetchPricesNow();
+}
 </script>
-   
    
    <!-- Firebase compat SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
