@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KYC Form</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+
+<style>
+
+    body {
+      background-color: #111;
+      color: #f1f1f1;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #222;
+      padding: 12px 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    nav a {
+      color: white;
+      font-size: 18px;
+    }
+
+    nav h3 {
+      color: white;
+      font-size: 16px;
+      margin: 0 auto;
+    }
+
+    .container {
+      min-width: 300px;
+      max-width: 440px;
+      margin: 40px auto;
+      background: #1a1a1a;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .progress {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 15px 5px;
+      background-color: #262626;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #00ccff;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      margin: 0 5px;
+      background-color: #00bfff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      color: black;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #00ccff, #00ffe7);
+    }
+
+    .btn:disabled {
+      background: #444;
+      cursor: not-allowed;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 500;
+      min-height: 20px;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #kycFormContainer {
+      display: none;
+    }
+
+  /* Spinner style */
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #00ccff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Full-page overlay spinner */
+  #overlaySpinner {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    text-align: center;
+  }
+
+  #overlaySpinner div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Light mode overrides omitted for brevity — keep your existing styles */
+
+  body.light-mode .toggle-btn {
+    background-color: #ddd;
+    color: #000;
+  }
+
+  /* Light mode overrides */
+  body.light-mode {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+
+  body.light-mode nav {
+    background-color: #e0e0e0;
+  }
+  body.light-mode nav a,
+  body.light-mode nav h3 {
+    color: #333;
+  }
+
+  body.light-mode .container {
+    background: #ffffff;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  }
+
+  body.light-mode label {
+    color: #555;
+  }
+  body.light-mode input,
+  body.light-mode select {
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    color: #333;
+  }
+  body.light-mode input:focus,
+  body.light-mode select:focus {
+    border-color: #00bfff;
+  }
+
+  body.light-mode .btn {
+    color: #000;
+    background-color: #00bfff;
+  }
+  body.light-mode .btn:hover {
+    background: linear-gradient(90deg, #00ccff, #00ffe7);
+  }
+  body.light-mode .btn:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+  }
+
+  #message.light-mode {
+    color: #444;
+  }
+  .progress.light-mode {
+    color: #666;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Spinner while loading KYC status -->
+<div id="loadingSpinner" style="text-align:center; padding: 40px 0;">
+  <i class="fa fa-spinner fa-spin" style="font-size: 28px; color: #00ccff;"></i>
+  <p style="margin-top: 10px; color: #aaa;">Checking your KYC status...</p>
+</div>
+
+<!-- Full-page overlay spinner for submit -->
+<div id="overlaySpinner">
+  <div>
+    <div class="spinner"></div>
+    <p style="color: #fff; margin-top: 10px;">Submitting KYC...</p>
+  </div>
+</div>
+
+<!-- KYC FORM CONTAINER -->
+<div class="container" id="kycFormContainer">
+<a href="Profile.html" style="text-align: left; color: grey; text-decoration: none; float: right; padding: 6px 10px; border: 1px solid #ccc; border-radius: 20px;"> <i class="fa fa-times"></i>
+</a>
+<h2>KYC Details</h2>
+  <div class="progress" id="progressText">Step 1 of 3</div>
+  <div id="message"></div>
+
+  <!-- Step 1 -->
+  <div class="step active" id="step1">
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" placeholder="Enter your full name" />
+
+    <label for="country">Country</label>
+    <input type="text" id="country" placeholder="Enter your country" />
+
+    <div class="button-group">
+      <button class="btn" onclick="nextStep(1)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step" id="step2">
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" />
+
+    <label for="idType">ID Type</label>
+    <select id="idType">
+      <option>Passport</option>
+      <option>National ID</option>
+      <option>Driver’s License</option>
+    </select>
+
+    <div class="button-group">
+      <button class="btn" onclick="prevStep(1)">Back</button>
+      <button class="btn" onclick="nextStep(2)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step" id="step3">
+    <div style="width: 100%; height: 300px; margin-bottom: 20px;"><img src="Kyc.PNG"style="width: 100%; height: 300px;" /></div>
+    <label for="idNumber">ID Number</label>
+    <input type="text" id="idNumber" placeholder="Enter ID number" />
+
+    <label for="idImage">Upload ID Image</label>
+    <input type="file" id="idImage" accept="image/*" capture="environment" />
+
+    <div id="imagePreviewContainer" style="margin-top: 15px; display: none;">
+      <p style="font-size: 14px; margin-bottom: 8px;">Preview:</p>
+      <img id="idImagePreview" src="" alt="ID Preview" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 6px;" />
+    </div>
+
+    <div class="button-group">
+      <button class="btn" onclick="prevStep(2)">Back</button>
+      <button class="btn" id="submitBtn" onclick="submitKYC()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ KYC Message Container -->
+<div class="container" id="kycMessageContainer" style="display: none;">
+  <h2 id="kycMessageTitle">KYC Status</h2>
+  <p id="kycMessageText" style="text-align: center; font-size: 15px; margin-bottom: 30px;"></p>
+  <div style="text-align: center;">
+    <a href="Profile.html">
+      <button class="btn" style="padding: 12px 30px;">Back to Profile</button>
+    </a>
+  </div>
+</div>
+
+<script src="theme-toggle.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="firebaseDetails.js"></script>
+
+<script>
+let user = null;
+
+function showMessage(msg, type = "info") {
+  const message = document.getElementById("message");
+  message.innerText = msg;
+  message.style.color = type === "error" ? "red" : type === "success" ? "lime" : "#00ccff";
+}
+
+function showStep(step) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById(`step${i}`).classList.remove("active");
+  }
+  document.getElementById(`step${step}`).classList.add("active");
+  document.getElementById("progressText").innerText = `Step ${step} of 3`;
+  localStorage.setItem("kycStep", step);
+}
+
+function nextStep(currentStep) {
+  const next = currentStep + 1;
+  if (next <= 3) showStep(next);
+}
+
+function prevStep(currentStep) {
+  const prev = currentStep - 1;
+  if (prev >= 1) showStep(prev);
+}
+
+function loadCachedUserData() {
+  const cached = localStorage.getItem("userData");
+  if (!cached) return null;
+  try { return JSON.parse(cached); } catch (err) { console.warn(err); return null; }
+}
+
+async function fetchAndCacheUserData(uid) {
+  try {
+    const doc = await firebaseDB.collection("users").doc(uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      localStorage.setItem("userData", JSON.stringify(data));
+      return data;
+    }
+  } catch (err) { console.error(err); }
+  return null;
+}
+
+function handleKYCStatus(data) {
+  const kycStatus = data.kycStatus;
+  if (kycStatus === "pending" || kycStatus === "approved") {
+    document.getElementById("kycFormContainer").style.display = "none";
+    document.getElementById("kycMessageContainer").style.display = "block";
+    const messageTitle = kycStatus === "pending" ? "⏳ Under Review" : "✅ KYC Approved";
+    const messageText = kycStatus === "pending"
+      ? "Your KYC is currently under review by our admin team. Please check back later."
+      : "Your KYC has been successfully approved. Thank you for verifying your identity.";
+    document.getElementById("kycMessageTitle").innerText = messageTitle;
+    document.getElementById("kycMessageText").innerText = messageText;
+  } else {
+    document.getElementById("kycFormContainer").style.display = "block";
+    document.getElementById("kycMessageContainer").style.display = "none";
+  }
+}
+
+firebaseAuth.onAuthStateChanged(async (currentUser) => {
+  document.getElementById("loadingSpinner").style.display = "block";
+  document.getElementById("kycFormContainer").style.display = "none";
+  document.getElementById("kycMessageContainer").style.display = "none";
+
+  if (!currentUser) {
+    showMessage("You must be logged in to submit KYC.", "error");
+    setTimeout(() => window.location.href = "login.html", 2000);
+    return;
+  }
+
+  user = currentUser;
+
+  const cachedData = loadCachedUserData();
+  if (cachedData) {
+    handleKYCStatus(cachedData);
+    document.getElementById("loadingSpinner").style.display = "none";
+  }
+
+  const savedStep = parseInt(localStorage.getItem("kycStep")) || 1;
+  showStep(savedStep);
+
+  const freshData = await fetchAndCacheUserData(user.uid);
+  if (freshData) handleKYCStatus(freshData);
+
+  document.getElementById("loadingSpinner").style.display = "none";
+});
+
+async function submitKYC() {
+  const submitBtn = document.getElementById("submitBtn");
+  const overlay = document.getElementById("overlaySpinner");
+
+  const fullName = document.getElementById("fullName").value.trim();
+  const country = document.getElementById("country").value.trim();
+  const dob = document.getElementById("dob").value;
+  const idType = document.getElementById("idType").value;
+  const idNumber = document.getElementById("idNumber").value.trim();
+  const idImageInput = document.getElementById("idImage");
+  const idImageFile = idImageInput.files[0];
+
+  if (!fullName || !country || !dob || !idType || !idNumber || !idImageFile) {
+    showMessage("❗ Please fill out all fields and upload an ID image.", "error");
+    return;
+  }
+
+  if (!user) {
+    showMessage("❗ You are not logged in.", "error");
+    return;
+  }
+
+  overlay.style.display = "block";
+  submitBtn.disabled = true;
+  showMessage("📤 Uploading ID image...");
+
+  try {
+    const imageUrl = await uploadImageToCloudinary(idImageFile);
+    showMessage("📬 Submitting your KYC...");
+
+    const payload = {
+      email: user.email,
+      fullName,
+      country,
+      dob,
+      idType,
+      idNumber,
+      idImageUrl: imageUrl,
+      kycStatus: "pending",
+      kycSubmittedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    await firebaseDB.collection("users").doc(user.uid).set(payload, { merge: true });
+    const updatedData = { ...(loadCachedUserData() || {}), ...payload };
+    localStorage.setItem("userData", JSON.stringify(updatedData));
+
+    showMessage("✅ KYC submitted successfully. Please wait for admin approval.", "success");
+    localStorage.removeItem("kycStep");
+
+    document.getElementById("kycFormContainer").style.display = "none";
+    document.getElementById("kycMessageContainer").style.display = "block";
+    document.getElementById("kycMessageTitle").innerText = "⏳ Under Review";
+    document.getElementById("kycMessageText").innerText = "Your KYC is currently under review by our admin team. Please check back later.";
+
+  } catch (err) {
+    console.error(err);
+    showMessage("❌ Error: " + err.message, "error");
+  } finally {
+    overlay.style.display = "none";
+    submitBtn.disabled = false;
+  }
+}
+
+async function uploadImageToCloudinary(file) {
+  const cloudName = "dfepzhhbz";
+  const uploadPreset = "kyc_unsigned";
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", uploadPreset);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, { method: "POST", body: formData });
+  const data = await res.json();
+  if (data.secure_url) return data.secure_url;
+  throw new Error("Cloudinary upload failed: " + JSON.stringify(data));
+}
+
+const idImageInput = document.getElementById("idImage");
+const previewContainer = document.getElementById("imagePreviewContainer");
+const previewImage = document.getElementById("idImagePreview");
+
+idImageInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file && file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImage.src = e.target.result;
+      previewContainer.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewImage.src = "";
+    previewContainer.style.display = "none";
+  }
+});
+</script>
+
+</body>
+</html>
+

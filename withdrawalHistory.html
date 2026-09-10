@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdrawal History</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0e0e0e;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background-color: #111;
+      border-radius: 12px;
+    }
+
+    .filter-bar {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .filter-bar label {
+      font-weight: bold;
+    }
+
+    .filter-bar input[type="date"] {
+      padding: 8px;
+      border-radius: 6px;
+      background-color: #1f1f1f;
+      color: white;
+      border: 1px solid #444;
+      margin-left: 10px;
+      width: 100px; 
+      height: 30px;
+    }
+
+    .filter-bar button {
+      padding: 8px 14px;
+      margin-left: 10px;
+      border-radius: 6px;
+      border: none;
+      background-color: #00ffe7;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .history-row {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      transition: background 0.3s;
+      position: relative;
+    }
+
+    .history-row:hover {
+      background-color: #262626;
+    }
+
+    .history-item {
+      flex: 100%;
+      font-size: 13px;
+      color: #fff;
+      word-break: break-word;
+      margin-bottom: 4px;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: inline-block;
+    }
+
+    .status.in-progress {
+      color: #f0ad4e;
+      background-color: rgba(240, 173, 78, 0.12);
+    }
+
+    .status.disbursed {
+      color: #5cb85c;
+      background-color: rgba(92, 184, 92, 0.12);
+    }
+
+    .status.canceled {
+      color: #d9534f;
+      background-color: rgba(217, 83, 79, 0.12);
+    }
+
+    .track-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #00ccff;
+      color: #000;
+      font-weight: 600;
+      font-size: 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .track-btn:hover {
+      background: #0099cc;
+      color: #fff;
+    }
+
+    .no-history {
+      text-align: center;
+      margin-top: 20px;
+      color: #bbb;
+      font-size: 15px;
+    }
+
+    /* Light mode support */
+    body.light-mode {
+      background-color: white;
+      color: #000;
+    }
+
+    body.light-mode .container {
+      background-color: #fff;
+      color: #000;
+    }
+
+    body.light-mode .filter-bar input[type="date"] {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+    }
+
+    body.light-mode .filter-bar button {
+      background-color: #00cc99;
+      color: #000;
+    }
+
+    body.light-mode .history-row {
+      background-color: #fafafa;
+      color: #000;
+    }
+
+    body.light-mode .history-row:hover {
+      background-color: #e0e0e0;
+    }
+
+    body.light-mode .history-item {
+      color: #000;
+    }
+
+    body.light-mode .status.in-progress {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    body.light-mode .status.disbursed {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    body.light-mode .status.canceled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    body.light-mode .no-history {
+      color: #666;
+    }
+
+    body.light-mode .back-button,
+    body.light-mode .heading {
+      color: black;
+    }
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+      color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+  <nav class="navbar">
+    <a href="wallet.html"><button class="back-button">&larr; </button></a>
+    <div class="heading"> Withdrawal History </div>
+  </nav>
+</div>
+
+  <div class="container">
+    <div class="filter-bar">
+      <label for="filter-date">Filter:</label>
+      <input type="date" id="filter-date" />
+      <button id="clear-filter">Clear</button>
+    </div>
+
+    <div id="history-container">
+      <div class="history-list" id="history-list"></div>
+      <p class="no-history" id="no-history">Loading withdrawal history...</p>
+    </div>
+  </div>
+
+  <script src="theme-toggle.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebaseDetails.js"></script>
+
+  <script>
+    const historyList = document.getElementById('history-list');
+    const noHistory = document.getElementById('no-history');
+    const filterDateInput = document.getElementById('filter-date');
+    const clearFilterBtn = document.getElementById('clear-filter');
+
+    firebaseAuth.onAuthStateChanged(user => {
+      if (!user) {
+        noHistory.textContent = "You must be logged in to view history.";
+        return;
+      }
+
+      filterDateInput.addEventListener("change", () => renderHistory(user));
+      clearFilterBtn.addEventListener("click", () => {
+        filterDateInput.value = '';
+        renderHistory(user);
+      });
+
+      renderHistory(user);
+    });
+
+    function renderHistory(user) {
+      historyList.innerHTML = '';
+      noHistory.textContent = "Loading withdrawal history...";
+      noHistory.style.display = "block";
+
+      firebaseDB.collection("withdrawals")
+        .where("userId", "==", user.uid)
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          historyList.innerHTML = '';
+
+          const selectedDate = filterDateInput.value;
+          let hasDocs = false;
+
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            if (!data.createdAt) return;
+
+            const txnDate = data.createdAt.toDate();
+            if (selectedDate) {
+              const filterDate = new Date(selectedDate);
+              if (txnDate.toDateString() !== filterDate.toDateString()) return;
+            }
+
+            hasDocs = true;
+            const amount = parseFloat(data.amount || 0);
+            const charge = amount * 0.01;
+            const final = amount - charge;
+            const address = data.address || '';
+            const currency = data.currency || 'USDT';
+            const rawStatus = (data.status || 'pending').toLowerCase();
+            const now = new Date();
+
+            let displayStatus = rawStatus;
+
+            // 10-Minute Auto-Cancel Rule for pending status
+            if (rawStatus === 'pending' || rawStatus === 'in_progress') {
+              const TEN_MINUTES_MS = 10 * 60 * 1000;
+              if (now - txnDate > TEN_MINUTES_MS) {
+                displayStatus = 'canceled';
+              }
+            }
+
+            let statusClass = 'in-progress';
+            let statusLabel = 'In Progress';
+            let showTrackBtn = true;
+
+            if (displayStatus === 'disbursed' || displayStatus === 'approved' || displayStatus === 'completed' || displayStatus === 'successful') {
+              statusClass = 'disbursed';
+              statusLabel = 'Disbursed';
+              showTrackBtn = false; // Hide tracking button when completed/disbursed
+            } else if (displayStatus === 'canceled' || displayStatus === 'cancelled') {
+              statusClass = 'canceled';
+              statusLabel = 'Canceled';
+              showTrackBtn = false; // Hide tracking button when canceled
+            }
+
+            const row = document.createElement("div");
+            row.className = "history-row";
+            
+            let trackButtonHtml = showTrackBtn 
+              ? `<a href="progressBar.html?id=${doc.id}" class="track-btn"><i class="fa fa-clock-rotate-left"></i> Track Progress</a>`
+              : '';
+
+            row.innerHTML = `
+              <div class="history-item"><strong>Status:</strong> <span class="status ${statusClass}">${statusLabel}</span></div>
+              <div class="history-item"><strong>Txn ID:</strong> ${doc.id}</div>
+              <div class="history-item"><strong>Amount:</strong> ${amount.toFixed(2)}</div>
+              <div class="history-item"><strong>Charge:</strong> ${charge.toFixed(2)}</div>
+              <div class="history-item"><strong>Final:</strong> ${final.toFixed(2)}</div>
+              <div class="history-item"><strong>Currency:</strong> ${currency}</div>
+              <div class="history-item"><strong>Method:</strong> ${data.method || ''}</div>
+              <div class="history-item"><strong>Address:</strong> ${address}</div>
+              <div class="history-item"><strong>Date:</strong> ${txnDate.toLocaleString()}</div>
+              ${trackButtonHtml}
+            `;
+
+            historyList.appendChild(row);
+          });
+
+          noHistory.style.display = hasDocs ? "none" : "block";
+          noHistory.textContent = hasDocs ? "" : selectedDate
+            ? "No withdrawal history found for this date."
+            : "No withdrawal history found.";
+        }, error => {
+          console.error("Snapshot listener error:", error);
+          noHistory.textContent = "Error retrieving history: " + error.message;
+        });
+    }
+  </script>
+</body>
+</html>

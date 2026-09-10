@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Announcement Popup</title>
+<style>
+
+body {
+    margin: 0;
+    background: #000;
+    font-family: "Inter", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;   /* Needed for flashlight layering */
+    overflow: hidden;     /* Prevent glow from scrolling */
+}
+
+.flashlight {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 300px;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg,
+        rgba(0, 150, 255, 0.8),
+        rgba(0, 0, 0, 0) 40%
+    );
+    filter: blur(20px);
+    animation: rotateFlash 4s linear infinite;
+    z-index: 0;
+    opacity: 1; /* Make sure it's visible */
+}
+
+@keyframes rotateFlash {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Popup box */
+.popup {
+    width: 330px;
+    background: #0e0f11;
+    border-radius: 22px;
+    padding: 30px 24px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    box-shadow: 0 0 18px rgba(0, 170, 255, 0.6);
+    z-index: 2; /* So it's above the glow */
+}
+
+/* Icon at the top */
+.icon-wrapper {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0e0f11;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.icon-wrapper img {
+    width: 75px;
+    height: 75px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 18px rgba(0, 170, 255, 0.6);
+}
+
+/* Text sections */
+.title-divider {
+    margin-top: 40px;
+    font-size: 14px;
+    opacity: 0.6;
+    letter-spacing: 1px;
+}
+
+.headline {
+    margin-top: 16px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.body-text {
+    margin-top: 14px;
+    font-size: 15px;
+    opacity: 0.85;
+    line-height: 1.45;
+}
+
+/* Button */
+.btn {
+    display: block;
+    width: 100%;
+    margin-top: 28px;
+    padding: 13px 0;
+    border-radius: 14px;
+    background: linear-gradient(to right, #3a63ff, #5edbff);
+    font-size: 16px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    bottom: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2a2a2a;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #fff;
+    line-height: 38px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.8;
+    transition: 0.2s;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="flashlight"></div>
+
+<div class="popup">
+
+  <div class="icon-wrapper">
+        <img src="Ohut Logo.png" alt="Icon" />
+    </div>
+
+    <div class="title-divider">— Congratulations!  —</div>
+
+<div class="headline">You’ve Earned $10!
+</div>
+
+<div class="body-text">
+    You’re one of the <b>first 1,000 pioneers</b> to join us — and we’re celebrating YOU!  
+    As a token of our appreciation, <b>$10 has been instantly added</b> to your trading balance.  
+    <br><br>
+    Thank you for being an early supporter.
+</div>
+    <div class="close">×</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Buy Product with TON</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #006699;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Buy Product</h1>
+  <p>Click below to buy the product for <strong>0.01 TON</strong>.</p>
+
+  <button onclick="buyProduct()">Buy with TON</button>
+
+  <script>
+    function buyProduct() {
+      const merchantAddress = 'UQB0DROMcjxjRK7Hh-vlz-JngAEYv7wCAy3ktn0EX8OvJZ8D'; // Your TON wallet address
+      const amountTon = 0.01;
+      const message = 'Order #1234';
+
+      const url = `ton://transfer/${merchantAddress}?amount=${amountTon}&text=${encodeURIComponent(message)}`;
+
+      // Open wallet
+      window.location.href = url;
+
+      // Fallback if wallet doesn't open
+      setTimeout(() => {
+        alert("If your TON wallet didn’t open, please send 0.01 TON manually to:\n\n" + merchantAddress);
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>

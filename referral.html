@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referral History</title>
+
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- ✅ Firebase v9 compat (non-modular) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <!-- ✅ Modern Styling -->
+
+<style>
+  :root {
+    /* Shared Base Colors */
+    --primary: black;
+    --success: #28a745;
+    --danger: #dc3545;
+    --light: #ffffff;
+    --font-size: 14px;
+
+    /* Dark Mode Defaults */
+    --bg-color: #000;
+    --text-color: #fff;
+    --muted-color: #ccc;
+    --table-bg: #111111;
+    --table-row-alt: #333;
+    --border-color: #444;
+    --card-bg: #111;
+    --summary-bg: #1e1e1e;
+    --thead-color: yellow;
+  }
+
+  body.light-mode {
+    --bg-color: white;
+    --text-color: grey;
+    --muted-color: #555;
+    --table-bg: #fff;
+    --table-row-alt: #f2f2f2;
+    --border-color: #ddd;
+    --card-bg: #fff;
+    --summary-bg: #fff;
+    --thead-color: #333;
+  }
+
+  body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: var(--font-size);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+
+  }
+body.light-mode .headding, body.light-mode  i, body.light-mode .headingText {
+background: (--bg-color);
+color: black;
+}
+  .container {
+margin-top: -20px;
+    padding: 20px;
+max-width: 400px;
+height: auto;
+width: 100%;
+  }
+
+  header,
+  .section {
+    max-width: 800px;
+    margin: 1rem auto;
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  body.light-mode h4, h3 {
+color: black;
+}
+
+h1 {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin: 1rem 0 0.5rem;
+  }
+
+  p,
+  span {
+    margin: 0.3rem 0;
+    font-size: var(--font-size);
+    color: var(--text-color);
+  }
+
+  .referral-box {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1rem;
+  }
+
+  #referralLink {
+    width: 250px;
+    height: auto;
+    padding: 8px;
+    font-size: var(--font-size);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: var(--font-size);
+    background-color: var(--primary);
+    color: var(--light);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .referral-box button:hover {
+    background-color: #1a68d1;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: var(--table-bg);
+    color: var(--muted-color);
+    border: 2px solid var(--border-color);
+    font-size: 13px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  thead {
+    background-color: var(--table-bg);
+    color: var(--thead-color);
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--table-row-alt);
+  }
+
+  .status-approved {
+    color: var(--success);
+    font-weight: bold;
+  }
+
+  .status-pending {
+    color: var(--danger);
+    font-weight: bold;
+  }
+
+  .summary {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .summary-item {
+    background: var(--summary-bg);
+    flex: 1;
+    min-width: 100px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-color);
+  }
+
+  @media (max-width: 600px) {
+    .referral-box {
+      flex-direction: column;
+    }
+
+    .summary {
+      flex-direction: column;
+    }
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    th {
+      display: none;
+    }
+
+    td {
+      position: relative;
+      padding-left: 50%;
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td::before {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-weight: bold;
+      font-size: 13px;
+      white-space: nowrap;
+      color: var(--text-color);
+    }
+
+    td:nth-of-type(1)::before {
+      content: "Email";
+    }
+
+    td:nth-of-type(2)::before {
+      content: "KYC Status";
+    }
+
+    td:nth-of-type(3)::before {
+      content: "Joined";
+    }
+
+    td:nth-of-type(4)::before {
+      content: "Reward";
+    }
+  }
+
+
+
+
+body.light-mode nav {
+    background-color: white;
+
+  }
+
+body.light-mode .back-button, body.light-mode  .heading{
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+margin-bottom: 50px;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+          font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="dashboard.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> Referral Log </div>
+  </nav>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+  
+<div class="container">
+  <p>Your Referral Code: <span id="yourReferralId"></span></p><!--<input type="text" id="referralLink" readonly />
+<button onclick="copyReferralLink()">Copy </button>-->
+
+<h4>Referral Summary</h4>
+<p>Total Invited: <span id="totalReferred">0</span></p>
+<p>Verified: <span id="totalApproved">0</span></p>
+<p>Total Earned: <span id="totalEarned">0.0</span> OHT</p>
+
+<h3>Invited Users</h3>
+<table border="1" width="100%">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>KYC Status</th>
+      <th>Joined Date</th>
+      <th>Reward</th>
+    </tr>
+  </thead>
+  <tbody id="referredUsersTable"></tbody>
+</table>
+
+</div> </div>
+<script src="theme-toggle.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    collection,
+    query,
+    where,
+    getDocs,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCQW9VLyn_nfgR27PO-3MEirIbZCWRo4_Q",
+    authDomain: "ohut-d7c8d.firebaseapp.com",
+    databaseURL: "https://ohut-d7c8d-default-rtdb.firebaseio.com",
+    projectId: "ohut-d7c8d",
+    storageBucket: "ohut-d7c8d.appspot.com",
+    messagingSenderId: "916521389173",
+    appId: "1:916521389173:web:5cd1b9b0c87d3bf4f87c3c",
+    measurementId: "G-721RMQFD2K"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  function copyReferralLink() {
+    const input = document.getElementById("referralLink");
+    input.select();
+    input.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Referral link copied to clipboard!");
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert("You are not logged in.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const uid = user.uid;
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        console.log("⚠️ User document not found.");
+        alert("User profile missing in database.");
+        return;
+      }
+
+      const userData = userSnap.data();
+      const referralCode = userData.referralCode || uid;
+      const currentMiniBalance = userData.miniBalance || 0;
+
+      // Show referral code & link
+      document.getElementById("yourReferralId").innerText = referralCode;
+      const baseUrl = window.location.origin;
+      const referralLink = `${baseUrl}/signup.html?ref=${referralCode}`;
+      document.getElementById("referralLink").value = referralLink;
+
+      const referredQuery = query(
+        collection(db, "users"),
+        where("referredBy", "==", user.uid)
+      );
+
+      const referredSnapshot = await getDocs(referredQuery);
+      const tbody = document.getElementById("referredUsersTable");
+      tbody.innerHTML = "";
+
+      console.log(`ℹ️ Found ${referredSnapshot.size} referred users.`);
+
+      let totalReferred = 0;
+      let totalApproved = 0;
+      let totalEarned = 0;
+      let newMiniBalance = currentMiniBalance;
+
+      for (const docSnap of referredSnapshot.docs) {
+        const data = docSnap.data();
+        totalReferred++;
+
+        const tr = document.createElement("tr");
+        const email = data.email || "Unknown";
+        const kyc = data.kycStatus || "Pending";
+        const createdAt = data.createdAt?.toDate
+          ? data.createdAt.toDate().toLocaleDateString()
+          : (typeof data.createdAt === "string"
+              ? new Date(data.createdAt).toLocaleDateString()
+              : "Unknown");
+
+        let rewardStatus = "❌ Not Yet";
+        let kycClass = kyc === "approved" ? "status-approved" : "status-pending";
+
+        if (kyc === "approved") {
+          totalApproved++;
+          rewardStatus = "✅ Earned";
+
+          if (!data.rewardGiven) {
+            try {
+              // Mark reward as given to referred user
+              await updateDoc(doc(db, "users", docSnap.id), {
+                rewardGiven: true
+              });
+
+              newMiniBalance += 0.1;
+              totalEarned += 0.1;
+
+              console.log(`✅ Reward credited for: ${email}`);
+            } catch (err) {
+              console.log(`❌ Error updating reward status for ${email}:`, err);
+            }
+          } else {
+            totalEarned += 0.1;
+            console.log(`ℹ️ Already rewarded: ${email}`);
+          }
+        }
+
+        tr.innerHTML = `
+          <td>${email}</td>
+          <td class="${kycClass}">${kyc}</td>
+          <td>${createdAt}</td>
+          <td>${rewardStatus}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      // Update miniBalance
+      if (newMiniBalance !== currentMiniBalance) {
+        try {
+          await updateDoc(userRef, { miniBalance: newMiniBalance });
+          console.log(`💰 miniBalance updated to: ${newMiniBalance.toFixed(2)}`);
+        } catch (e) {
+          console.log("❌ Failed to update miniBalance:", e);
+        }
+      } else {
+        console.log("ℹ️ No miniBalance update needed.");
+      }
+
+      // Update summary
+      document.getElementById("totalReferred").innerText = totalReferred;
+      document.getElementById("totalApproved").innerText = totalApproved;
+      document.getElementById("totalEarned").innerText = totalEarned.toFixed(1);
+    } catch (error) {
+      console.log("❌ General error loading referral history:", error);
+      alert("Something went wrong loading your referral data.");
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

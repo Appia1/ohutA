@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+ <link rel="stylesheet" href="wallet.css">
+
+ <link rel="stylesheet" href="nav.css">
+
+  <title> Wallet </title>
+<style>
+
+/* === GLOBAL MODAL POPUP FIX === */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);   /* Dark background */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;                 /* Always above everything */
+}
+.modal .modal-content {
+background: black; 
+padding:20px;
+border-radius:10px; 
+width: 300px;
+z-index: 1000;
+color: white;
+  animation: popupShow .3s ease;
+}
+
+@keyframes popupShow {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+body.light-mode .modal .modal-content {
+background-color : white;
+
+}
+
+ .modal-content input::placeholder{
+font-weight: bold;
+font-size: 20px;
+color: rgba(0, 191, 255, 1);
+}
+
+.modal-content input{
+width: 50%;margin-left: 25%;padding:10px;border-radius:6px;border:1px solid #444; font-size: 14px; background:#222;color:#fff; text-align: center;
+}
+body.light-mode .modal-content input {
+background:#eee;
+border: 0px;
+color: black;
+
+}
+
+body.light-mode .modal-content input::placeholder{
+color:black;
+}
+body.light-mode .modal-content #withdrawPasswordMessage, 
+body.light-mode .modal-content #forgotWithdrawError {
+color: red;
+}
+
+.modal-content #withdrawPasswordMessage, #forgotWithdrawError { color:red; text-align:center; margin-top:10px; font-size:14px;}
+
+
+
+
+
+/* === TON CONFIRM MODAL — DARK MODE DEFAULT === */
+.ton-modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: flex-end;
+  align-items: flex-end;
+  z-index: 9999;
+}
+
+.ton-modal-content {
+  width: 100%;
+  max-width: 400px;
+  background: #111;              /* DARK */
+  padding: 25px;
+  border-radius: 18px 18px 0 0;
+  color: #ffffff;
+  text-align: center;
+  animation: slideUp 0.35s ease-out;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Slide-up animation */
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Close icon */
+.ton-close {
+  font-size: 30px;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  color: #fff;
+  opacity: 0.7;
+}
+.ton-close:hover { opacity: 1; }
+
+/* Tonkeeper Logo */
+.ton-logo {
+  width: 65px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+border-radius: 20px;
+}
+
+.ton-text {
+  font-size: 14px;
+  color: #ccc;                   /* DARK */
+  margin-top: 10px;
+text-align: left;
+}
+
+.ton-continue {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #00ccff;           /* TON BLUE */
+  color: black;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-top: 20px;
+font-size: 12px;
+  cursor: pointer;
+}
+
+.ton-continue:hover {
+  background: #00aadd;
+}
+
+/* === TON CONFIRM MODAL — LIGHT MODE === */
+body.light-mode .ton-modal {
+  background: rgba(0,0,0,0.3);
+}
+
+body.light-mode .ton-modal-content {
+  background: #ffffff;           /* LIGHT */
+  color: #000000;
+}
+
+body.light-mode .ton-text {
+  color: #333;                   /* LIGHT */
+}
+
+/* Close button turns dark in light mode */
+body.light-mode .ton-close {
+  color: #000;
+  opacity: 0.5;
+}
+body.light-mode .ton-close:hover {
+  opacity: 1;
+}
+
+/* Button styling stays similar, but slightly lighter in light mode */
+body.light-mode .ton-continue {
+  background: #00b8ee;
+  color: #fff;
+}
+
+body.light-mode .ton-continue:hover {
+  background: #009fcc;
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="buttonBox">
+  <div class="buttonContainer">
+<a href="deposit.html"> <button class="deposit-btn" id="depositButton">Deposit</button> </a>
+  </div>
+
+</div>
+
+  
+
+  <div class="container" id="container">
+    <header>
+      <img src="Ohut Logo.png" class="logo" />
+
+    </header>
+
+    <div class="balance-section">
+      <h2>Total balance </h2>  <button id="toggleVisibility" class="eye-btn"> <i class="fa fa-eye" id="toggle-icon"></i>
+</button>
+      <div class="balance-row">
+        <span id="balance-value"> loading… </span> <span class="currency">USDT</span>
+      </div>
+   
+      <div class="green-line"></div>
+    </div>
+
+    <div class="account-section">
+      <div class="account-box">
+        <div class="icon funding-icon"> <i class="fa fa-money-bill"></i>
+ </div>
+       <a href="funding.html"> <div class="account-details">
+          <p>Funding <br/>Account</p>
+          <strong id="funding-balance""> loading… </strong>
+   
+        </div>
+      </div> </a>
+
+ <div class="account-box">
+           <a href="tradingHistory.html"> <div class="icon trading-icon"> <i class="fa fa-chart-line"></i> </div>
+        <div class="account-details">
+          <p>Trading <br/>Account</p>
+          <strong id="trading-balance"> loading… </strong>
+  
+        </div>
+      </div> </a> 
+    </div>
+
+
+   <div class="overview">
+
+   <p style="font-size: 16px; font-weight: bold;"> Withdraw USDT (TON) </p>
+
+     <button id="menuToggle" class="tonWithdrawal"> Withdraw</button>
+    </div>
+
+     <h3>Mine OHT</h3>
+
+    <div class="overviewBox">
+<div class="viewContent">
+
+     <button id="mining_mineButton" disabled class="usdt-section">
+        <img src="Native.PNG" alt="OHT" class="usdt-icon"/>
+        <span class="mineBtn">Mine </span>
+        <span id="mining_balance" >Loading…</span>
+      </button>
+
+<div id="mining_timer"></div>
+
+<!-- Mining Progress UI -->
+<div class="mining-progress-container">
+  <div class="progress-bar" id="mining_progressBar"></div>
+</div>
+<div id="mining_notification" class="mining-notification" style="display: none;">
+  🎉 Your mining reward is ready!
+</div>
+
+</div>
+
+    </div>
+
+<div class="historyContainer" id="historyContainer"style="display: none">
+<div class="historyBox">
+
+
+    
+
+<button id="allDetailsBtn">All</button>
+<button id="widthlDetailsBtn">Funding</button>
+
+<button id="pendingBtn">Trading</button>
+
+<div class="allDetails">
+
+<div class="widthlDetails" id="widthlDetails">
+<div class="details"><h5>Pending</h5>
+<span id="pendingDetails"><img src="No data .png" />
+</div>
+</div>
+
+<div class="widthlDetails" id="pendingWidth">
+<div class="details"><h5>Complete</h5>
+ <span id="completeDetails" > <img src="No data .png" /> </span> 
+</div>
+</div>
+</div>
+
+
+
+</div>
+
+ </div>
+
+</div>
+<div class="depBox">
+<div id="depositContainer"style="display: none">
+<div class="smallLine"></div>
+<h1>Deposit Method</h1>
+
+<a href= "deposit.html">
+<div class="depositDetails">
+<div> <img src="Usdt.PNG"/> </div><div> <span><h3>Deposit Crypto </h3> <p>Transfer Crypto from another on-chain or third party wallet</p></span> </div>
+</div>
+</a>
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="bm">
+  <button class="set">
+    <a href="dashboard.html">
+      <i class="fa fa-home"></i>
+      <span>Home</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Markets.html">
+      <i class="fa fa-chart-line"></i>
+      <span>Market</span>
+    </a>
+  </button>
+
+  <button class="tradeSet">
+    <a href="trade.html">
+      <div class="tradeBtn">
+        <i class="fa fa-long-arrow-up"></i>
+        <i class="fa fa-long-arrow-down"></i>
+      </div>
+      <span>Trade</span>
+    </a>
+  </button>
+
+  <button class="set active">
+    <a href="wallet.html">
+      <i class="fa-solid fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Profile.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </button>
+</div>
+
+
+<!--<div id="loader"></div>-->
+
+  <!-- Overlay -->
+
+<div class="overlay" id="overlay"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="container">
+
+    <!-- Spinner -->
+    <div id="loading-spinner" style="display:none; text-align:center;">
+      <div class="spinner"></div>
+      <p>Opening TON Wallet...</p>
+    </div>
+
+    <!-- Address input -->
+    <label for="address">TON (GRAM) Address:</label>
+    <input type="text" id="address" placeholder="Enter Address" required />
+
+    <!-- Amount input -->
+    <label for="amount">Withdrawal Amount:</label>
+    <div class="amount-bar">
+      <input type="number" id="amount" placeholder="Enter Amount" required/>
+      <button class="all-btn" onclick="setMaxAmount()">ALL</button>
+    </div>
+
+    <!-- Balance info -->
+    <div class="available-balance">
+      Available Balance: <span id="available-balance">0.00</span> USDT
+    </div>
+
+    <!-- Send button (moved outside hidden gas-fee div!) -->
+    <!--<button onclick="buyProduct()" class="tonWithdrawal">Send</button>-->
+
+<button onclick="openTonConfirm()" class="tonWithdrawal">Send</button>
+
+    <!-- Fallback info / gas fee area -->
+    <div id="gas-fee" style="display: none; margin-top: 15px; font-size: 14px; color: grey;">
+      <strong>⚡ Loading….</strong>
+   </div>  </div>
+
+  <!-- Success message -->
+ <p id="success-msg"></p>
+
+<!-- TON Confirmation Modal -->
+
+<!-- TON Confirmation Modal -->
+<div id="tonConfirmModal" class="ton-modal">
+  <div class="ton-modal-content">
+
+    <!-- Close button -->
+    <span id="tonCloseBtn" class="ton-close">&times;</span>
+
+    <!-- Tonkeeper Logo -->
+    <img src="IMG_3203.JPEG"
+         alt="Tonkeeper Logo"
+         class="ton-logo">
+
+    <h3>Before You Continue</h3>
+
+    <p class="ton-text">
+      ⚠️Make sure you have <strong>Tonkeeper Wallet</strong> installed on your device.<br><br>
+      ⚠️A <strong>network fee of 1 TON</strong> is required to process this withdrawal.
+    </p>
+
+<div id="tonconnect-ui" style="display:none;"></div>
+
+    <button id="tonContinueBtn" class="ton-continue">Continue</button>
+
+  </div>
+</div>
+
+<!-- WITHDRAW PASSWORD MODAL -->
+
+<div id="withdrawPasswordModal" class="modal" style="display:none;">
+
+<div style="display: flex; max-width: 400px; justify-content: center; align-items: center;">
+  <div class="modal-content">
+    <h3 style="color: white; text-align: center;">Enter Transaction PIN</h3>
+    <p style="color: white; text-align: center; font-size: 12px;">Confirm Withdrawal </p>
+
+    <input type="password" id="withdrawPasswordInput" 
+           placeholder="- - - - -"/>
+
+    <p id="withdrawForgotPassword" 
+       style="margin-top:10px;font-size:12px;cursor:pointer; color: rgba(0, 191, 255, 1);text-align:right;">
+      Forgot password?
+    </p>
+
+    <div id="withdrawPasswordMessage"></div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button id="cancelWithdrawPassword"
+              style="flex:1;padding:10px;border-radius:6px;background: #444;color:#fff;border:0;">
+        Cancel
+      </button>
+      <button id="confirmWithdrawPassword"
+              style="flex:1;padding:10px;border-radius:6px;background:#00ccff;color:#fff;border:0;">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT SEND PASSWORD MODAL -->
+<div id="forgotWithdrawPasswordModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3 style="margin-bottom:10px; color: white; text-align: center;">Reset Transaction PIN</h3>
+    <p style="color: white; text-align: center; font-size: 12px;">Enter your login password </p>
+
+    <input type="password" id="forgotWithdrawLoginPassword"
+           placeholder="- - - - -"/>
+
+    <div id="forgotWithdrawError"></div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button id="cancelForgotWithdraw" 
+              style="flex:1;padding:10px;border-radius:6px;background:#444;color:#fff;border:0;">
+        Cancel
+      </button>
+      <button id="confirmForgotWithdraw" 
+              style="flex:1;padding:10px;border-radius:6px;background:#00ccff;color:#fff;border:0;">
+        Continue
+      </button>
+    </div>
+  </div> </div>
+</div>
+
+</div>
+
+  </div>
+
+<script src="theme-toggle.js"></script>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Central Firebase Config -->
+<script src="firebaseDetails.js"></script>
+
+<!-- TON Connect SDK -->
+
+<!-- TON Connect UI (optional, shows a modal with supported wallets) -->
+<!--<script src="[unpkg.com](https://unpkg.com/@tonconnect/ui@2/dist/tonconnect-ui.min.js)"></script>
+<link rel="stylesheet" href="[unpkg.com](https://unpkg.com/@tonconnect/ui@2/dist/tonconnect-ui.css)">
+-->
+
+<script src="https://unpkg.com/@tonconnect/ui@2/dist/tonconnect-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/@tonconnect/ui@2/dist/tonconnect-ui.css">
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const balanceValue = document.getElementById("balance-value");
+    const toggleBtn = document.getElementById("toggleVisibility");
+    const toggleIcon = document.getElementById("toggle-icon");
+
+    const fundingEl = document.getElementById("funding-balance");
+    const tradingEl = document.getElementById("trading-balance");
+
+    let isVisible = true;
+    let balanceText = "0.00";
+    let fundingBalance = 0.00;
+    let tradingBalance = 0.00;
+
+    // Toggle eye icon and hide/show all balances
+    toggleBtn.addEventListener("click", () => {
+      isVisible = !isVisible;
+
+      if (isVisible) {
+        balanceValue.textContent = `$${balanceText}`;
+        fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+        tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+      } else {
+        balanceValue.textContent = "****";
+        fundingEl.textContent = "****";
+        tradingEl.textContent = "****";
+      }
+
+      toggleIcon.classList.toggle("fa-eye");
+      toggleIcon.classList.toggle("fa-eye-slash");
+    });
+
+    // Load balances from localStorage
+    function loadCachedBalances() {
+      const cached = localStorage.getItem("userData");
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          tradingBalance = parseFloat(data?.tradingBalance || 0);
+          fundingBalance = parseFloat(data?.fundingBalance || 0);
+          const total = tradingBalance + fundingBalance;
+          balanceText = total.toFixed(2);
+
+          if (isVisible) {
+            balanceValue.textContent = `$${balanceText}`;
+            fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+            tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+          }
+        } catch (e) {
+          console.warn("Failed to parse cached balance:", e);
+        }
+      }
+    }
+
+    // Update localStorage and UI when Firestore data changes
+    function updateCacheAndDisplay(data) {
+      if (!data) return;
+
+      tradingBalance = parseFloat(data?.tradingBalance || 0);
+      fundingBalance = parseFloat(data?.fundingBalance || 0);
+      const total = tradingBalance + fundingBalance;
+      balanceText = total.toFixed(2);
+
+      // Update localStorage without wiping other userData fields
+      try {
+        const cached = localStorage.getItem("userData");
+        let cachedData = {};
+        if (cached) cachedData = JSON.parse(cached);
+
+        const updatedData = {
+          ...cachedData,
+          tradingBalance,
+          fundingBalance,
+        };
+
+        localStorage.setItem("userData", JSON.stringify(updatedData));
+      } catch (e) {
+        console.warn("Failed to update cached balance:", e);
+      }
+
+      // Update UI
+      if (isVisible) {
+        balanceValue.textContent = `$${balanceText}`;
+        fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+        tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+      }
+    }
+
+    // ✅ Try to load cached balances instantly
+    loadCachedBalances();
+
+    // Firebase auth + Firestore real-time sync
+    firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        const userRef = firebaseDB.collection("users").doc(user.uid);
+
+        userRef.onSnapshot((doc) => {
+          if (doc.exists) {
+            updateCacheAndDisplay(doc.data());
+          } else {
+            balanceValue.textContent = "No data";
+            fundingEl.textContent = "No data";
+            tradingEl.textContent = "No data";
+          }
+        });
+
+// Update user's last activity
+userRef.update({
+  lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+});
+
+// Keep updating every minute
+setInterval(() => {
+  userRef.update({
+    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+  });
+}, 60000);
+
+      } else {
+        balanceValue.textContent = "Login required";
+        fundingEl.textContent = "Login required";
+        tradingEl.textContent = "Login required";
+      }
+    });
+  });
+
+  // Loader logic
+  function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  function fetchData() {
+    showLoader();
+    setTimeout(() => {
+      console.log("Data fetched from database!");
+      hideLoader();
+  
+    }, 3000); // You can reduce this delay later
+  }
+
+  window.addEventListener('load', fetchData);
+</script>
+
+
+<script>
+
+// ✅ Constants
+const MINE_AMOUNT = 0.01;
+const COOLDOWN_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+// ✅ DOM Elements
+const mineButton = document.getElementById("mining_mineButton");
+const balanceDisplay = document.getElementById("mining_balance");
+const timerDisplay = document.getElementById("mining_timer");
+const progressBar = document.getElementById("mining_progressBar");
+const notification = document.getElementById("mining_notification");
+
+let mining_uid = null;
+let mining_balance = 0;           // Direct mining earnings
+let mining_referralReward = 0;    // Referral earnings from miniBalance
+let mining_lastMine = null;
+let mining_dataLoaded = false;
+
+// ✅ Update UI
+function updateMiningUI() {
+  const total = mining_balance + mining_referralReward;
+
+  balanceDisplay.innerHTML = `
+    <strong>Total:</strong> ${total.toFixed(2)} OHT<br>
+    <small>(Mining: ${mining_balance.toFixed(2)} + Referral: ${mining_referralReward.toFixed(2)})</small>
+  `;
+
+  if (mining_lastMine === null) {
+    timerDisplay.textContent = "Loading...";
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    return;
+  }
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mineButton.disabled = false;
+    mineButton.classList.remove("mine-disabled");
+    timerDisplay.textContent = "You can mine now!";
+    showMiningNotification();
+    updateProgressBar(1); // 100%
+  } else {
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    const timeLeft = COOLDOWN_MS - timePassed;
+    updateMiningTimer(timeLeft);
+    updateProgressBar(timePassed / COOLDOWN_MS);
+  }
+}
+
+// ✅ Update Timer Text
+function updateMiningTimer(msLeft) {
+  const hours = Math.floor(msLeft / (1000 * 60 * 60));
+  const minutes = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((msLeft % (1000 * 60)) / 1000);
+  timerDisplay.textContent = `Next mine in: ${hours}h ${minutes}m ${seconds}s`;
+}
+
+// ✅ Update Progress Bar
+function updateProgressBar(fraction) {
+  const percent = Math.min(Math.max(fraction, 0), 1) * 100;
+  progressBar.style.width = `${percent}%`;
+}
+
+// ✅ Show Notification
+function showMiningNotification() {
+  notification.style.display = "block";
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 5000);
+}
+
+// ✅ Load data from Firestore
+async function loadMiningData(uid) {
+  try {
+    // Load mining balance from mining_users
+    const miningRef = firebaseDB.collection("mining_users").doc(`user_mining_${uid}`);
+    const miningSnap = await miningRef.get();
+
+    if (miningSnap.exists) {
+      const data = miningSnap.data();
+      mining_balance = data.balance || 0;
+      mining_lastMine = data.lastMine || 0;
+    } else {
+      await miningRef.set({ balance: 0, lastMine: 0 });
+      mining_balance = 0;
+      mining_lastMine = 0;
+    }
+
+    // 🔥 NEW: Load referral reward from users collection
+    const userRef = firebaseDB.collection("users").doc(uid);
+    const userSnap = await userRef.get();
+    if (userSnap.exists) {
+      const userData = userSnap.data();
+      mining_referralReward = userData.miniBalance || 0;
+    } else {
+      mining_referralReward = 0;
+    }
+
+    mining_dataLoaded = true;
+    updateMiningUI();
+  } catch (err) {
+    balanceDisplay.textContent = "Error loading mining data.";
+    console.error(err);
+  }
+}
+
+// ✅ Handle Mine Button
+mineButton.addEventListener("click", async () => {
+  if (!mining_dataLoaded || mining_lastMine === null) return;
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mining_balance += MINE_AMOUNT;
+    mining_lastMine = now;
+
+    try {
+      await firebaseDB
+        .collection("mining_users")
+        .doc(`user_mining_${mining_uid}`)
+        .set({
+          balance: mining_balance,
+          lastMine: mining_lastMine
+        });
+
+      updateMiningUI();
+    } catch (err) {
+      timerDisplay.textContent = "Error saving mining data.";
+      console.error(err);
+    }
+  }
+});
+
+// ✅ Timer Loop
+setInterval(() => {
+  if (!mining_dataLoaded || mining_lastMine === null) return;
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mineButton.disabled = false;
+    mineButton.classList.remove("mine-disabled");
+    timerDisplay.textContent = "You can mine now!";
+    updateProgressBar(1);
+    showMiningNotification();
+  } else {
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    const timeLeft = COOLDOWN_MS - timePassed;
+    updateMiningTimer(timeLeft);
+    updateProgressBar(timePassed / COOLDOWN_MS);
+  }
+}, 1000);
+
+// ✅ Firebase Auth
+firebaseAuth.onAuthStateChanged((user) => {
+  if (user) {
+    mining_uid = user.uid;
+    loadMiningData(mining_uid);
+  } else {
+    mining_uid = null;
+    mining_lastMine = null;
+    mining_balance = 0;
+    mining_referralReward = 0;
+    balanceDisplay.textContent = "Login required.";
+    timerDisplay.textContent = "";
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+  }
+});
+
+</script>
+
+
+
+
+  <!-- Script -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    menuToggle.addEventListener("click", () => {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    });
+  </script>
+
+
+<script>
+// Simple device helper
+function getDeviceType() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera || "";
+  const isAndroid = /Android/i.test(ua);
+  // iOS detection covers iPhone/iPad/iPod and iOS 13+ iPadOS
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || 
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  return { isAndroid, isIOS };
+}
+</script>
+
+<script>
+let tonConnect = null;
+let tonConnectUI = null;
+
+// Initialize TON Connect (called lazily for Android)
+function initTonConnect() {
+  if (tonConnect) return tonConnect;
+
+  // App metadata (used by wallets)
+  tonConnect = new TON_CONNECT.TonConnect({
+
+manifestUrl: 'https://ohtexchange.netlify.app/tonconnect-manifest.json'
+
+  });
+
+  // Optional UI helper
+  const uiHost = document.getElementById('tonconnect-ui');
+  if (uiHost && window.TON_CONNECT_UI) {
+    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+      manifestUrl: 'https://ohtexchange.netlify.app/tonconnect-manifest.json',
+      buttonRootId: 'tonconnect-ui' // This creates a connect button if you show the div
+    });
+  }
+
+  return tonConnect;
+}
+</script>
+
+<script>
+function openTonConfirm() {
+  const { isAndroid, isIOS } = getDeviceType();
+
+  // Update modal fee text as before
+  document.getElementById("tonConfirmModal").style.display = "flex";
+  const feeText = document.querySelector(".ton-text");
+  if (feeText) {
+    feeText.innerHTML = `
+      ⚠️ Make sure you have <strong>${isAndroid ? 'a TON wallet supporting TON Connect' : 'Tonkeeper Wallet'}</strong> installed on your device.<br><br>
+      ⚠️ A <strong>network fee of ${tonFee} TON(GRAM)</strong> is required to process this withdrawal.
+    `;
+  }
+}
+
+// Close/continue handlers unchanged
+document.getElementById("tonCloseBtn").onclick = () => {
+  document.getElementById("tonConfirmModal").style.display = "none";
+};
+
+document.getElementById("tonContinueBtn").onclick = () => {
+  document.getElementById("tonConfirmModal").style.display = "none";
+  buyProduct(); // branch inside
+};
+
+// Main dispatcher
+async function buyProduct() {
+  const address = document.getElementById("address").value.trim();
+  const amount = parseFloat(amountInput.value);
+  if (!address) return alert("Enter your TON (GRAM) address.");
+  if (!amount || isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
+  if (amount > maxBalance) return alert("Insufficient balance.");
+
+  // Show spinner
+  spinner.style.display = "flex";
+  gasFeeDiv.style.display = "none";
+
+  const { isAndroid, isIOS } = getDeviceType();
+
+  try {
+    if (isIOS) {
+      // iPhone/iPad: Keep your existing Tonkeeper universal link flow
+      const tonAmountToSend = tonFee;
+      const message = "Network gas fee";
+      const tonNano = tonAmountToSend * 1e9;
+
+      const tonUniversalLink =
+`https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent(message)}`;
+
+      const isTelegram = typeof Telegram !== "undefined" && Telegram.WebApp;
+      if (isTelegram) {
+        Telegram.WebApp.openLink(tonUniversalLink);
+      } else {
+        window.location.href = tonUniversalLink;
+      }
+
+      // Fallback panel if not opened
+      setTimeout(() => {
+        spinner.style.display = "none";
+        gasFeeDiv.innerHTML = `
+          <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
+            If your TON wallet didn’t open automatically, please send 
+            <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
+            <strong style="color:#00ccff;">${merchantAddress}</strong> to process Withdrawal 
+          </p>
+          <a href="${tonUniversalLink}" target="_blank" class="ton-link" 
+             style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
+            🔗 Open in Tonkeeper
+          </a>
+          <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+        `;
+        gasFeeDiv.style.display = "block";
+      }, 4000);
+
+    } else if (isAndroid) {
+      // Android: Use TON Connect
+      const comment = "Network gas fee";
+      await androidTonConnectTransfer({
+        to: merchantAddress,
+        tonAmount: tonFee,
+        comment
+      });
+
+      // When wallet takes over, hide spinner and show PIN to proceed with internal record
+      spinner.style.display = "none";
+      openWithdrawPasswordModal();
+    } else {
+      // Desktop or unknown: default to universal link (like iOS fallback)
+      const tonAmountToSend = tonFee;
+      const message = "Network gas fee";
+      const tonNano = tonAmountToSend * 1e9;
+
+      const tonUniversalLink =
+`https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent(message)}`;
+
+      window.open(tonUniversalLink, "_blank");
+      spinner.style.display = "none";
+      gasFeeDiv.innerHTML = `
+        <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
+          If your TON wallet didn’t open automatically, please send 
+          <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
+          <strong style="color:#00ccff;">${merchantAddress}</strong> to process Withdrawal 
+        </p>
+        <a href="${tonUniversalLink}" target="_blank" class="ton-link" 
+           style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
+          🔗 Open in Tonkeeper
+        </a>
+        <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+      `;
+      gasFeeDiv.style.display = "block";
+    }
+
+  } catch (err) {
+    console.error("TON flow failed:", err);
+    spinner.style.display = "none";
+    alert("Unable to open wallet. Try again or use the manual method. To ensure a smooth withdrawal experience, we recommend: ‎1. Using an iPhone (iOS) device, where TON wallet integration has shown better compatibility in some cases. ‎2. Using the latest version of Telegram. ‎3. Updating your Android device to the latest available version.");
+    // Offer manual panel
+    const tonNano = tonFee * 1e9;
+    const tonUniversalLink =
+`https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent(message)}`;
+    gasFeeDiv.innerHTML = `
+      <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
+        You can also send <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
+        <strong style="color:#00ccff;">${merchantAddress}</strong>
+      </p>
+      <a href="${tonUniversalLink}" target="_blank" class="ton-link" 
+         style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
+        🔗 Open in Tonkeeper
+      </a>
+      <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+    `;
+    gasFeeDiv.style.display = "block";
+  }
+}
+</script>
+
+<script> /**********************************************
+ * CONFIG
+ **********************************************/
+const merchantAddress = "UQA_XTik4qqp8Ondqfd8CBembbu7dMzqxjTHrfD24_kHHx64";
+
+let maxBalance = 0;
+let user = null;
+let tonFee = 1; // default, replaced by admin value
+
+const amountInput = document.getElementById("amount");
+const availableBalanceDisplay = document.getElementById("available-balance");
+const gasFeeDiv = document.getElementById("gas-fee");
+const spinner = document.getElementById("loading-spinner");
+
+
+/**********************************************
+ * LOAD CACHED BALANCE
+ **********************************************/
+function loadCachedBalance() {
+  const cached = localStorage.getItem("userData");
+  if (!cached) return;
+
+  try {
+    const data = JSON.parse(cached);
+    maxBalance = parseFloat(data?.fundingBalance || 0);
+    updateAvailableBalanceDisplay(maxBalance);
+  } catch (e) {
+    console.warn("Could not parse cached user data:", e);
+  }
+}
+
+function updateAvailableBalanceDisplay(balance) {
+  if (balance < 0) balance = 0;
+  availableBalanceDisplay.textContent = balance.toFixed(2);
+}
+
+loadCachedBalance();
+
+
+/**********************************************
+ * LOAD TON FEE (ADMIN CONTROLLED)
+ **********************************************/
+async function loadTonFee() {
+  try {
+    const doc = await firebaseDB
+      .collection("admin")
+      .doc("settings")
+      .collection("tonConfig")
+      .doc("fee")
+      .get();
+
+    if (doc.exists) {
+      tonFee = parseFloat(doc.data().tonFee) || 1;
+    }
+
+    // Show updated fee in UI
+    gasFeeDiv.innerHTML = `⚡ Network Gas Fee: <strong>${tonFee} TON(GRAM). </strong>`;
+
+  } catch (err) {
+    console.error("Failed to load TON fee:", err);
+  }
+}
+
+
+/**********************************************
+ * FIREBASE USER LISTENER
+ **********************************************/
+firebaseAuth.onAuthStateChanged(async (currentUser) => {
+  if (!currentUser) return;
+
+  user = currentUser;
+
+  try {
+    const doc = await firebaseDB.collection("users").doc(user.uid).get();
+
+    if (doc.exists) {
+      const data = doc.data();
+      maxBalance = parseFloat(data?.fundingBalance || 0);
+
+      updateAvailableBalanceDisplay(maxBalance);
+
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          ...(JSON.parse(localStorage.getItem("userData") || "{}")),
+          fundingBalance: maxBalance,
+        })
+      );
+    }
+
+    await loadTonFee(); // load admin-defined ton fee
+
+  } catch (err) {
+    console.error("Error fetching balance:", err);
+  }
+});
+
+
+/**********************************************
+ * AMOUNT INPUT LISTENER
+ **********************************************/
+amountInput.addEventListener("input", () => {
+  const typed = parseFloat(amountInput.value) || 0;
+
+  if (typed > maxBalance) {
+    availableBalanceDisplay.textContent = "Insufficient funds";
+    availableBalanceDisplay.style.color = "#ff5555";
+  } else {
+    availableBalanceDisplay.style.color = "";
+    updateAvailableBalanceDisplay(maxBalance - typed);
+  }
+
+  gasFeeDiv.style.display = typed > 0 ? "block" : "none";
+});
+
+
+function setMaxAmount() {
+  amountInput.value = maxBalance;
+  updateAvailableBalanceDisplay(0);
+  gasFeeDiv.style.display = "block";
+}
+
+/**********************************************
+ * PAY CONFIRMATION (AFTER PIN)
+ **********************************************/
+async function confirmPayment() {
+  if (!user) return alert("You must be logged in.");
+
+  const address = document.getElementById("address").value.trim();
+  const amount = parseFloat(amountInput.value);
+  const email = user.email;
+
+  if (!address) return alert("Enter your TON (GRAM) address.");
+  if (!amount || isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
+  if (amount > maxBalance) return alert("Insufficient balance.");
+
+  try {
+    const newBalance = maxBalance - amount;
+
+    await firebaseDB.collection("users").doc(user.uid).update({
+      fundingBalance: newBalance,
+    });
+
+    maxBalance = newBalance;
+    updateAvailableBalanceDisplay(newBalance);
+
+    // Update local storage
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({
+        ...(JSON.parse(localStorage.getItem("userData") || "{}")),
+        fundingBalance: newBalance,
+      })
+    );
+
+    // Record withdrawal request
+    await firebaseDB.collection("withdrawals").add({
+      userId: user.uid,
+      email,
+      address,
+      amount,
+      currency: "USDT",
+      method: "TON",
+      status: "in_progress",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      expiryAt: firebase.firestore.Timestamp.fromDate(
+        new Date(Date.now() + 24 * 60 * 60 * 1000)
+      ),
+    });
+
+    window.location.href = "successfully.html";
+
+  } catch (err) {
+    console.error("Payment confirm error:", err);
+    alert("Something went wrong. Please try again.");
+  }
+}
+
+
+/**********************************************
+ * PASSWORD HASH
+ **********************************************/
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+
+/**********************************************
+ * WITHDRAW PIN MODAL SYSTEM
+ **********************************************/
+function openWithdrawPasswordModal() {
+  document.getElementById("withdrawPasswordModal").style.display = "flex";
+}
+
+document.getElementById("cancelWithdrawPassword").onclick = () => {
+  document.getElementById("withdrawPasswordModal").style.display = "none";
+};
+
+document.getElementById("confirmWithdrawPassword").onclick = async () => {
+  const password = document.getElementById("withdrawPasswordInput").value.trim();
+  const msg = document.getElementById("withdrawPasswordMessage");
+
+  msg.textContent = "";
+
+  if (!password) {
+    msg.style.color = "#ff4444";
+    msg.textContent = "Enter your Transaction PIN.";
+    return;
+  }
+
+  if (!user) {
+    msg.style.color = "#ff4444";
+    msg.textContent = "You are not logged in.";
+    return;
+  }
+
+  try {
+    const userDoc = await firebaseDB.collection("users").doc(user.uid).get();
+    const userData = userDoc.data();
+
+    if (!userData.transactionPassword) {
+      msg.style.color = "#ff4444";
+      msg.textContent = "You haven’t set PIN.";
+      return setTimeout(() => (window.location.href = "setpin.html"), 1500);
+    }
+
+    const inputHash = await sha256(password);
+
+    if (inputHash !== userData.transactionPassword) {
+      msg.style.color = "#ff4444";
+      msg.textContent = "Incorrect PIN.";
+      return;
+    }
+
+    msg.style.color = "#00ff99";
+    msg.textContent = "PIN correct ✓ Processing...";
+
+    setTimeout(() => {
+      document.getElementById("withdrawPasswordModal").style.display = "none";
+      confirmPayment();
+    }, 1000);
+
+  } catch (err) {
+    msg.style.color = "#ff4444";
+    msg.textContent = "Error: " + err.message;
+  }
+};
+
+
+/**********************************************
+ * FORGOT PASSWORD FLOW
+ **********************************************/
+document.getElementById("withdrawForgotPassword").onclick = () => {
+  document.getElementById("forgotWithdrawPasswordModal").style.display = "flex";
+  document.getElementById("forgotWithdrawLoginPassword").value = "";
+  document.getElementById("forgotWithdrawError").textContent = "";
+};
+
+document.getElementById("cancelForgotWithdraw").onclick = () => {
+  document.getElementById("forgotWithdrawPasswordModal").style.display = "none";
+};
+
+document.getElementById("confirmForgotWithdraw").onclick = async () => {
+  const loginPass = document.getElementById("forgotWithdrawLoginPassword").value.trim();
+  const errorBox = document.getElementById("forgotWithdrawError");
+
+  if (!loginPass) {
+    errorBox.textContent = "Enter your login password.";
+    return;
+  }
+
+  if (!user) {
+    errorBox.textContent = "You are not logged in.";
+    return;
+  }
+
+  try {
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      loginPass
+    );
+
+    await user.reauthenticateWithCredential(credential);
+
+    document.getElementById("forgotWithdrawPasswordModal").style.display = "none";
+    alert("Login verified. You can now set a new PIN.");
+    window.location.href = "setpin.html";
+
+  } catch (err) {
+    errorBox.textContent = "Incorrect login password.";
+  }
+};
+
+
+
+
+</script>
+
+<script>
+// Request a TON transfer via TON Connect (Android)
+async function androidTonConnectTransfer({ to, tonAmount, comment }) {
+  initTonConnect();
+
+  // Ensure connected
+  if (!tonConnect.connected) {
+    // Show UI connect modal if available, else fall back to connect()
+    if (tonConnectUI) {
+      // Reveal the UI so the user can pick a wallet
+      document.getElementById('tonconnect-ui').style.display = 'block';
+      await tonConnectUI.connectWallet();
+      // Hide again to keep your UI clean
+      document.getElementById('tonconnect-ui').style.display = 'none';
+    } else {
+      await tonConnect.connect();
+    }
+  }
+
+  // Convert TON to nanoTON
+  const amountNano = BigInt(Math.round(tonAmount * 1e9));
+
+  // Build request (v2 format)
+  const tx = {
+    validUntil: Math.floor(Date.now() / 1000) + 300, // 5 min
+    messages: [
+      {
+        address: to,
+        amount: amountNano.toString(),
+        payload: comment ? TON_CONNECT.toBase64(new TextEncoder().encode(comment)) : undefined
+      }
+    ]
+  };
+
+  // Send
+  await tonConnect.sendTransaction(tx);
+}
+</script>
+
+</body>
+</html>

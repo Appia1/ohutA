@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+
+<title>Send Funds</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* --------------------------------------------------
+   BASE DARK MODE (DEFAULT)
+-------------------------------------------------- */
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
+.container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Headings */
+h2, .heading {
+  color: white;
+}
+
+/* Labels */
+label {
+  display: block;
+
+margin: 10px;
+
+  margin-bottom: 8px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Inputs */
+input {
+  height: 30px;
+  width: 95%;
+  transition: border 0.2s ease;
+ 
+  background-color: #262626;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(0, 191, 255, 1);
+  color: black;
+  border: none;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover {
+  background-color: grey;
+}
+
+/* Messages */
+.message { text-align: center; margin-top: 15px; font-size: 14px; }
+.error { color: #ff5555; }
+.success { color: #00ff99; }
+
+/* Navbar */
+.headContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.navbar {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid #333;
+  position: relative;
+}
+
+.back-button,
+.history-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+}
+
+.heading {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------
+   LIGHT MODE OVERRIDES
+-------------------------------------------------- */
+body.light-mode {
+  background-color: white;
+  color: #000;
+}
+
+body.light-mode label {
+  color: #444;
+}
+
+body.light-mode input {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: black;
+}
+
+body.light-mode .navbar {
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+}
+
+body.light-mode .heading {
+  color: black;
+}
+
+body.light-mode .back-button,
+body.light-mode .history-button {
+  color: black;
+background-color: transparent;
+}
+
+body.light-mode button {
+  background-color: black;
+  color: white;
+}
+body.light-mode button:hover {
+  background-color: grey;
+}
+
+body.light-mode .success { color: green; }
+body.light-mode .error { color: red; }
+
+/* Modal Light Mode */
+/*body.light-mode .modal {
+  background-color: rgba(0,0,0,0.5);
+}
+
+body.light-mode .modal-content {
+  background-color: white;
+  color: black;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+body.light-mode .modal input {
+  background-color: #fafafa;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+body.light-mode .modal input::placeholder {
+color: black;
+}
+
+body.light-mode #forgotPassword {
+  color: #007bff !important;
+}
+
+/* Forgot Password modal */
+/*body.light-mode #forgotPasswordModal .modal-content {
+  background-color: white;
+  color: black;
+}
+body.light-mode #forgotPasswordModal input {
+  background-color: #fafafa;
+  border: 1px solid #ccc;
+  color: black;
+}*/
+body.light-mode #forgotError {
+  color: red;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);   /* Dark background */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;                 /* Always above everything */
+}
+.modal .modal-content {
+background: black; 
+padding:20px;
+border-radius:10px; 
+width: 300px;
+z-index: 1000;
+color: white;
+  animation: popupShow .3s ease;
+}
+
+@keyframes popupShow {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+body.light-mode .modal .modal-content {
+background-color : white;
+
+}
+
+ .modal-content input::placeholder{
+font-weight: bold;
+font-size: 20px;
+color: rgba(0, 191, 255, 1);
+}
+
+.modal-content input{
+width: 50%;margin-left: 25%;padding:10px;border-radius:6px;border:1px solid #444; font-size: 14px; background:#222;color:#fff; text-align: center;
+}
+body.light-mode .modal-content input {
+background:#eee;
+border: 0px;
+color: black;
+
+}
+
+body.light-mode .modal-content input::placeholder{
+color:black;
+}
+body.light-mode .modal-content #withdrawPasswordMessage, 
+body.light-mode .modal-content #forgotWithdrawError {
+color: red;
+}
+
+.modal-content #withdrawPasswordMessage, #forgotWithdrawError { color:red; text-align:center; margin-top:10px; font-size:14px;}
+
+body.light-mode h3,
+body.light-mode p {
+  color: #222 !important;
+}
+
+body.light-mode .error {
+  color: red !important;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="headContainer">
+  <nav class="navbar">
+    <a href="funding.html"><button class="back-button"><i class="fas fa-arrow-left"></i></button></a>
+    <div class="heading">Send Funds</div>
+ <a href="History.html"><button class="history-button"><i class="fas fa-history"></i></button></a>
+  </nav>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+
+ <div id="message" class="message"></div>
+
+  <label for="recipientEmail">Recipient Email</label>
+  <input type="email" id="recipientEmail" placeholder="Enter recipient's email"style="margin-bottom: 30px;">
+
+  <label for="amount"style="position: absolute; margin: 10px;">Amount (USDT)</label>
+<div id="afterBalance" style="text-align: right; font-size:13px; margin:10px;"></div>
+  <input type="number" id="amount" min="0.01" step="0.01" placeholder="Enter amount"style="margin-bottom: 30px;">
+
+  <button id="nextBtn">Next</button>
+
+</div>
+
+<!-- CONFIRM SEND PASSWORD MODAL -->
+<div id="confirmPasswordModal" class="modal">
+  <div class="modal-content">
+    <h3 style="text-align: center; font-size: 20px">Confirm Transfer</h3>
+    <div id="confirmPasswordDetails"></div>
+
+  <label for="password" style="text-align: center; font-size: 12px;"> Enter Transaction PIN </label>
+
+    <input type="password" id="passwordInput" placeholder="- - - - -">
+
+<p id="confirmPinError" class="error" style="text-align:center; padding:0px; margin:0px;"></p>
+
+    <p id="forgotPassword" style="font-size:14px;text-align: right; margin-right:20px; cursor:pointer;color: rgba(0, 191, 255, 1);">
+      Forgot PIN?
+    </p>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button id="cancelConfirmPassword">Cancel</button>
+      <button id="confirmTransferPassword">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT SEND PASSWORD MODAL -->
+<div id="forgotPasswordModal" class="modal">
+  <div class="modal-content">
+    <h3 style="text-align: center; font-size: 20px">Reset Transaction PIN</h3>
+    <p style="color:gray;font-size:14px; text-align: center;">Enter your login password </p>
+
+    <input type="password" id="forgotLoginPassword" placeholder="- - - - - ">
+
+    <p id="forgotError" class="error" style="margin-top:8px; text-align: center;"></p>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button id="cancelForgot">Cancel</button>
+      <button id="confirmForgot">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script>
+
+<!-- THEME TOGGLE -->
+<script src="theme-toggle.js"></script>
+
+<script>
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ============================================================
+      GLOBAL VARIABLES
+============================================================ */
+let currentUser = null;
+let transferData = {};
+let userBalance = 0;
+
+const BAL_CACHE_KEY = "userData";
+
+/* ============================================================
+      INSTANT LOCAL STORAGE BALANCE (LIKE WITHDRAW PAGE)
+============================================================ */
+function loadCachedBalance() {
+  const cached = localStorage.getItem(BAL_CACHE_KEY);
+  if (!cached) return;
+
+  try {
+    const data = JSON.parse(cached);
+    userBalance = parseFloat(data?.fundingBalance || 0);
+    updateAfterBalance(); // update UI immediately
+  } catch (e) {
+    console.warn("Cached balance error:", e);
+  }
+}
+
+// Load cached instantly
+loadCachedBalance();
+
+/* ============================================================
+      LIVE FIREBASE BALANCE SYNC (LIKE WITHDRAW PAGE)
+============================================================ */
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+  if (!user) return;
+
+  try {
+    const doc = await db.collection("users").doc(user.uid).get();
+
+    if (doc.exists) {
+      userBalance = parseFloat(doc.data().fundingBalance || 0);
+
+      // Update UI
+      updateAfterBalance();
+
+      // Update cache
+      const cached = localStorage.getItem(BAL_CACHE_KEY);
+      let updatedData = {};
+
+      try {
+        updatedData = cached ? JSON.parse(cached) : {};
+      } catch {
+        updatedData = {};
+      }
+
+      localStorage.setItem(
+        BAL_CACHE_KEY,
+        JSON.stringify({
+          ...updatedData,
+          fundingBalance: userBalance
+        })
+      );
+    }
+  } catch (error) {
+    console.error("Error refreshing balance:", error);
+  }
+});
+
+/* ============================================================
+      SHA-256 HASH FUNCTION
+============================================================ */
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+/* ============================================================
+      UPDATE BALANCE AFTER INPUT
+============================================================ */
+function updateAfterBalance() {
+  const amount = parseFloat(document.getElementById("amount").value);
+  const afterBalanceEl = document.getElementById("afterBalance");
+  const msg = document.getElementById("message");
+
+  msg.innerHTML = "";
+
+  if (isNaN(amount) || amount <= 0) {
+    afterBalanceEl.style.color = "#ff7200";
+    afterBalanceEl.textContent =
+      "Bal. : " + userBalance.toFixed(2) + " USDT";
+    return;
+  }
+
+  if (amount > userBalance) {
+    afterBalanceEl.style.color = "red";
+    afterBalanceEl.textContent = "Insufficient funds";
+    return;
+  }
+
+  const after = userBalance - amount;
+
+  afterBalanceEl.style.color = "green";
+  afterBalanceEl.textContent =
+    "Bal. : " + after.toFixed(2) + " USDT";
+}
+
+document.getElementById("amount").addEventListener("input", updateAfterBalance);
+
+/* ============================================================
+      NEXT BUTTON (OPEN CONFIRM MODAL)
+============================================================ */
+document.getElementById("nextBtn").addEventListener("click", () => {
+  const recipientEmail = document
+    .getElementById("recipientEmail")
+    .value.trim()
+    .toLowerCase();
+
+  const amount = parseFloat(document.getElementById("amount").value);
+  const msg = document.getElementById("message");
+
+  msg.innerHTML = "";
+
+  if (!recipientEmail || isNaN(amount) || amount <= 0) {
+    msg.innerHTML = "<p class='error'>Enter a valid email and amount.</p>";
+    return;
+  }
+
+  if (recipientEmail === currentUser?.email?.toLowerCase()) {
+    msg.innerHTML = "<p class='error'>You cannot send funds to yourself.</p>";
+    return;
+  }
+
+  if (amount > userBalance) {
+    msg.innerHTML = "<p class='error'>Insufficient funds.</p>";
+    return;
+  }
+
+  transferData = { recipientEmail, amount };
+
+  document.getElementById("confirmPasswordDetails").innerHTML = `
+    <p style="color: grey; text-align: left;">
+      Send <strong>${amount.toFixed(2)} USDT</strong> to 
+      <strong>${recipientEmail}</strong>
+    </p>`;
+
+  document.getElementById("confirmPinError").textContent = "";
+  document.getElementById("message").innerHTML = "";
+
+  document.getElementById("confirmPasswordModal").style.display = "flex";
+});
+
+/* ============================================================
+      CANCEL CONFIRM PASSWORD MODAL
+============================================================ */
+document
+  .getElementById("cancelConfirmPassword")
+  .addEventListener("click", () => {
+    document.getElementById("confirmPasswordModal").style.display = "none";
+    document.getElementById("confirmPinError").textContent = "";
+    document.getElementById("message").innerHTML = "";
+  });
+
+/* ============================================================
+      CONFIRM TRANSFER PIN
+============================================================ */
+document
+  .getElementById("confirmTransferPassword")
+  .addEventListener("click", async () => {
+    const password = document.getElementById("passwordInput").value.trim();
+    const pinError = document.getElementById("confirmPinError");
+
+    pinError.textContent = "";
+
+    if (!password) {
+      pinError.textContent = "Enter your PIN.";
+      return;
+    }
+
+    const msg = document.getElementById("message");
+    msg.innerHTML = "<p>Verifying password...</p>";
+    document.getElementById("confirmPasswordModal").style.display = "none";
+
+    try {
+      const senderRef = db.collection("users").doc(currentUser.uid);
+      const senderDoc = await senderRef.get();
+      const senderData = senderDoc.data();
+
+      if (!senderData.transactionPassword) {
+        alert("You havenÃ¢ÂÂt set Transaction PIN yet.");
+        return (location.href = "setpin.html");
+      }
+
+      const inputHash = await sha256(password);
+
+      if (inputHash !== senderData.transactionPassword) {
+        msg.innerHTML = "";
+        pinError.textContent = "Incorrect PIN.";
+        document.getElementById("confirmPasswordModal").style.display = "flex";
+        return;
+      }
+
+      if (transferData.amount > userBalance) {
+        msg.innerHTML = "";
+        pinError.textContent = "Insufficient funds.";
+        document.getElementById("confirmPasswordModal").style.display = "flex";
+        return;
+      }
+
+      const recipientSnap = await db
+        .collection("users")
+        .where("email", "==", transferData.recipientEmail)
+        .get();
+
+      if (recipientSnap.empty) {
+        msg.innerHTML = "";
+        pinError.textContent = "Recipient not found.";
+        document.getElementById("confirmPasswordModal").style.display = "flex";
+        return;
+      }
+
+      const recipientDoc = recipientSnap.docs[0];
+      const recipientId = recipientDoc.id;
+      const recipientData = recipientDoc.data();
+
+      await db.runTransaction(async (t) => {
+        const newSenderBalance = userBalance - transferData.amount;
+        const newRecipientBalance =
+          (recipientData.fundingBalance || 0) + transferData.amount;
+
+        const timestamp = new Date();
+        const txnId = db.collection("ids").doc().id;
+
+        t.update(senderRef, { fundingBalance: newSenderBalance });
+        t.update(db.collection("users").doc(recipientId), {
+          fundingBalance: newRecipientBalance
+        });
+
+        t.set(senderRef.collection("transfers").doc(txnId), {
+          transactionId: txnId,
+          direction: "Sent",
+          amount: transferData.amount,
+          balanceAfter: newSenderBalance,
+          timestamp,
+          type: "funding",
+          to: transferData.recipientEmail
+        });
+
+        t.set(
+          db.collection("users").doc(recipientId).collection("transfers").doc(txnId),
+          {
+            transactionId: txnId,
+            direction: "Received",
+            amount: transferData.amount,
+            balanceAfter: newRecipientBalance,
+            timestamp,
+            type: "funding",
+            from: currentUser.email
+          }
+        );
+      });
+
+      // Update local balance + cache immediately
+      userBalance -= transferData.amount;
+
+      localStorage.setItem(
+        BAL_CACHE_KEY,
+        JSON.stringify({
+          fundingBalance: userBalance
+        })
+      );
+
+      location.href = "sendSuccessful.html";
+    } catch (err) {
+      msg.innerHTML = "";
+      pinError.textContent = "Error: " + err.message;
+      document.getElementById("confirmPasswordModal").style.display = "flex";
+    }
+  });
+
+/* ============================================================
+      FORGOT TRANSACTION PIN
+============================================================ */
+document.getElementById("forgotPassword").addEventListener("click", () => {
+  document.getElementById("forgotPasswordModal").style.display = "flex";
+  document.getElementById("forgotLoginPassword").value = "";
+  document.getElementById("forgotError").textContent = "";
+});
+
+document.getElementById("cancelForgot").addEventListener("click", () => {
+  document.getElementById("forgotPasswordModal").style.display = "none";
+});
+
+document.getElementById("confirmForgot").addEventListener("click", async () => {
+  const loginPass = document
+    .getElementById("forgotLoginPassword")
+    .value.trim();
+  const errorBox = document.getElementById("forgotError");
+
+  if (!loginPass) {
+    errorBox.textContent = "Enter your login password.";
+    return;
+  }
+
+  try {
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      currentUser.email,
+      loginPass
+    );
+
+    await currentUser.reauthenticateWithCredential(credential);
+
+    document.getElementById("forgotPasswordModal").style.display = "none";
+    alert("Login verified. You can now set a new send password.");
+    location.href = "setpin.html";
+  } catch (error) {
+    errorBox.textContent = "Incorrect password. Try again.";
+  }
+});
+
+
+
+</script>
+
+</body>
+</html>

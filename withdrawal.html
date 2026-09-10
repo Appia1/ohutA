@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="HTML, CSS">
+  <meta name="description" content="Withdraw Funds">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Withdrawal</title>
+
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+
+    body {
+      background-color: black;
+      color: #f1f1f1;
+      font-family: 'Inter', sans-serif;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: black;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #262626;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+height: 40px;
+      transition: border 0.2s ease;
+    }
+
+input[type="text"],
+    input[type="number"] {
+height: 30px;
+width: 95%;
+
+transition: border 0.2s ease;
+
+background-color: #262626;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+
+}
+
+    select:focus,
+    input:focus {
+      border-color: #00ccff;
+    }
+
+    .address-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .saved-address {
+      color: #00ccff;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .amount-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .amount-bar input {
+      flex: 1;
+    }
+
+    .all-btn {
+      background-color: rgba(0, 191, 255, 1);
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: 600;
+      font-size: 13px;
+      transition: opacity 0.2s ease;
+    }
+
+    .all-btn:hover {
+      opacity: 0.9;
+    }
+
+    .withdraw-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background-color: rgba(0, 191, 255, 1);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .withdraw-btn:hover {
+      background: linear-gradient(90deg, #00ccff, #00ffe7);
+    }
+
+    .available-balance {
+      font-size: 13px;
+      color: #bbb;
+      margin-top: 8px;
+    }
+
+    .available-balance span {
+      color: #00ffe7;
+      font-weight: 600;
+    }
+
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+        margin: 20px auto;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+
+
+
+
+
+#process {
+  max-width: 300px;
+  text-align: center;
+  margin: -40px auto;
+      background: black;
+      padding: -30px;
+}
+
+.image-container img {
+  width: 100%;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+h4 {
+  margin-top: 10px;
+  font-size: 22px;
+}
+
+.message {
+  font-size: 14px;
+  margin: 10px 0 30px;
+  color: #ccc;
+}
+
+.buttons button {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: none;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.primary {
+ background-color: rgba(0, 191, 255, 1);
+  color: #000;
+}
+
+.secondary {
+  background-color: rgba(0, 191, 255, 1);
+  color: #000;
+}
+
+/* === Light Mode Overrides === */
+body.light-mode {
+  background-color: white;
+  color: black;
+
+}
+
+body.light-mode .container,
+body.light-mode nav {
+  background-color: white !important;
+  color: black;
+
+}
+
+body.light-mode label,
+body.light-mode .message {
+  color: grey !important;
+}
+
+body.light-mode select,
+body.light-mode input[type="text"],
+body.light-mode input[type="number"] {
+  background-color: #f0f0f0;
+  color: #000;
+  border: none;
+}
+
+body.light-mode .available-balance span {
+  color: #007acc;
+}
+
+body.light-mode .all-btn,
+body.light-mode .withdraw-btn,
+body.light-mode .primary,
+body.light-mode .secondary {
+  background-color: black !important;
+  color: white !important;
+}
+
+body.light-mode .back-button,
+body.light-mode .heading, body.light-mode nav a,
+body.light-mode  .history-button{
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+color: white;
+    }
+
+    .history-button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+nav a {
+text-decoration: none;
+color: red;
+}
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+ <nav class="navbar">
+  <a href="wallet.html">   <button class="back-button">
+      <i class="fas fa-arrow-left"></i>
+     
+    </button></a>
+    <div class="heading"> Withdrawal </div>
+ <a href="withdrawalHistory.html">    <button class="history-button">
+      <i class="fas fa-history"></i>
+    </button> </a>
+  </nav>
+
+</div>
+
+
+<div class="container">
+
+  <!-- Process message (initially hidden) -->
+  <div id="process" style="display: none;">
+    
+ 
+   
+    <div class="image-container">
+      <img src="with.png" alt="Withdrawal">
+    </div>
+
+    <h4>Your funds are on the way!</h4>
+    <p class="message">
+      Your withdrawal is currently under review. We will notify you once your funds have been successfully processed.
+    </p>
+
+    <div class="buttons">
+      <a href="withdrawalHistory.html"><button class="primary">Check in History</button> </a>
+    
+    </div>
+  
+  </div>
+
+  <!-- Wrap the form inside its own container -->
+  <div id="withdrawal-form">
+    <label for="currency">Currency</label>
+    <select id="currency">
+      <option>USDT</option>
+    </select>
+
+    <label for="method">Withdrawal Method</label>
+    <select id="method">
+      <option>Tron (TRC-20)</option>
+    </select>
+
+    <label for="address">
+      Address <!--<span class="saved-address" onclick="loadSavedAddress()">Saved Address</span>-->
+    </label>
+    <input type="text" id="address" placeholder="Enter Address" required />
+
+    <label for="amount">Withdrawal Amount</label>
+    <div class="amount-bar">
+      <input type="number" id="amount" placeholder="Enter Amount" />
+      <button class="all-btn" onclick="setMaxAmount()">ALL</button>
+    </div>
+
+    <div class="available-balance">
+      Available Balance: <span id="available-balance">0.00</span> USDT
+    </div>
+
+    <button class="withdraw-btn" onclick="withdraw()">Withdraw <span id="lockWith" style="float: right;">🔒</span></button>
+  </div>
+
+  <!-- Success message -->
+ <p id="success-msg"></p>
+
+</div>
+
+
+
+<script src="theme-toggle.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase Config -->
+  <script src="firebaseDetails.js"></script>
+
+<script>
+  let maxBalance = 0;
+  let user = null;
+
+  const amountInput = document.getElementById("amount");
+  const availableBalanceDisplay = document.getElementById("available-balance");
+  const successMsg = document.getElementById("success-msg"); // <p> element for messages
+
+  // 💾 Load from localStorage (cached userData)
+  function loadCachedBalance() {
+    const cached = localStorage.getItem("userData");
+    if (!cached) return;
+
+    try {
+      const data = JSON.parse(cached);
+      maxBalance = parseFloat(data?.fundingBalance || 0);
+      updateAvailableBalance(maxBalance);
+    } catch (e) {
+      console.warn("Could not parse cached user data:", e);
+    }
+  }
+
+  // 🧠 Update balance UI
+  function updateAvailableBalance(balance) {
+    availableBalanceDisplay.textContent = balance.toFixed(2);
+  }
+
+  // 📦 Load from cache first
+  loadCachedBalance();
+
+  // 🔐 Firebase auth state
+  firebaseAuth.onAuthStateChanged(async (currentUser) => {
+    if (currentUser) {
+      user = currentUser;
+
+      try {
+        const doc = await firebaseDB.collection("users").doc(user.uid).get();
+
+        if (doc.exists) {
+          const userData = doc.data();
+          maxBalance = parseFloat(userData?.fundingBalance || 0);
+          updateAvailableBalance(maxBalance);
+
+          // 🔄 Update cache with latest Firestore data
+          const cached = localStorage.getItem("userData");
+          let updatedData = {};
+
+          try {
+            updatedData = cached ? JSON.parse(cached) : {};
+          } catch {
+            updatedData = {};
+          }
+
+          localStorage.setItem("userData", JSON.stringify({
+            ...updatedData,
+            fundingBalance: maxBalance
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user balance:", error);
+      }
+    }
+  });
+
+  // ⌨️ Input event: update balance preview
+  amountInput.addEventListener("input", () => {
+    const typedAmount = parseFloat(amountInput.value) || 0;
+    const remaining = maxBalance - typedAmount;
+    updateAvailableBalance(remaining >= 0 ? remaining : 0);
+  });
+
+  // 🧮 Max amount
+  function setMaxAmount() {
+    amountInput.value = maxBalance;
+    updateAvailableBalance(0);
+  }
+
+  // 🏦 Withdraw
+
+async function withdraw() {
+  const address = document.getElementById('address').value.trim();
+  const amount = parseFloat(amountInput.value);
+  const currency = document.getElementById('currency').value;
+  const method = document.getElementById('method').value;
+
+  successMsg.textContent = "";
+
+  if (!user) {
+    alert("You must be logged in to withdraw.");
+    return;
+  }
+
+  if (!address || !amount || isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid address and amount.");
+    return;
+  }
+
+  if (amount > maxBalance) {
+    alert("Insufficient balance.");
+    return;
+  }
+
+  try {
+    // Add withdrawal request
+    await firebaseDB.collection("withdrawals").add({
+      userId: user.uid,
+      email: user.email,
+      address,
+      amount,
+      currency,
+      method,
+      status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // Update user balance in Firestore
+    maxBalance -= amount;
+    await firebaseDB.collection("users").doc(user.uid).update({
+      fundingBalance: maxBalance
+    });
+
+    // Update localStorage
+    const cached = localStorage.getItem("userData");
+    let updatedData = {};
+    try {
+      updatedData = cached ? JSON.parse(cached) : {};
+    } catch {
+      updatedData = {};
+    }
+
+    updatedData.fundingBalance = maxBalance;
+    localStorage.setItem("userData", JSON.stringify(updatedData));
+
+    // Clear inputs
+    document.getElementById('address').value = "";
+    amountInput.value = "";
+
+    updateAvailableBalance(maxBalance);
+
+    // Optional: Show processing UI (if needed)
+    const processDiv = document.getElementById("process");
+    const withdrawalForm = document.getElementById("withdrawal-form");
+    if (processDiv) processDiv.style.display = "block";
+    if (withdrawalForm) withdrawalForm.style.display = "none";
+
+    // ✅ REDIRECT TO SUCCESS PAGE
+    window.location.href = "successfully.html";
+
+  } catch (error) {
+    console.error("Withdrawal Error:", error);
+    alert("Error sending request. Try again.");
+  }
+}
+
+  // 📦 Placeholder for loading saved address
+  function loadSavedAddress() {
+    alert("Load saved address feature not implemented.");
+  }
+</script>
+
+<script>
+  const lockIcon = document.getElementById("lockWith");
+  const withdrawBtn = document.querySelector(".withdraw-btn");
+
+  async function checkWithdrawalLock() {
+    try {
+      const doc = await firebaseDB.collection("settings").doc("withdrawal_control").get();
+      const data = doc.data();
+
+      if (data && data.locked === true) {
+        // Show lock and disable withdrawal
+        lockIcon.style.display = "inline";
+        withdrawBtn.disabled = true;
+        withdrawBtn.style.opacity = 0.5;
+        withdrawBtn.textContent = "Withdrawals Disabled 🔒";
+        withdrawBtn.style.cursor = "not-allowed";
+      } else {
+        // Unlock state
+        lockIcon.style.display = "none";
+        withdrawBtn.disabled = false;
+        withdrawBtn.style.opacity = 1;
+        withdrawBtn.textContent = "Withdraw";
+        withdrawBtn.style.cursor = "pointer";
+      }
+    } catch (error) {
+      console.error("Failed to check withdrawal lock:", error);
+    }
+  }
+
+  // Run on load
+  document.addEventListener("DOMContentLoaded", checkWithdrawalLock);
+</script>
+
+
+</body>
+</html>
+
+
+
+

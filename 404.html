@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Page Not Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin: 0;
+      font-weight: 600;
+      color: #2d3436;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 10px 0 20px;
+      font-weight: 400;
+      color: #636e72;
+    }
+
+    p {
+      color: #636e72;
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+
+    a.button {
+      display: inline-block;
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    a.button:hover {
+      background-color: #2980b9;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 4rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>404</h1>
+  <h2>Page Not Found</h2>
+  <p>Sorry, the page you're looking for doesn’t exist or has been moved.</p>
+  <a href="index.html" class="button">Back to Home</a>
+</body>
+</html>

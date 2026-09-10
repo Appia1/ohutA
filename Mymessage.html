@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notification Icon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    /* Notification icon container */
+    .notification-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .notification-wrapper img {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* Red count badge */
+    .notification-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Notification Icon -->
+  <div class="notification-wrapper" id="notification-icon" title="View Notifications">
+    <img src="https://img.icons8.com/ios-glyphs/30/000000/appointment-reminders.png" alt="Notifications">
+    <span class="notification-count" id="notification-count">0</span>
+  </div>
+
+<div id="debug" style="white-space: pre-wrap; font-family: monospace; color: red; background: #ffecec; padding: 10px;"></div>
+
+
+  <!-- ✅ Firebase SDKs + Notification Logic -->
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, updateDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+const log = (msg) => {
+  const debugDiv = document.getElementById("debug");
+  if (debugDiv) {
+    debugDiv.textContent += `\n${typeof msg === "string" ? msg : JSON.stringify(msg, null, 2)}`;
+  }
+  console.log(msg);
+};
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCQW9VLyn_nfgR27PO-3MEirIbZCWRo4_Q",
+  authDomain: "ohut-d7c8d.firebaseapp.com",
+  databaseURL: "https://ohut-d7c8d-default-rtdb.firebaseio.com",
+  projectId: "ohut-d7c8d",
+  storageBucket: "ohut-d7c8d.appspot.com",
+  messagingSenderId: "916521389173",
+  appId: "1:916521389173:web:5cd1b9b0c87d3bf4f87c3c",
+  measurementId: "G-721RMQFD2K"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const notificationIcon = document.getElementById("notification-icon");
+const notificationCount = document.getElementById("notification-count");
+
+if (!notificationIcon || !notificationCount) {
+  log("❌ Missing notification elements in HTML.");
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    log(`✅ User logged in as: ${user.email}`);
+
+    const messagesRef = collection(db, "messages");
+
+    const q = query(messagesRef, where("to", "in", [user.email, "all"]), where("read", "==", false));
+
+    onSnapshot(q, (snapshot) => {
+      try {
+        const count = snapshot.size;
+        log(`🔔 Unread messages count: ${count}`);
+
+        if (count > 0) {
+          notificationCount.textContent = count;
+          notificationCount.style.display = "inline";
+        } else {
+          notificationCount.style.display = "none";
+        }
+      } catch (err) {
+        log(`❌ Error in onSnapshot: ${err.message}`);
+      }
+    }, (error) => {
+      // <--- This is the new error callback for onSnapshot
+      log(`❌ Firestore onSnapshot error: ${error.message}`);
+    });
+
+    notificationIcon.addEventListener("click", async () => {
+      try {
+        const unreadQuery = query(messagesRef, where("to", "in", [user.email, "all"]), where("read", "==", false));
+        const snapshot = await getDocs(unreadQuery);
+
+        const updatePromises = snapshot.docs.map((docSnap) => {
+          return updateDoc(doc(db, "messages", docSnap.id), { read: true });
+        });
+
+        await Promise.all(updatePromises);
+        notificationCount.style.display = "none";
+        window.location.href = "messages.html";
+      } catch (error) {
+        log(`❌ Error marking messages as read: ${error.message}`);
+      }
+    });
+
+  } else {
+    log("⚠️ User not logged in.");
+  }
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Page</title>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link rel="stylesheet" href="nav.css">
+
+
+
+
+</head>
+<body>
+<div class="container">
+  <div class="profile-card">
+
+  
+<div style="max-width: 400px; display: flex; justify-content:right; align-items: right;">
+<p id="toggle-theme" style="
+  position: relative;
+  top: 10px;
+  right: 0;
+left: 0;
+margin: 0px;
+  font-size: 22px;
+  cursor: pointer;
+text-align: right;
+">
+  🌙
+</p>
+
+</div>
+
+
+    <div class="profile-avatar">
+    <img src="Profile image .png"style="width: 60px; height: auto;"/>  <!--<i class="fa-solid fa-user"></i>-->
+    </div>
+    <h2 id="userName">Loading...</h2>
+    <p id="userEmail">Loading email…</p>
+    <button id="verifyBtn" onclick="window.location.href='Kyc.html'">VERIFY</button>
+  </div>
+
+  <p id="kycRejectionReason"></p>
+
+  <div class="preferences">
+    <div class="pref-row">
+      <span>KYC Status</span>
+      <span id="kycStatusDisplay">Loading...</span>
+    </div>
+    <div class="pref-row">
+      <span>Language</span>
+      <span>English-GB</span>
+    </div>
+
+<button style="width: 100%; background-color: grey; color: black; padding: 10px; font-size: 14px; border-radius: 10px; border: 0px; margin-top: 20px; cursor: pointer;" id="logout-btn"> Logout </button>
+   
+    </div>
+
+
+  </div>
+</div>
+
+<div class="bm">
+  <button class="set">
+    <a href="dashboard.html">
+      <i class="fa fa-home"></i>
+      <span>Home</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Markets.html">
+      <i class="fa fa-chart-line"></i>
+      <span>Market</span>
+    </a>
+  </button>
+
+  <button class="tradeSet">
+    <a href="trade.html">
+      <div class="tradeBtn">
+        <i class="fa fa-long-arrow-up"></i>
+        <i class="fa fa-long-arrow-down"></i>
+      </div>
+      <span>Trade</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="wallet.html">
+      <i class="fa-solid fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+  </button>
+
+  <button class="set active">
+    <a href="Profile.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </button>
+</div>
+
+<style>
+
+:root {
+  --primary: rgba(0, 191, 255, 1);
+  --danger: #ff4d4d;
+  --accent: #ff7200;
+  --bg-dark: #000;
+  --card-dark: #111111;
+  --text-dark: #fff;
+  --muted-dark: #555;
+  --divider-dark: #333;
+
+  --bg-light: #f9f9f9;
+  --card-light: #fff;
+  --text-light: #000;
+  --muted-light: #666;
+  --divider-light: #ddd;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+}
+
+body.light-mode {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+}
+
+.container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 16px;
+}
+
+.profile-card {
+  background: var(--card-dark);
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+body.light-mode .profile-card {
+  background: var(--card-light);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: #ddd;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: white;
+}
+
+#userName {
+  margin: 12px 0 4px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+body.light-mode #userName {
+  color: var(--text-light);
+}
+
+#userEmail {
+  color: var(--muted-dark);
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+body.light-mode #userEmail {
+  color: var(--muted-light);
+}
+
+#verifyBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+#kycRejectionReason {
+  color: var(--danger);
+  font-size: 13px;
+  display: none;
+  margin-top: 5px;
+}
+
+.preferences {
+  background: var(--card-dark);
+  margin-top: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 16px;
+  transition: background 0.3s ease;
+}
+
+body.light-mode .preferences {
+  background: var(--card-light);
+}
+
+.pref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--divider-dark);
+  font-size: 14px;
+  color: var(--muted-dark);
+  cursor: pointer;
+}
+
+body.light-mode .pref-row {
+  color: var(--muted-light);
+  border-bottom: 1px solid var(--divider-light);
+}
+
+/* Bottom Nav */
+
+</style>
+
+
+
+<!-- Firebase SDKs -->
+<script src="theme-toggle.js"></script>
+
+<!-- ==========================
+     PROFILE SCRIPT (v9 compat)
+     ========================== -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="firebaseDetails.js"></script>
+
+<script>
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// ===============================
+//  APPLY KYC BONUS (ASYNC, FIRESTORE)
+// ===============================
+async function applyKycBonus(userId, userData) {
+  try {
+    // 1️⃣ Check admin setting
+    const settingsSnap = await db.collection("settings").doc("kycBonus").get();
+    const bonusActive = settingsSnap.exists ? settingsSnap.data().kycBonusActive : true;
+    if (!bonusActive) return;
+
+    // 2️⃣ Only if verified
+    if (userData.kycStatus !== "verified") return;
+
+    // 3️⃣ Prevent double bonus
+    if (userData.receivedKycBonus === true) return;
+
+    // 4️⃣ Add $10
+    const newBalance = (userData.tradingBalance || 0) + 10;
+    await db.collection("users").doc(userId).update({
+      tradingBalance: newBalance,
+      receivedKycBonus: true
+    });
+
+    userData.tradingBalance = newBalance;
+    userData.receivedKycBonus = true;
+    localStorage.setItem("userData", JSON.stringify(userData));
+
+    console.log("🎉 KYC bonus applied!");
+
+    // 5️⃣ Show popup
+    if (!localStorage.getItem("bonusShown")) {
+      showCongratsPopup();
+      localStorage.setItem("bonusShown", "true");
+    }
+
+  } catch (err) {
+    console.error("KYC bonus error:", err);
+  }
+}
+
+// ===============================
+//  SHOW CONGRATS POPUP
+// ===============================
+function showCongratsPopup() {
+  const popup = document.getElementById("congratsPopup");
+  if (!popup) return;
+
+  popup.style.display = "block";
+
+  const closeBtn = popup.querySelector(".close");
+  if (closeBtn) closeBtn.addEventListener("click", () => popup.style.display = "none");
+  popup.addEventListener("click", (e) => { if (e.target === popup) popup.style.display = "none"; });
+}
+
+// ===============================
+//  POPULATE PROFILE UI
+// ===============================
+function populateUserUI(userData) {
+  document.getElementById("userName").textContent = userData.fullName || "No Name";
+  document.getElementById("userEmail").textContent = userData.email || "";
+
+  const kycDisplay = document.getElementById("kycStatusDisplay");
+  const kycReason = document.getElementById("kycRejectionReason");
+  const verifyBtn = document.getElementById("verifyBtn");
+
+  const kycStatus = (userData.kycStatus || "not_submitted").toLowerCase();
+  kycReason.style.display = "none";
+
+  switch (kycStatus) {
+    case "verified":
+    case "approved":
+      kycDisplay.textContent = "Verified";
+      kycDisplay.style.color = "green";
+      if (verifyBtn) {
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = "Verified";
+        verifyBtn.style.background = "#4caf50";
+      }
+      break;
+
+    case "rejected":
+      kycDisplay.textContent = "Declined";
+      kycDisplay.style.color = "red";
+      if (userData.kycReviewReason) {
+        kycReason.textContent = `Reason: ${userData.kycReviewReason}`;
+        kycReason.style.display = "block";
+      }
+      break;
+
+    case "pending":
+      kycDisplay.textContent = "Pending Verification";
+      kycDisplay.style.color = "orange";
+      break;
+
+    default:
+      kycDisplay.textContent = "Not Verified";
+      kycDisplay.style.color = "gray";
+      break;
+  }
+
+  // Optional: show trading balance immediately
+  const balanceElem = document.getElementById("tradingBalance");
+  if (balanceElem) balanceElem.textContent = `$${(userData.tradingBalance || 0).toFixed(2)}`;
+}
+
+// ===============================
+//  LOAD CACHED DATA FIRST
+// ===============================
+const cachedData = localStorage.getItem("userData");
+if (cachedData) {
+  try {
+    populateUserUI(JSON.parse(cachedData));
+  } catch (e) { console.warn("Error parsing cached user data:", e); }
+}
+
+// ===============================
+//  AUTH STATE LISTENER
+// ===============================
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    document.getElementById("userName").textContent = "Guest";
+    document.getElementById("userEmail").textContent = "";
+    return;
+  }
+
+  try {
+    const docSnap = await db.collection("users").doc(user.uid).get();
+    if (!docSnap.exists) return;
+
+    const userData = docSnap.data();
+
+    // ⭐ Apply KYC bonus in the background, don't wait for UI
+    applyKycBonus(user.uid, userData);
+
+    // Update UI immediately
+    populateUserUI(userData);
+
+    // Save local cache
+    localStorage.setItem("userData", JSON.stringify(userData));
+
+  } catch (err) {
+    console.error("Fetch user error:", err);
+  }
+});
+
+// ===============================
+//  LOGOUT BUTTON
+// ===============================
+document.addEventListener("DOMContentLoaded", function () {
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await auth.signOut();
+        localStorage.clear();
+        alert("You have been signed out.");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Failed to logout");
+        console.error(error);
+      }
+    });
+  }
+});
+</script>
+
+
+
+
+</body>
+</html>

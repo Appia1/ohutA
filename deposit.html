@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="keywords" content="HTML, CSS">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Deposit Crypto</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+
+/*nav {
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: transparent;
+
+}
+
+nav i {
+color: white;
+position: absolute;
+left: 20px;
+font-size: 16px;
+padding: 0px;
+margin-top: -5px;
+}
+nav h3 {
+text-align: center;
+}*/
+
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: black;
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      transition: filter 0.3s ease;
+    }
+
+    header h2 {
+      margin-bottom: 20px;
+    }
+
+    .custom-select {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .selected-option {
+      padding: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+      background-color: #222;
+    }
+
+    .selected-option img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      border-radius: 10px;
+    }
+
+    .option {
+      height: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      width: 350px;
+      margin-top: 10px;
+      padding: 10px 10px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      color: white;
+margin-left: 2px;
+    }
+
+    .option img {
+      width: 30px;
+      height: auto;
+      margin-right: 10px;
+      border-radius: 10px;
+    }
+
+    .option:hover,
+    .option.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .groupContainer {
+      display: none; /* shown by JS */
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0,0,0,0.85);
+      z-index: 1000;
+
+    }
+
+    .optionsContainer {
+      max-width: 400px;
+      width: 100%;
+      background-color: black;
+      border-top: 3px solid #ff7200;
+      border-radius: 30px 30px 0 0;
+      box-sizing: border-box;
+
+    }
+
+    .smallLine {
+      width: 20%;
+      height: 2px;
+      margin: 0 auto 15px;
+      background-color: grey;
+      border-radius: 2px;
+    }
+
+    .tabs {
+      display: flex;
+      margin: 20px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background: transparent;
+      color: #888;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.selected {
+      color: #0f0;
+      border-bottom: 2px solid #0f0;
+    }
+
+    .tab:hover {
+      color: #0f0;
+      border-bottom: 2px solid #0f0;
+    }
+
+    .option-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .option-left .icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    .token {
+      font-weight: bold;
+    }
+
+    .network {
+      font-size: 12px;
+      color: #aaa;
+    }
+/*
+    .option-right {
+      margin-left: 100px;
+font-size: 12px;
+text-align: right;
+    }*/
+
+ 
+
+    .radio {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #aaa;
+      margin-top: 5px;
+    }
+
+    .radio.selected {
+      background-color: #0f0;
+      border-color: #0f0;
+    }
+
+    .details {
+      margin: 20px 0;
+      font-size: 14px;
+      background-color: #111111;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .deposit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: rgba(0, 191, 255, 1);
+      border: none;
+      border-radius: 12px;
+      color: black;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    h1 {
+      font-size: 18px;
+      padding: 0px;
+      margin-bottom: 10px;
+    }
+
+    .cryptoContent {
+      display: none;
+    }
+
+    .cryptoContent.active {
+      display: block;
+    }
+
+    .OfficialBox {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: #111111;
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+    }
+
+    .OfficialBox img {
+      width: 100px;
+      height: auto;
+    }
+
+    .option-right {
+      margin-left: 35%;
+font-size: 12px;
+text-align: right;
+    }
+
+  /* Light Mode Overrides */
+  body.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+/*body.light-mode nav i{
+
+    color: black;
+  }*/
+
+  body.light-mode .container {
+    filter: none;
+  }
+
+  body.light-mode .selected-option {
+    background-color: #f0f0f0;
+    border-color: #aaa;
+    color: #000;
+  }
+
+  body.light-mode .option {
+    color: #000;
+  }
+
+  body.light-mode .option:hover,
+  body.light-mode .option.active {
+    background-color: #007bff;
+    color: white;
+  }
+
+  body.light-mode .groupContainer {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  body.light-mode .optionsContainer {
+    background-color: #f9f9f9;
+    border-top-color: #ff7200;
+  }
+
+  body.light-mode .smallLine {
+    background-color: #bbb;
+  }
+
+  body.light-mode .tab {
+    color: #666;
+    border-bottom-color: transparent;
+  }
+
+  body.light-mode .tab.selected,
+  body.light-mode .tab:hover {
+    color: #0a0;
+    border-bottom-color: #0a0;
+  }
+
+  body.light-mode .radio {
+    border-color: #444;
+  }
+
+  body.light-mode .radio.selected {
+    background-color: #0f0;
+    border-color: #0f0;
+  }
+
+  body.light-mode .details {
+    background-color: #f0f0f0;
+    color: #000;
+  }
+
+  body.light-mode .deposit-btn {
+    background-color: black;
+    color: white;
+  }
+
+  body.light-mode .OfficialBox {
+    background-color: #f4f4f4;
+  }
+
+  /* Toggle button style */
+  .toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 10px 15px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  body.light-mode .toggle-btn {
+    background-color: #ddd;
+    color: #000;
+  }
+.textTRX {
+margin-left: -6px;
+}
+
+
+
+body.light-mode .back-button,
+body.light-mode .heading {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+        font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="wallet.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> Deposit Crypto </div>
+  </nav>
+</div>
+
+<!-- Main container -->
+<div class="container" id="container">
+
+  
+
+  <div class="custom-select">
+    <div class="selected-option">
+      <img src="" alt="" />
+      <span>Select a crypto</span>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab" id="thirdParty">Third-party</button>
+    <button class="tab" id="official">Official</button>
+  </nav>
+
+  <section class="OfficialBox">
+    <img src="No data .png" alt="No Data" />
+  </section>
+
+  <!-- ETH -->
+  <div id="ETH" class="cryptoContent">
+    <section class="option">
+      <div class="option-left">
+        <img src="IMG_2533.JPEG" class="icon" alt="ETH" />
+        <div>
+          <div class="token">ETH </div>
+          <div class="network">Ethereum </div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span>Limit: 0 - 0 ETH</span>
+        <div class="radio selected"></div>
+      </div>
+    </section>
+
+    <section class="details">
+      <h3>ETH</h3>
+      <p>Ethereum</p>
+      <p>Fee: <strong>FREE</strong></p>
+      <p>Processing Fee: <strong>FREE</strong></p>
+    </section>
+
+<!--<a href="Eth.html"> --><button class="deposit-btn depositBtnE">Deposit</button> <!--</a>   -->
+  </div>
+
+  <!-- USDT -->
+  <div id="USDT" class="cryptoContent">
+    <section class="option">
+      <div class="option-left">
+        <img src="Usdt.PNG" class="icon" alt="USDT" />
+        <div>
+          <div class="token">USDT</div>
+          <div class="network">TRC20</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span>Limit: 0 - 0 USDT</span>
+        <div class="radio selected"></div>
+      </div>
+    </section>
+
+    <section class="details">
+      <h3>USDT</h3>
+      <p>Tether</p>
+      <p>Fee: <strong>FREE</strong></p>
+      <p>Processing Fee: <strong>FREE</strong></p>
+    </section>
+
+<!--<a href="usdt.html"> --><button class="deposit-btn depositBtnU">Deposit</button> <!--</a>  -->
+  </div>
+
+  <!-- USDC -->
+  <div id="USDC" class="cryptoContent">
+    <section class="option">
+      <div class="option-left">
+        <img src="IMG_2534.PNG" class="icon" alt="USDC" />
+        <div>
+          <div class="token">USDC</div>
+          <div class="network">BEP20</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span>Limit: 0 - 0 USDC</span>
+        <div class="radio selected"></div>
+      </div>
+    </section>
+
+    <section class="details">
+      <h3>USD Coin</h3>
+      <p>Tether</p>
+      <p>Fee: <strong>FREE</strong></p>
+      <p>Processing Fee: <strong>FREE</strong></p>
+    </section>
+
+ <!--<a href="usdc.html">--> <button class="deposit-btn depositBtnC">Deposit</button><!-- </a> -->
+  </div>
+
+  <!-- TRX -->
+  <div id="TRX" class="cryptoContent">
+    <section class="option">
+      <div class="option-left">
+        <img src="IMG_2535.PNG" class="icon" alt="TRX" />
+        <div>
+          <div class="token">TRX</div>
+          <div class="network">Tron (TRX)</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span>Limit: 0 - 0 TRX</span>
+        <div class="radio selected"></div>
+      </div>
+    </section>
+
+    <section class="details">
+      <h3>Tron (TRX)</h3>
+      <p>Tether</p>
+      <p>Fee: <strong>FREE</strong></p>
+      <p>Processing Fee: <strong>FREE</strong></p>
+    </section>
+
+<!--<a href="Trx.html">  --><button class="depositBtn deposit-btn">Deposit</button> <!--</a> -->
+  </div>
+</div>
+
+<!-- Group container modal -->
+<div class="groupContainer" id="groupContainer">
+  <div class="optionsContainer">
+    <div class="smallLine"></div>
+
+    <input type="hidden" id="crypto" value="ETH" />
+
+    <section class="option active" data-value="ETH">
+      <div class="option-left">
+        <img src="IMG_2533.JPEG" class="icon" alt="ETH" />
+        <div>
+          <div class="token">ETH </div>
+          <div class="network">Ethereum </div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span> ETH
+         <input type="radio"> </span>
+      </div>
+    </section>
+
+    <section class="option" data-value="USDT">
+      <div class="option-left">
+        <img src="Usdt.PNG" class="icon" alt="USDT" />
+        <div>
+          <div class="token">USDT</div>
+          <div class="network">TRC20</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span >USDT</span>
+        <input type="radio">
+      </div>
+    </section>
+
+    <section class="option" data-value="USDC">
+      <div class="option-left">
+        <img src="IMG_2534.PNG" class="icon" alt="USDC" />
+        <div>
+          <div class="token">USDC</div>
+          <div class="network">BEP20</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span> USDC</span>
+        <input type="radio">
+      </div>
+    </section>
+
+    <section class="option" data-value="TRX">
+      <div class="option-left">
+        <img src="IMG_2535.PNG" class="icon" alt="TRX" />
+        <div>
+          <div class="token">TRX</div>
+          <div class="network">Tron (TRX)</div>
+        </div>
+      </div>
+      <div class="option-right">
+        <span class="textTRX"> TRX </span>
+        <input type="radio">
+      </div>
+    </section>
+  </div>
+</div>
+
+
+
+
+
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script>
+<script src="depositNotify.js"></script>
+<script src="depositNotifyE.js"></script>
+<script src="depositNotifyU.js"></script>
+<script src="depositNotifyC.js"></script>
+
+<script src="theme-toggle.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const options = document.querySelectorAll(".option");
+  const contents = document.querySelectorAll(".cryptoContent");
+  const hiddenInput = document.getElementById("crypto");
+  const officialBtn = document.getElementById("official");
+  const thirdPartyBtn = document.getElementById("thirdParty");
+  const officialBox = document.querySelector(".OfficialBox");
+  const container = document.getElementById("container");
+
+  function hideAllCryptoContents() {
+    contents.forEach(content => content.classList.remove("active"));
+  }
+
+  function showCryptoContent(value) {
+    if (thirdPartyBtn.classList.contains("selected")) {
+      hideAllCryptoContents();
+      const target = document.getElementById(value);
+      if (target) {
+        target.classList.add("active");
+      }
+    }
+  }
+
+  function initializeSelection() {
+    const firstOption = document.querySelector(".option");
+    if (firstOption) {
+      const imgSrc = firstOption.querySelector("img").src;
+      const text = firstOption.querySelector("span").textContent;
+      document.querySelector(".selected-option").innerHTML = `<img src="${imgSrc}" alt="${text}" /><span>${text}</span>`;
+      hiddenInput.value = firstOption.dataset.value;
+
+      if (thirdPartyBtn.classList.contains("selected")) {
+        showCryptoContent(firstOption.dataset.value);
+      } else {
+        hideAllCryptoContents();
+      }
+    }
+  }
+
+  function activateOfficialTab() {
+    officialBtn.classList.add("selected");
+    thirdPartyBtn.classList.remove("selected");
+    officialBox.style.display = "flex";
+    hideAllCryptoContents();
+  }
+
+  function activateThirdPartyTab() {
+    thirdPartyBtn.classList.add("selected");
+    officialBtn.classList.remove("selected");
+    officialBox.style.display = "none";
+    showCryptoContent(hiddenInput.value || document.querySelector(".option").dataset.value);
+  }
+
+  // Set default tab: third-party
+  activateThirdPartyTab();
+
+  officialBtn.addEventListener("click", activateOfficialTab);
+  thirdPartyBtn.addEventListener("click", activateThirdPartyTab);
+
+  options.forEach(option => {
+    option.addEventListener("click", () => {
+      const selected = option.getAttribute("data-value");
+
+      hiddenInput.value = selected;
+
+      options.forEach(opt => opt.classList.remove("active"));
+      option.classList.add("active");
+
+      const imgSrc = option.querySelector('img').src;
+      const text = option.querySelector('span').textContent;
+      document.querySelector('.selected-option').innerHTML = `<img src="${imgSrc}" alt="${text}" /><span>${text}</span>`;
+
+      if (thirdPartyBtn.classList.contains("selected")) {
+        showCryptoContent(selected);
+      } else {
+        hideAllCryptoContents();
+      }
+
+      // Close group container and unblur main container
+      const groupContainer = document.getElementById('groupContainer');
+      const mainContainer = document.getElementById('container');
+      groupContainer.style.display = 'none';
+      mainContainer.style.filter = 'none';
+      mainContainer.style.pointerEvents = 'auto';
+    });
+  });
+
+  const groupContainer = document.getElementById('groupContainer');
+  const mainContainer = document.getElementById('container');
+  const selectedOption = document.querySelector('.selected-option');
+
+  function blurMainContainer() {
+    mainContainer.style.filter = 'blur(5px)';
+    mainContainer.style.pointerEvents = 'none';
+  }
+
+  function unblurMainContainer() {
+    mainContainer.style.filter = 'none';
+    mainContainer.style.pointerEvents = 'auto';
+  }
+
+  // Show groupContainer and blur mainContainer on page load
+  groupContainer.style.display = 'flex';
+  blurMainContainer();
+
+  // Show group container when selected option clicked
+  selectedOption.addEventListener('click', () => {
+    groupContainer.style.display = 'flex';
+    blurMainContainer();
+  });
+
+  initializeSelection();
+});
+</script>
+
+</body>
+</html>

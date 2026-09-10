@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Funding </title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+<style>
+
+  /*
+  * {
+    box-sizing: border-box;
+  }*/
+
+    body {
+      background-color: black;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: black;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.05);
+    }
+
+  .back {
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .title {
+    font-weight: 600;
+    font-size: 22px;
+  }
+  .icon-right {
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  /* Equity value */
+  .equity-value {
+    margin-top: 16px;
+    color: #999;
+    font-weight: 600;
+    /*display: flex;
+text-align: center;
+    align-items: center;*/
+    gap: 6px;
+  }
+  .equity-value span {
+    font-weight: 700;
+    font-size: 32px;
+    color: white;
+  }
+  .dropdown-arrow {
+    cursor: pointer;
+    border: solid #999;
+    border-width: 0 1.5px 1.5px 0;
+    display: inline-block;
+    padding: 4px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+  }
+  /* Buttons */
+  .button-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+  .btn {
+    background-color: #222;
+    border-radius: 50%;
+padding: 15px;
+width: 30px;
+height: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn svg {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 6px;
+  }
+  /* Toggle Hide small balances */
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .toggle-container label {
+    color: #666;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  /* Toggle switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #555;
+    transition: .4s;
+    border-radius: 12px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: #a9f14a;
+  }
+  input:checked + .slider:before {
+    transform: translateX(16px);
+  }
+  /* Search icon */
+  .search-icon {
+    margin-left: auto;
+    cursor: pointer;
+    user-select: none;
+    color: #666;
+  }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    margin-bottom: 12px;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #222;
+    color: #999;
+font-size: 12px;
+margin-top: 20px;
+   
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tab.active {
+    color: #00FF00;
+  border-bottom: 2px solid #00FF00;
+font-weight: bold;
+   
+  }
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ccc;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 6px;
+    font-weight: 600;
+  }
+  th {
+    color: #999;
+    font-size: 12px;
+  }
+  /* Sort arrows */
+  .sort-arrow {
+    border: solid #999;
+    border-width: 0 1.5px 1.5px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-left: 4px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    cursor: pointer;
+  }
+  /* Rotate down */
+  .sort-arrow.down {
+    transform: rotate(-135deg);
+  }
+  /* Currency icon */
+  .crypto-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background-color: #32848e;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+  }
+  .crypto-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+  /* More button */
+  .more-btn {
+    cursor: pointer;
+    font-size: 20px;
+    color: #777;
+    user-select: none;
+  }
+  /* Small currency amount */
+  .small-amount {
+    font-size: 12px;
+    color: #666;
+  }
+.btn a {
+color: #ccc;
+font-size: 15px;
+}
+
+.subText {
+text-align: center;
+font-weight: bold;
+font-size: 14px;
+}
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+
+margin-top: 40px;
+
+color: white;
+    }
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+
+    }
+    .toggle-buttons button {
+      flex: 1;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+font-size: 14px;
+    }
+    .toggle-buttons button.active {
+      border-bottom: 1px solid rgba(0, 191, 255, 1);
+      color: rgba(0, 191, 255, 1);
+
+      font-weight: bold;
+    }
+    .history-entry {
+      background-color: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-left: 4px solid rgba(0, 191, 255, 1);
+    }
+    .history-entry .label {
+      font-size: 14px;
+      color: #aaa;
+    }
+    .history-entry .value {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .date-filter {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .date-filter input {
+
+padding: 8px;
+      border-radius: 6px;
+      background-color: grey;
+      color: white;
+    border: 0px;
+  margin: 10px;
+width: 50px; 
+height: 30px;
+
+    }
+.filterBtn {
+padding: 10px;
+color: black;
+background-color: rgba(0, 191, 255, 1);
+border-radius: 10px;
+font-size: 12px;
+border: 0px;
+}
+
+/* === Light Mode Support === */
+body.light-mode {
+  background-color: #fff;
+  color: #000;
+}
+
+body.light-mode .container {
+  background-color: #fff;
+  color: #000;
+}
+
+body.light-mode header,
+body.light-mode .equity-value span,
+body.light-mode .title,
+body.light-mode h3,
+body.light-mode #fundingBalanceDisplay {
+  color: #000 !important;
+}
+
+body.light-mode .filterBtn {
+color: white;
+background-color: black;
+}
+body.light-mode .back a, body.light-mode .btn a,
+body.light-mode .icon-right a {
+  color: #333;
+}
+
+body.light-mode .tabs {
+  background-color: #eee;
+  color: #333;
+}
+
+body.light-mode .tab.active {
+  color: #00aa00;
+  border-bottom: 2px solid #00aa00;
+}
+
+body.light-mode .btn {
+  background-color: #eee;
+  color: #000;
+}
+
+body.light-mode .toggle-buttons button {
+  background-color: #eee;
+  color: #333;
+}
+
+body.light-mode .toggle-buttons button.active {
+  color: black;
+  border-bottom: 1px solid black;
+}
+
+body.light-mode .date-filter input {
+background-color: #eee;
+color: black;
+}
+
+body.light-mode .history-entry {
+  background-color: #f5f5f5;
+  border-left: 4px solid black;
+  color: #000;
+}
+
+body.light-mode .label,
+body.light-mode .value,
+body.light-mode .small-amount {
+  color: #444;
+}
+
+body.light-mode .switch .slider {
+  background-color: #ccc;
+}
+
+body.light-mode .search-icon {
+  color: #888;
+}
+
+body.light-mode table,
+body.light-mode th,
+body.light-mode td {
+  color: #333;
+}
+
+body.light-mode .sort-arrow {
+  border-color: #666;
+}
+
+body.light-mode .crypto-icon {
+  background-color: #b3e5fc;
+}
+
+body.light-mode .more-btn {
+  color: #777;
+}
+
+/* === Light Mode Overrides === */
+
+body.light-mode nav h3, body.light-mode .back-button, body.light-mode nav a, body.light-mode .history-button{
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+color: white;
+    }
+
+    .history-button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+nav a {
+text-decoration: none;
+color: red;
+
+}
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+ <nav class="navbar">
+  <a href="wallet.html">   <button class="back-button">
+      <i class="fas fa-arrow-left"></i>
+     
+    </button></a>
+    <div class="heading"> Funding </div>
+ <a href="History.html">    <button class="history-button">
+      <i class="fas fa-history"></i>
+    </button> </a>
+  </nav>
+
+</div>
+
+<div class="container">
+  
+
+  <div class="equity-value">
+    <div style="text-align: center; font-size: 12px; font-weight: 0; color: grey;">Equity value</div>
+  </div>
+  <div id="fundingBalanceDisplay" style="font-weight: 700; font-size: 30px; color: white; text-align: center; margin-top: 6px; margin-bottom: 50px;">
+  0.00 USDT
+</div>
+
+
+  <div class="button-row" style="margin-top: 24px;">
+
+<div class="subText"> 
+    <div class="btn" title="Deposit">
+   <a href="deposit.html"> <i class="fas fa-download"></i> </a>
+    </div>
+Deposit </div>
+
+<div class="subText"> 
+
+    <div class="btn" title="Withdraw">
+     <a href="withdrawal.html"> <i class="fas fa-wallet"></i> </a>
+     
+    </div> Withdraw </div>
+
+<div class="subText"> 
+    <div class="btn" title="Convert">
+   <a href="send.html"> <i class="fas fa-paper-plane"></i>
+
+ </a>
+     
+    </div> Send </div>
+
+<div class="subText"> 
+
+    <div class="btn" title="Transfer">
+      <a href="transfer.html"> <i class="fa fa-exchange"></i> </a>
+     
+    </div> Transfer </div>
+  </div>
+
+
+
+<div> <h3 style="text-align: left;"> Transfer History </h3> </div>
+
+
+  <div class="toggle-buttons">
+    <button id="showTrading"class="active">Trading</button>
+    <button id="showFunding">Funding</button>
+  </div>
+
+  <div class="date-filter">
+    <label>From: <input type="date" id="fromDate"></label>
+    <label>To: <input type="date" id="toDate"></label>
+    <button class="filterBtn"onclick="loadHistory()">Filter</button>
+  </div>
+
+  <div id="historyList">Loading...</div>
+
+  
+  
+  
+
+</div>
+
+<script src="theme-toggle.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<script src="firebaseDetails.js"></script>
+
+<script>
+  // Firebase Init
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentUser = null;
+  let currentType = "trading"; // default
+
+  // Load funding balance from cache first
+  function loadCachedFundingBalance() {
+    const cached = localStorage.getItem("userData");
+    if (!cached) return updateFundingBalanceUI(0);
+
+    try {
+      const data = JSON.parse(cached);
+      const fundingBalance = data.fundingBalance || 0;
+      updateFundingBalanceUI(fundingBalance);
+    } catch (e) {
+      console.warn("Could not load cached balance:", e);
+    }
+  }
+
+  //Update funding balance UI
+  function updateFundingBalanceUI(amount) {
+    const display = document.getElementById('fundingBalanceDisplay');
+    if (display) {
+      display.textContent = parseFloat(amount).toFixed(2) + " USDT";
+    }
+  }
+
+  //Load from cache instantly
+  loadCachedFundingBalance();
+
+  // Auth listener for real-time Firebase sync
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+
+      // Fetch latest user data
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          const fundingBalance = data.fundingBalance || 0;
+
+          // Update UI
+          updateFundingBalanceUI(fundingBalance);
+
+          //Cache it
+          localStorage.setItem("userData", JSON.stringify(data));
+        } else {
+          updateFundingBalanceUI(0);
+        }
+      }).catch(err => {
+        console.error("Error loading funding balance:", err);
+      });
+
+      //Load transfer history
+      loadHistory();
+    } else {
+      console.log("No user logged in");
+      updateFundingBalanceUI(0);
+      document.getElementById('historyList').innerHTML = "Please login to view history.";
+    }
+  });
+
+  //Toggle views
+  document.getElementById('showTrading').addEventListener('click', () => {
+    currentType = "trading";
+    toggleButtons("trading");
+    loadHistory();
+  });
+
+  document.getElementById('showFunding').addEventListener('click', () => {
+    currentType = "funding";
+    toggleButtons("funding");
+    loadHistory();
+  });
+
+  function toggleButtons(activeType) {
+    document.getElementById('showTrading').classList.remove('active');
+    document.getElementById('showFunding').classList.remove('active');
+    document.getElementById(`show${capitalize(activeType)}`).classList.add('active');
+  }
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // Load transfer history
+  function loadHistory() {
+    const list = document.getElementById('historyList');
+    list.innerHTML = "Loading...";
+
+    if (!currentUser) {
+      list.innerHTML = "Please sign in.";
+      return;
+    }
+
+    const fromDateVal = document.getElementById('fromDate').value;
+    const toDateVal = document.getElementById('toDate').value;
+
+    let query = db.collection("users")
+      .doc(currentUser.uid)
+      .collection("transfers")
+      .where("type", "==", currentType)
+      .orderBy("timestamp", "desc");
+
+    if (fromDateVal) {
+      const fromDate = new Date(fromDateVal);
+      fromDate.setHours(0, 0, 0, 0);
+      query = query.where("timestamp", ">=", fromDate);
+    }
+
+    if (toDateVal) {
+      const toDate = new Date(toDateVal);
+      toDate.setHours(23, 59, 59, 999);
+      query = query.where("timestamp", "<=", toDate);
+    }
+
+    query.get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          list.innerHTML = "<p>No transfer history found.</p>";
+          return;
+        }
+
+        list.innerHTML = "";
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const entry = document.createElement("div");
+          entry.className = "history-entry";
+          const date = data.timestamp?.toDate().toLocaleString() || "No Date";
+
+          entry.innerHTML = `
+            <div class="value">${data.direction.replace("-", " - ").toUpperCase()}</div>
+            <div class="label">Amount: ${data.amount} USDT</div>
+            <div class="label">Balance After: ${data.balanceAfter} USDT</div>
+            <div class="label">Date: ${date}</div>
+            <div class="label">Type: ${capitalize(data.type)}</div>
+          `;
+          list.appendChild(entry);
+        });
+      })
+      .catch(error => {
+        console.error("Error loading history:", error);
+        list.innerHTML = "<p>Error loading history: " + error.message + "</p>";
+      });
+  }
+
+  //Loader utilities
+  function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  function fetchData() {
+    showLoader();
+    setTimeout(() => {
+      console.log("Data fetched from database!");
+      hideLoader();
+      document.getElementById("content").innerHTML += "<p><strong>Data loaded!</strong></p>";
+    }, 3000);
+  }
+
+  window.addEventListener('load', fetchData);
+</script>
+
+</body>
+</html>
+
+
+

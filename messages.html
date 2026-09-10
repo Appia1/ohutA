@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Messages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+  
+    body {
+      background-color: #0e0e0e;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }/* Light mode support */
+   
+    .container {
+      max-width: 400px;
+      width: 100%;
+      background: black;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+      text-align: center;
+      color: #333;
+    }
+    .message {
+      background: #f1f1f1;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .message-type {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+    }
+  .message-text {
+  font-size: 15px;
+  color: #222;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+    .timestamp {
+      font-size: 11px;
+      color: #888;
+      margin-top: 6px;
+      text-align: right;
+    }
+    .empty-state {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    #debug {
+      white-space: pre-wrap;
+      color: red;
+      margin-top: 20px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: monospace;
+      background: #ffecec;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+body.light-mode {
+      background-color: white;
+      color: #000;
+    }
+
+    body.light-mode .container {
+      background-color: #fff;
+      color: #000;
+    }
+
+body.light-mode .back-button,
+body.light-mode .heading {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+
+     font-size: 20px;
+font-weight: bold;
+
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="dashboard.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> 🔔 Notification </div>
+  </nav>
+</div>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <div class="container">
+  
+    <div id="messages-container">
+      <p class="empty-state">Loading Notification...</p>
+    </div>
+<!--   <div id="debug"></div>-->
+  </div></div>
+
+<script src="theme-toggle.js"></script>
+
+ <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebaseDetails.js"></script>
+
+<script>
+
+let unsubscribe = null;
+
+  const container = document.getElementById("messages-container");
+  const debug = document.getElementById("debug");
+
+  function log(msg) {
+    console.log(msg);
+    if (debug) {
+      debug.textContent += typeof msg === "string" ? `\n${msg}` : `\n${JSON.stringify(msg, null, 2)}`;
+      debug.scrollTop = debug.scrollHeight;
+    }
+  }
+
+  function formatDate(timestamp) {
+    try {
+      return timestamp.toDate().toLocaleString();
+    } catch {
+      return "Unknown time";
+    }
+  }
+
+function getCacheKey(user) {
+  return "messages_" + user.uid;
+}
+
+/*function renderMessages(messages) {
+  container.innerHTML = "";
+
+  if (!messages.length) {
+    container.innerHTML =
+      '<p class="empty-state">No messages yet.</p>';
+    return;
+  }
+
+  messages.forEach(data => {
+
+    const div = document.createElement("div");
+    div.className = "message";
+
+    div.innerHTML = `
+      <div class="message-type">
+        ${data.to === "all"
+          ? "📢 Broadcast Message"
+          : "📩 Private Message"}
+      </div>
+
+      <div class="message-text">
+        ${data.message || "(No content)"}
+      </div>
+
+      <div class="timestamp">
+        ${data.timestamp
+          ? formatDate(data.timestamp)
+          : "Unknown time"}
+      </div>
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}*/
+
+function renderMessages(messages) {
+
+    container.innerHTML = "";
+
+    if (!messages.length) {
+        container.innerHTML =
+            '<p class="empty-state">No messages yet.</p>';
+        return;
+    }
+
+    messages.forEach(data => {
+
+        const div = document.createElement("div");
+        div.className = "message";
+
+        const type = document.createElement("div");
+        type.className = "message-type";
+        type.textContent =
+            data.to === "all"
+            ? "📢 Broadcast Message"
+            : "📩 Private Message";
+
+        const text = document.createElement("div");
+        text.className = "message-text";
+        text.textContent = data.message || "(No content)";
+
+        const time = document.createElement("div");
+        time.className = "timestamp";
+        time.textContent = data.timestamp
+            ? formatDate(data.timestamp)
+            : "Unknown time";
+
+        div.appendChild(type);
+        div.appendChild(text);
+        div.appendChild(time);
+
+        container.appendChild(div);
+
+    });
+
+}
+
+  window.onerror = function(message, source, lineno, colno, error) {
+    log(`❌ Global error: ${message} at ${source}:${lineno}:${colno}`);
+    if (error && error.stack) log(error.stack);
+  };
+
+  window.onunhandledrejection = function(event) {
+    log(`❌ Unhandled promise rejection: ${event.reason}`);
+    if (event.reason && event.reason.stack) log(event.reason.stack);
+  };
+
+  firebaseAuth.onAuthStateChanged((user) => {
+    if (!container) {
+      log("❌ #messages-container not found in HTML.");
+      return;
+    }
+
+    if (user) {
+      log(`✅ Logged in as: ${user.email}`);
+
+const cacheKey = getCacheKey(user);
+
+const cachedMessages = JSON.parse(
+  localStorage.getItem(cacheKey) || "[]"
+);
+
+if (cachedMessages.length) {
+  renderMessages(cachedMessages);
+}
+
+      const db = firebaseDB;
+      const messagesRef = db.collection("messages")
+        .where("to", "in", [user.email, "all"])
+        .orderBy("timestamp", "desc");
+
+      /*messagesRef.onSnapshot(snapshot => {
+        container.innerHTML = "";
+
+        if (snapshot.empty) {
+          log("📭 No messages found.");
+          container.innerHTML = '<p class="empty-state">No messages yet.</p>';
+          return;
+        }
+
+        log(`📬 Messages found: ${snapshot.size}`);
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          log("📄 Message data:", data);
+
+          const div = document.createElement("div");
+          div.className = "message";
+          div.innerHTML = `
+            <div class="message-type">${data.to === "all" ? "📢 Broadcast Message" : "📩 Private Message"}</div>
+            <div class="message-text">${data.message || "(No content)"}</div>
+            <div class="timestamp">${formatDate(data.timestamp)}</div>
+          `;
+          container.appendChild(div);
+        });
+      }, error => {
+        log("❌ onSnapshot error: " + error.message);
+        container.innerHTML = '<p class="empty-state">Failed to load messages.</p>';
+      });*/
+
+unsubscribe = messagesRef.onSnapshot(snapshot => {
+
+    const messages = [];
+
+    snapshot.forEach(doc => {
+        messages.push({
+            ...doc.data()
+        });
+    });
+
+    localStorage.setItem(
+        cacheKey,
+        JSON.stringify(messages)
+    );
+
+    renderMessages(messages);
+
+}, error => {
+
+    log("❌ onSnapshot error: " + error.message);
+
+    container.innerHTML =
+        '<p class="empty-state">Failed to load messages.</p>';
+
+});
+
+
+    } else {
+      log("⚠️ User not logged in.");
+      container.innerHTML = '<p class="empty-state">You are not signed in.</p>';
+    }
+  });
+
+window.addEventListener("beforeunload", () => {
+    if (unsubscribe) {
+        unsubscribe();
+    }
+});
+
+</script>
+</body>
+</html>
+
