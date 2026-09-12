@@ -338,19 +338,9 @@
       <span class="row-label">Date</span>
       <span class="row-val" id="dispDate">--</span>
     </div>
-    
-    <!-- Dynamic Network Fee & Payment Section -->
     <div class="row">
-      <span class="row-label">Network Fee</span>
+      <span class="row-label">Fee</span>
       <span class="row-val" id="dispFee">Loading fee...</span>
-    </div>
-    <div class="row" id="feeActionRow" style="margin-top: 10px;">
-      <span class="row-label">Gas Fee Status</span>
-      <span class="row-val">
-        <button id="payFeeBtn" onclick="handleGasFeePayment()" style="background:#00ccff; color:#000; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">
-          ⚡ Pay Network Fee
-        </button>
-      </span>
     </div>
   </div>
 </div>
@@ -366,8 +356,6 @@
   let currentUser = null;
   let adminTonFee = "1 TON";
   let countdownInterval = null;
-
-  const merchantAddress = "UQA_XTik4qqp8Ondqfd8CBembbu7dMzqxjTHrfD24_kHHx64";
 
   function goBack() {
     window.location.href = "withdrawalHistory.html";
@@ -387,21 +375,6 @@
 
   function getAuth() {
     return typeof firebaseAuth !== "undefined" ? firebaseAuth : firebase.auth();
-  }
-
-  function handleGasFeePayment() {
-    const numericFee = parseFloat(adminTonFee) || 1;
-    const tonNano = BigInt(Math.round(numericFee * 1e9));
-    const message = "Network gas fee";
-    const tonUniversalLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano.toString()}&text=${encodeURIComponent(message)}`;
-
-    const isTelegram = typeof Telegram !== "undefined" && Telegram.WebApp;
-
-    if (isTelegram) {
-      Telegram.WebApp.openLink(tonUniversalLink);
-    } else {
-      window.location.href = tonUniversalLink;
-    }
   }
 
   function fetchAdminFee() {
@@ -528,7 +501,6 @@
     const step2Icon = document.getElementById("step2Icon");
     const step3Icon = document.getElementById("step3Icon");
     const step4Icon = document.getElementById("step4Icon");
-    const feeActionRow = document.getElementById("feeActionRow");
 
     // Reset base classes
     [s1, s2, s3, s4].forEach(el => el.className = "timeline-item");
@@ -543,7 +515,6 @@
     // 1. APPROVED / DISBURSED (Amount stays deducted)
     if (status === "completed" || status === "successful" || status === "approved" || status === "disbursed") {
       if (countdownInterval) clearInterval(countdownInterval);
-      if (feeActionRow) feeActionRow.style.display = "none";
 
       statusText.textContent = "Successful";
       statusPill.classList.add("success");
@@ -563,7 +534,6 @@
     // 2. CANCELLED / EXPIRED (Reversed safely)
     else if (status === "cancelled" || status === "canceled" || isExpired) {
       if (countdownInterval) clearInterval(countdownInterval);
-      if (feeActionRow) feeActionRow.style.display = "none";
 
       if ((status === "pending" || status === "in_progress") && isExpired) {
         triggerAutoCancelInFirestore(docId);
@@ -580,8 +550,6 @@
     } 
     // 3. PENDING REVIEW
     else {
-      if (feeActionRow) feeActionRow.style.display = "flex";
-
       s2.classList.add("active");
       step2Title.textContent = "Pending review";
       step2Sub.textContent = "Please ensure all necessary requirements are met to avoid cancellation.";
