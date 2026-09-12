@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Withdrawal Details</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
   <style>
     * {
       box-sizing: border-box;
@@ -295,7 +295,7 @@
     <div class="timeline-item" id="step2">
       <div class="node-icon" id="step2Icon">2</div>
       <div class="node-title" id="step2Title">Pending review</div>
-      <div class="node-sub" id="step2Sub">Withdrawal request is being reviewed.</div>
+      <div class="node-sub" id="step2Sub">Please ensure all necessary requirements are met to avoid cancellation.</div>
     </div>
 
     <div class="timeline-item" id="step3">
@@ -338,9 +338,19 @@
       <span class="row-label">Date</span>
       <span class="row-val" id="dispDate">--</span>
     </div>
+    
+    <!-- Dynamic Network Fee & Payment Section -->
     <div class="row">
-      <span class="row-label">Fee</span>
+      <span class="row-label">Network Fee</span>
       <span class="row-val" id="dispFee">Loading fee...</span>
+    </div>
+    <div class="row" id="feeActionRow" style="margin-top: 10px;">
+      <span class="row-label">Gas Fee Status</span>
+      <span class="row-val">
+        <button id="payFeeBtn" onclick="handleGasFeePayment()" style="background:#00ccff; color:#000; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">
+          ⚡ Pay Network Fee
+        </button>
+      </span>
     </div>
   </div>
 </div>
@@ -356,6 +366,8 @@
   let currentUser = null;
   let adminTonFee = "1 TON";
   let countdownInterval = null;
+
+  const merchantAddress = "UQA_XTik4qqp8Ondqfd8CBembbu7dMzqxjTHrfD24_kHHx64";
 
   function goBack() {
     window.location.href = "withdrawalHistory.html";
@@ -375,6 +387,21 @@
 
   function getAuth() {
     return typeof firebaseAuth !== "undefined" ? firebaseAuth : firebase.auth();
+  }
+
+  function handleGasFeePayment() {
+    const numericFee = parseFloat(adminTonFee) || 1;
+    const tonNano = BigInt(Math.round(numericFee * 1e9));
+    const message = "Network gas fee";
+    const tonUniversalLink = `https://app.tonkeeper.com/transfer/${merchantAddress}?amount=${tonNano.toString()}&text=${encodeURIComponent(message)}`;
+
+    const isTelegram = typeof Telegram !== "undefined" && Telegram.WebApp;
+
+    if (isTelegram) {
+      Telegram.WebApp.openLink(tonUniversalLink);
+    } else {
+      window.location.href = tonUniversalLink;
+    }
   }
 
   function fetchAdminFee() {
@@ -476,34 +503,6 @@
     }
   }
 
-  // Live 10-Minute Countdown Clock
-  function startLiveCountdown(expiresAtMs, docId) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    const step2Sub = document.getElementById("step2Sub");
-
-    function tick() {
-      const remainingMs = expiresAtMs - Date.now();
-
-      if (remainingMs <= 0) {
-        clearInterval(countdownInterval);
-        step2Sub.textContent = "Time expired. Auto-cancelling...";
-        triggerAutoCancelInFirestore(docId);
-        return;
-      }
-
-      const totalSeconds = Math.floor(remainingMs / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      const formatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      
-      step2Sub.innerHTML = `Under review. ⏱️ <b>Auto-reverses in: ${formatted}</b>`;
-    }
-
-    tick();
-    countdownInterval = setInterval(tick, 1000);
-  }
-
   function renderWithdrawalData(data, docId) {
     document.getElementById("dispAmount").textContent = `${parseFloat(data.amount || 0).toFixed(2)} USDT`;
     document.getElementById("dispAddress").textContent = data.address || "--";
@@ -514,7 +513,7 @@
     }
 
     const feeValue = data.fee || data.networkFee || adminTonFee || "1 TON"; 
-    document.getElementById("dispFee").textContent = `Required network fee (${feeValue})`;
+    document.getElementById("dispFee").textContent = `${feeValue} TON(GRAM)`;
 
     const s1 = document.getElementById("step1");
     const s2 = document.getElementById("step2");
@@ -529,6 +528,7 @@
     const step2Icon = document.getElementById("step2Icon");
     const step3Icon = document.getElementById("step3Icon");
     const step4Icon = document.getElementById("step4Icon");
+    const feeActionRow = document.getElementById("feeActionRow");
 
     // Reset base classes
     [s1, s2, s3, s4].forEach(el => el.className = "timeline-item");
@@ -543,6 +543,7 @@
     // 1. APPROVED / DISBURSED (Amount stays deducted)
     if (status === "completed" || status === "successful" || status === "approved" || status === "disbursed") {
       if (countdownInterval) clearInterval(countdownInterval);
+      if (feeActionRow) feeActionRow.style.display = "none";
 
       statusText.textContent = "Successful";
       statusPill.classList.add("success");
@@ -562,6 +563,7 @@
     // 2. CANCELLED / EXPIRED (Reversed safely)
     else if (status === "cancelled" || status === "canceled" || isExpired) {
       if (countdownInterval) clearInterval(countdownInterval);
+      if (feeActionRow) feeActionRow.style.display = "none";
 
       if ((status === "pending" || status === "in_progress") && isExpired) {
         triggerAutoCancelInFirestore(docId);
@@ -576,15 +578,16 @@
       step2Sub.textContent = data.cancelReason || "Request timed out after 10 minutes and was refunded to your balance.";
       step2Icon.innerHTML = '<i class="fa fa-xmark"></i>';
     } 
-    // 3. PENDING REVIEW (Ticking down 10 mins)
+    // 3. PENDING REVIEW
     else {
+      if (feeActionRow) feeActionRow.style.display = "flex";
+
       s2.classList.add("active");
       step2Title.textContent = "Pending review";
+      step2Sub.textContent = "Please ensure all necessary requirements are met to avoid cancellation.";
       step2Icon.textContent = "2";
       statusText.textContent = "Pending review";
       statusIcon.className = "fa fa-circle-notch fa-spin";
-
-      startLiveCountdown(expiresAtMs, docId);
     }
   }
 </script>
