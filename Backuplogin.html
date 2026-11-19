@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register & Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+</head>
+<body>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-image: url(IMG_2608.JPEG);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+
+  animation: fadeIn 2s ease-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.container {
+  /*width: 80%;*/
+max-width: 400px;
+  height: auto;
+  margin: 50px auto;
+  border-radius: 10px;
+  backdrop-filter: blur(70px);
+  /*background-color: rgba(255, 255, 255, 0.75);*/
+  /*border: 1px solid white;*/
+
+background: rgba(9, 0, 0, 0.6);
+
+}
+
+form {
+  margin: 0 2rem;
+}
+
+.form-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 1.3rem;
+  margin-bottom: 0.4rem;
+color: white;
+
+}
+
+input {
+  color: white;
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #757575;
+  padding-left: 1.5rem;
+  font-size: 15px;
+  margin-top: 10px;
+font-weight: bold;
+}
+
+.input-group {
+  padding: 1% 0;
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  color: #ccc;
+  top: 25px;
+}
+
+input:focus {
+  background-color: transparent;
+  outline: transparent;
+  border-bottom: 2px solid hsl(327, 90%, 28%);
+}
+
+input::placeholder {
+  color: transparent;
+}
+
+label {
+  color: white;
+  position: relative;
+  left: 1.2em;
+  top: -1.8em;
+  cursor: auto;
+  transition: 0.3s ease all;
+}
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+  top: -4.1em;
+  color: yellow;
+  font-size: 15px;
+}
+
+.recover {
+  text-align: right;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.recover a {
+  text-decoration: none;
+  color: rgb(125, 125, 235);
+}
+
+.recover a:hover {
+  color: blue;
+  text-decoration: underline;
+}
+
+button {
+  font-size: 1.1rem;
+  padding: 8px 0;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  width: 100%;
+
+  background: rgba(0, 191, 255, 1);
+/*box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);*/
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.9s;
+}
+
+button:hover {
+  background: grey;
+color: white;
+}
+
+.or {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.icons {
+  text-align: center;
+color: #ccc;
+}
+
+.icons i {
+  color: #ccc;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: 2px solid #dfe9f5;
+  margin: 0 15px;
+  transition: 1s;
+}
+
+.icons i:hover {
+  background: #07001f;
+  font-size: 1.6rem;
+  border: 2px solid rgb(125, 125, 235);
+}
+
+.links {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 4rem;
+  margin-top: 0.9rem;
+  font-weight: bold;
+}
+
+#switchToSignUp,
+#switchToSignIn {
+  color: grey;
+  border: none;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+#switchToSignUp:hover,
+#switchToSignIn:hover {
+  text-decoration: underline;
+  color: blue;
+}
+
+.messageDiv {
+  background-color: hsl(327, 90%, 28%);
+  color: white;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  opacity: 0;
+  animation: fadeOut 7s forwards;
+}
+
+.fly {
+  position: relative;
+}
+
+.fly i {
+  padding: 0px;
+  position: absolute;
+  color: white;
+  top: 22px;
+}
+
+.fly input {
+  color: white;
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #757575;
+  padding-left: 1.5rem;
+  font-size: 15px;
+  margin-top: 10px;
+}
+/*
+.box h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+  margin-top: -20px;
+}*/
+
+p {
+  margin-bottom: 20px;
+color: #ccc;
+}
+
+img {
+  width: 100px;
+  height: auto;
+}
+
+h1 {
+  font-size: 30px;
+  color: white;
+text-align: center;
+margin-bottom: 20px;
+font-weight: bold;
+
+}
+
+.subText {
+  text-align: center;
+  color: black;
+  margin-top: -30px;
+  font-size: 13px;
+}
+/*
+.uniformBck {
+border: 2px solid red;
+background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.75));
+width: 100%;
+height: 100px;
+}
+*/
+
+
+
+</style>
+<!-- Sign Up Form -->
+<div class="container" id="signup" style="display: none;">
+
+ <div style ="width: 100px; height: auto; margin-bottom: -50px; right: 0px;"> <img src="Ohut Logo.png"/> </div>
+
+<h1>Sign Up</h1>
+
+  <form method="post" action="">
+    <div class="box-container">
+      <div class="box">
+       
+        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+
+        <div class="fly">
+          <i class="fas fa-user"></i>
+          <input type="text" id="fName" placeholder="First Name" required>
+          <label for="fName">First Name</label>
+        </div>
+        <div class="fly">
+          <i class="fas fa-user"></i>
+          <input type="text" id="lName" placeholder="Last Name" required>
+          <label for="lName">Last Name</label>
+        </div>
+        <div class="fly">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="rEmail" placeholder="Email" required>
+          <label for="rEmail">Email</label>
+        </div>
+        <div class="fly">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="rPassword" placeholder="Password" required>
+          <label for="rPassword">Password</label>
+        </div>
+
+     
+       <!-- Add this inside your signup form -->
+
+<div class="fly">
+  <i class="fas fa-gift"></i>
+  <input type="text" id="referralCode" placeholder="Referral Code (Optional)">
+  <label for="referralCode">Referral Code (Optional)</label>
+</div>
+
+
+   
+
+
+
+
+        <button class="btn" id="submitSignUp">Create</button>
+      </div>
+    </div>
+  </form>
+  <p class="or">----------or--------</p>
+  <div class="icons"></div>
+  <div class="links">
+    <p>Already have an account? </p>
+    <div id="switchToSignIn">Sign In</div>
+  </div>
+</div>
+
+<!-- Sign In Form -->
+
+<div class="container" id="signIn">
+
+ <div style ="width: 100px; height: auto; margin-bottom: -50px; right: 0px;"> <img src="Ohut Logo.png"/> </div>
+
+<h1 class="form-title">Welcome to Ohut</h1>
+
+<div class="env">
+
+    <form method="post" action="">
+      <div id="signInMessage" class="messageDiv" style="display:none;"></div>
+
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" required>
+        <label for="password">Password</label>
+        <div class="recover">
+          <!--<a href="#" id="resetPasswordLink">Forgot Password?</a>-->
+        </div>
+      </div>
+      <button class="btn" id="submitSignIn">Sign In</button>
+    </form>
+
+    <div class="icons"></div>
+    <div class="links">
+      <p>Not a member yet?</p>
+      <div id="switchToSignUp">Sign Up</div>
+    </div>
+  </div>
+</div>
+
+<!-- Spinner overlay -->
+<div id="spinner" style="display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;">
+  <div style="border:6px solid #f3f3f3;border-top:6px solid #3498db;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;"></div>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<!-- Congratulations popup -->
+<div id="congratsPopup" style="display:none;">
+  <div class="flashlight"></div>
+  <div class="popup">
+    <div class="icon-wrapper">
+      <img src="Ohut Logo.png" alt="Icon" />
+    </div>
+    <div class="title-divider">— Congratulations! —</div>
+    <div class="headline">You’ve Earned $10!</div>
+    <div class="body-text">
+      You’re one of the <b>first 1,000 pioneers</b> to join us — and we’re celebrating YOU!  
+      As a token of our appreciation, <b>$10 has been instantly added</b> to your trading balance.  
+      <br><br>
+      Thank you for being an early supporter.
+    </div>
+    <div class="close" style="cursor:pointer;">×</div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script> <!-- Your firebaseConfig -->
+
+<!-- Spinner element -->
+<div id="spinner" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
+  <div class="loader"></div> <!-- Style your loader -->
+</div>
+
+<!-- Congratulations popup -->
+<div id="congratsPopup" style="display:none;">
+  <!-- Include your congratulations HTML here -->
+</div>
+
+<script>
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Helper: Show/hide spinner
+  function showSpinner(show = true) {
+    document.getElementById("spinner").style.display = show ? "flex" : "none";
+  }
+
+  // Helper: Show message
+  function showMessage(message, divId) {
+    const div = document.getElementById(divId);
+    div.style.display = "block";
+    div.innerHTML = message;
+    div.style.opacity = 1;
+    setTimeout(() => { div.style.opacity = 0; }, 5000);
+  }
+
+  // Helper: Generate referral code
+  function generateReferralCodeFromName(firstName, lastName) {
+    const base = `${firstName}${lastName}`.replace(/\s+/g, "").toUpperCase();
+    const suffix = Math.floor(100 + Math.random() * 900);
+    return `${base}${suffix}`;
+  }
+
+  // -------------------- SIGNUP --------------------
+
+  document.getElementById('submitSignUp').addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('rEmail').value.trim();
+    const password = document.getElementById('rPassword').value;
+    const firstName = document.getElementById('fName').value.trim();
+    const lastName = document.getElementById('lName').value.trim();
+    const fullName = `${firstName} ${lastName}`;
+    const referralCode = generateReferralCodeFromName(firstName, lastName);
+
+    let referredBy = document.getElementById('referralCode').value.trim().toUpperCase();
+    let referrerUid = null;
+
+    showSpinner(true);
+
+    // Step 1: check referral code if entered
+    const referralCheck = referredBy 
+      ? db.collection("referrals").doc(referredBy).get()
+      : Promise.resolve(null);
+
+    referralCheck
+      .then(docSnap => {
+        if (docSnap && docSnap.exists){
+          referrerUid = docSnap.data().referrerId;
+        } else {
+          referredBy = null;
+        }
+
+        // ---> Bonus is completely disabled:
+        const bonusAmount = 0;
+
+        // Step 2: Create auth user
+        return auth.createUserWithEmailAndPassword(email, password)
+          .then(userCredential => {
+            const user = userCredential.user;
+
+            // Step 3: Save user in database
+            return db.collection("users").doc(user.uid).set({
+              email,
+              firstName,
+              lastName,
+              fullName,
+              tradingBalance: 0.00, // no bonus
+              miniBalance: 0.00,
+              referralCode,
+              referredBy: referrerUid,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              receivedBonus: false // never used again
+            })
+            .then(() => db.collection("referrals").doc(referralCode).set({
+              referrerId: user.uid
+            }))
+            .then(() => user);
+          });
+      })
+      .then(user => {
+        showSpinner(false);
+        showMessage("Signup successful! Please login.", "signUpMessage");
+
+        setTimeout(() => {
+          document.getElementById("signup").style.display = "none";
+          document.getElementById("signIn").style.display = "block";
+          document.getElementById("email").value = email;
+        }, 1500);
+      })
+      .catch(error => {
+        showSpinner(false);
+        console.error("SIGNUP ERROR:", error);
+        showMessage("Failed to create account", "signUpMessage");
+      });
+  });
+
+// -------------------- FORM TOGGLE --------------------
+  document.getElementById("switchToSignUp").addEventListener("click", () => {
+    document.getElementById("signIn").style.display = "none";
+    document.getElementById("signup").style.display = "block";
+  });
+  document.getElementById("switchToSignIn").addEventListener("click", () => {
+    document.getElementById("signup").style.display = "none";
+    document.getElementById("signIn").style.display = "block";
+  });
+
+  // -------------------- AUTOFILL REFERRAL --------------------
+  const params = new URLSearchParams(window.location.search);
+  const refCode = params.get('ref');
+  if(refCode) document.getElementById("referralCode").value = refCode.toUpperCase();
+</script>
+
+<script>
+
+document.getElementById('submitSignIn').addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  const ADMIN_EMAIL = "josh@ohut.com";
+  const ADMIN_REDIRECT = "master.html";
+  const USER_REDIRECT = "dashboard.html";
+
+  document.getElementById("spinner").style.display = "flex";
+
+  try {
+    // 1️⃣ Sign in
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    // 2️⃣ Fetch user data
+    const docSnap = await db.collection("users").doc(user.uid).get();
+    if (!docSnap.exists) throw new Error("User profile not found");
+
+    let userData = docSnap.data();
+
+    // 3️⃣ Apply KYC bonus if eligible
+    const settingsSnap = await db.collection("settings").doc("kycBonus").get();
+    const bonusActive = settingsSnap.exists ? settingsSnap.data().kycBonusActive : true;
+
+    const kycStatus = (userData.kycStatus || "").toLowerCase();
+    const receivedBonus = !!userData.receivedKycBonus;
+
+    if (bonusActive && (kycStatus === "verified" || kycStatus === "approved") && !receivedBonus) {
+      const newBalance = (userData.tradingBalance || 0) + 10;
+
+      await db.collection("users").doc(user.uid).update({
+        tradingBalance: newBalance,
+        receivedKycBonus: true
+      });
+
+      // Update local copy
+      userData.tradingBalance = newBalance;
+      userData.receivedKycBonus = true;
+      userData.showKycCongrats = true; // flag for popup
+    }
+
+    // 4️⃣ Save to localStorage
+    localStorage.setItem("loggedInUserId", user.uid);
+    //just added here 
+// ===============================
+// ACTIVE USER TRACKING SYSTEM
+// ===============================
+
+const today = new Date();
+
+const todayDate =
+  today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+  String(today.getDate()).padStart(2, "0");
+
+await db.collection("activeUsers")
+.doc(user.uid)
+.set({
+
+  uid: user.uid,
+
+  email: user.email || "",
+
+  fullName: userData.fullName || "",
+
+  lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+
+  lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+
+  todayDate: todayDate,
+
+  online: true,
+
+  device: navigator.userAgent
+
+}, { merge:true });
+
+
+// ===============================
+// AUTO UPDATE LAST ACTIVE
+// ===============================
+
+setInterval(async ()=>{
+
+  try{
+
+    await db.collection("activeUsers")
+    .doc(user.uid)
+    .update({
+
+      lastActive:
+      firebase.firestore.FieldValue.serverTimestamp(),
+
+      online:true
+
+    });
+
+  }catch(err){
+
+    console.log(err);
+
+  }
+
+}, 60000);
+
+
+// ===============================
+// DETECT WHEN USER LEAVES APP
+// ===============================
+
+window.addEventListener("beforeunload", async ()=>{
+
+  try{
+
+    await db.collection("activeUsers")
+    .doc(user.uid)
+    .update({
+
+      online:false,
+
+      lastActive:
+      firebase.firestore.FieldValue.serverTimestamp()
+
+    });
+
+  }catch(err){
+
+    console.log(err);
+
+  }
+
+});
+    
+    //ends
+    localStorage.setItem("userName", userData.fullName || "");
+    localStorage.setItem("isAdmin", user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "true" : "false");
+    localStorage.setItem("userData", JSON.stringify(userData));
+
+    // 5️⃣ Redirect
+    const redirectTo = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? ADMIN_REDIRECT : USER_REDIRECT;
+    window.location.href = redirectTo;
+
+  } catch (err) {
+    console.error("Login error:", err);
+    document.getElementById("spinner").style.display = "none";
+    showMessage("Invalid email or password", "signInMessage");
+  }
+});
+
+function showMessage(message, divId) {
+  const div = document.getElementById(divId);
+  div.style.display = "block";
+  div.innerHTML = message;
+  div.style.opacity = 1;
+  setTimeout(() => { div.style.opacity = 0; }, 5000);
+}
+</script>
+
+
+</body>
+</html>

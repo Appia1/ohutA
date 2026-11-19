@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+  <title> Wallet </title>
+ 
+</head>
+<body>
+
+<div class="buttonBox">
+  <div class="buttonContainer">
+<a href="deposit.html"> <button class="deposit-btn" id="depositButton">Deposit</button> </a>
+  </div>
+
+</div>
+
+  
+
+  <div class="container" id="container">
+    <header>
+      <img src="Ohut Logo.png" class="logo" />
+
+    </header>
+
+    <div class="balance-section">
+      <h2>Total balance </h2>  <button id="toggleVisibility" class="eye-btn"> <i class="fa fa-eye" id="toggle-icon"></i>
+</button>
+      <div class="balance-row">
+        <span id="balance-value"> loading… </span> <span class="currency">USDT</span>
+      </div>
+   
+      <div class="green-line"></div>
+    </div>
+
+    <div class="account-section">
+      <div class="account-box">
+        <div class="icon funding-icon"> <i class="fa fa-money-bill"></i>
+ </div>
+       <a href="funding.html"> <div class="account-details">
+          <p>Funding <br/>Account</p>
+          <strong id="funding-balance""> loading… </strong>
+   
+        </div>
+      </div> </a>
+
+ <div class="account-box">
+           <a href="tradingHistory.html"> <div class="icon trading-icon"> <i class="fa fa-chart-line"></i> </div>
+        <div class="account-details">
+          <p>Trading <br/>Account</p>
+          <strong id="trading-balance"> loading… </strong>
+  
+        </div>
+      </div> </a> 
+    </div>
+
+
+   <div class="overview">
+
+   <p style="font-size: 16px; font-weight: bold;"> Withdraw USDT (TON) </p>
+
+     <button id="menuToggle" class="tonWithdrawal"> Withdraw</button>
+    </div>
+
+     <h3>Mine OHT</h3>
+
+    <div class="overviewBox">
+<div class="viewContent">
+
+     <button id="mining_mineButton" disabled class="usdt-section">
+        <img src="Native.PNG" alt="OHT" class="usdt-icon"/>
+        <span class="mineBtn">Mine </span>
+        <span id="mining_balance" >Loading…</span>
+      </button>
+
+<div id="mining_timer"></div>
+
+<!-- Mining Progress UI -->
+<div class="mining-progress-container">
+  <div class="progress-bar" id="mining_progressBar"></div>
+</div>
+<div id="mining_notification" class="mining-notification" style="display: none;">
+  🎉 Your mining reward is ready!
+</div>
+
+</div>
+
+    </div>
+
+<div class="historyContainer" id="historyContainer"style="display: none">
+<div class="historyBox">
+
+
+    
+
+<button id="allDetailsBtn">All</button>
+<button id="widthlDetailsBtn">Funding</button>
+
+<button id="pendingBtn">Trading</button>
+
+<div class="allDetails">
+
+<div class="widthlDetails" id="widthlDetails">
+<div class="details"><h5>Pending</h5>
+<span id="pendingDetails"><img src="No data .png" />
+</div>
+</div>
+
+<div class="widthlDetails" id="pendingWidth">
+<div class="details"><h5>Complete</h5>
+ <span id="completeDetails" > <img src="No data .png" /> </span> 
+</div>
+</div>
+</div>
+
+
+
+</div>
+
+ </div>
+
+</div>
+<div class="depBox">
+<div id="depositContainer"style="display: none">
+<div class="smallLine"></div>
+<h1>Deposit Method</h1>
+
+<a href= "deposit.html">
+<div class="depositDetails">
+<div> <img src="Usdt.PNG"/> </div><div> <span><h3>Deposit Crypto </h3> <p>Transfer Crypto from another on-chain or third party wallet</p></span> </div>
+</div>
+</a>
+</div>
+
+</div>
+
+<div class ="bm">
+
+<button class="set" >   <a href="dashboard.html"> <i class="fa fa-home"></i> <br>Home</button>   </a>
+  
+   
+   <button class="set" ><a href="Markets.html"> <i class="fa fa-chart-line"></i> <br>Market</a></button>              
+                  
+<button class="tradeSet" > <a href ="trade.html"><div class="tradeBtn"><i class="fa fa-long-arrow-up"></i><i class="fa fa-long-arrow-down"></i> </div> <br/><span style ="position: relative; padding: 0px; margin-left: -5px;"> Trade </span> </a></button>    
+
+     <button class="set" id="activeBtn"><a href="wallet.html"> <i class="fa-solid fa-wallet"></i> <br>Wallet</a></button>                           
+                           
+                     <button class="set" ><a href="Profile.html"><i class="fa fa-solid fa-user"></i> <br>Profile</a></button>     
+              
+</div>
+
+
+
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <div class="sidebar" id="sidebar">
+
+<div class="container">
+
+  <!-- Process message (initially hidden) -->
+
+    <label for="address">
+      TON Address:
+    </label>
+    <input type="text" id="address" placeholder="Enter Address" required />
+
+    <label for="amount">Withdrawal Amount:</label>
+    <div class="amount-bar">
+      <input type="number" id="amount" placeholder="Enter Amount" />
+      <button class="all-btn" onclick="setMaxAmount()">ALL</button>
+    </div>
+
+    <div class="available-balance">
+      Available Balance: <span id="available-balance">0.00</span> USDT
+    </div>
+
+<div id="gas-fee" style="display: none; margin-top: 10px; font-size: 14px; color: grey;">
+  ⚡ Network Gas Fee: <strong>1 TON</strong>
+
+     <button onclick="buyProduct()" class="tonWithdrawal">Send
+</button>
+
+</div>
+
+  </div>
+
+  <!-- Success message -->
+ <p id="success-msg"></p>
+
+</div>
+
+  </div>
+
+<style>
+#depositContainer {
+
+  max-width: 400px;
+  margin: auto;
+
+height: auto;
+background-color: black;
+border-top: 3px solid #ff7200;
+border-radius: 30px 30px 0 0;
+padding-bottom: 40px;
+bottom: 0px;
+position: fixed;
+z-index: 10;
+
+}
+
+.smallLine {
+width: 20%;
+height: 2px;
+margin-left: 40%;
+background-color: grey;
+margin-top: 10px;
+margin-bottom: 10px;
+
+}
+
+#depositContainer h1 {
+color: white;
+margin-left:20px;
+font-size: 18px;
+}
+
+#depositContainer a {
+color: #ccc;
+text-decoration: none;
+}
+.depositDetails {
+display: flex;
+padding: 10px;
+justify-content: center;
+align-items: center;
+gap: 5px;
+}
+
+.depositDetails img {
+width : 50px;
+height: 50px;
+border-radius: 20px;
+
+}
+
+.depositDetails p {
+font-size: 14px;
+margin-top: -10px;
+}
+
+.depositDetails h3 {
+font-size: 16px;
+margin-top: 0px;
+color: white;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0c0c0c;
+  color: white;
+padding: 0px;
+}
+
+.container {
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+background-color: transparent;
+margin-bottom: 100px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 90px;
+
+margin: 0px;
+
+}
+
+.eye-btn {
+ background: none;
+  border: none;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+margin-top: 15px;
+margin-left: 100px;
+}
+
+.balance-section h2 {
+  margin-top: 20px;
+  font-weight: normal;
+  font-size: 18px;
+position: absolute;
+}
+
+.balance-row {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.currency {
+  margin-left: 8px;
+  font-size: 20px;
+  color: #aaa;
+}
+
+.day-change {
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.negative {
+  color: #ff4d4f;
+}
+
+.green-line {
+  height: 5px;
+  background-color: limegreen;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.account-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+gap: 10px;
+}
+
+.account-box {
+  background-color: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  width: 48%;
+}
+
+.icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.funding-icon {
+  color: #ccc;
+
+position: absolute;
+margin-left: 100px;
+
+}
+
+.trading-icon {
+  color: #ab47bc;
+position: absolute;
+margin-left: 100px;
+}
+
+.account-details p {
+  margin: 3px 0;
+}
+
+.percentage {
+  font-size: 14px;
+}
+
+.overview {
+  margin-top: 20px;
+}
+
+
+.tonWithdrawal {
+    background-color: rgba(0, 191, 255, 1);
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+width: 100%;
+font-size: 16px;
+color: black;
+border: 0px;
+text-align: center
+}
+
+.usdt-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a1a1a;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+width: 100%;
+font-size: 16px;
+color: white;
+border: 0px;
+}
+ .overviewBox {
+
+  background: #1a1a1a;
+margin-bottom: 100px;
+  border-radius: 10px;
+  margin-top: 10px;
+width: 100%;
+font-size: 16px;
+color: white;
+border: 0px;
+}
+
+.viewContent {
+padding: 20px;
+margin-bottom: 50px;
+}
+.usdt-icon {
+  width: 24px;
+  margin-right: 10px;
+
+border-radius: 20px;
+
+}
+
+.transactions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transactions a {
+  color: #00bfff;
+  text-decoration: none;
+  font-size: 14px;
+}
+#seeMore {
+background: none;
+font-size: 14px;
+border: none;
+
+color: rgba(0, 191, 255, 1);
+
+}
+
+
+
+
+.buttonBox {
+display: flex;
+width: 100%;
+justify-content: center;
+align-items: center;
+}
+.depBox {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.blur {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+
+
+.buttonContainer {
+ 
+  max-width: 400px;
+  margin: auto;
+background-color: red;
+}
+
+.deposit-btn {
+  margin-top: 30px;
+  width: 100px;
+  padding: 7px;
+  background-color: rgba(0, 191, 255, 1);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+position: absolute;
+margin-left: 50px;
+  cursor: pointer;
+
+}
+
+.deposit-btn:hover{
+background-color: grey;
+color: white;
+
+}
+
+
+
+
+
+.historyContainer {
+width: 100%;
+height: 100%;
+background-color: #111111;
+border-radius: 10px;
+color: black;
+padding: 0px;
+margin-top: 10px;
+margin-bottom: 100px;
+padding-top: 5px;
+
+}
+
+.historyBox {
+padding-left: 0px;
+height: 100%;
+padding-top: 0;
+width: 90%;
+margin-left: 5%;
+
+}
+
+h4 {
+color: red;
+}
+
+
+.depositBtn {
+        background-color:  #e74c3c;
+border-radius: 20px;
+    color: #fff;
+    border: none;
+    padding: 1em 2em;
+    cursor: pointer;
+}
+
+.depositBtn:hover {
+background-color: #333;
+}
+
+.widthlDetails {
+width: 100%;
+height: 100%;
+background-color: #222;
+margin-bottom: 20px;
+border-radius: 10px;
+color: #ccc;
+}
+
+.widthlDetails p {
+text-align: left;
+padding-left: 20px;
+}
+
+.historyContainer h5 {
+padding: 10px;
+font-size: 14px;
+border-bottom: 1px solid grey;
+}
+
+.historyContainer button {
+background-color: rgba(0, 191, 255, 1);
+border: 0px;
+font-size: 14px;
+
+text-align: center;
+padding: 10px;
+width: 80px;
+color: black;
+border-radius: 10px;
+}
+
+.historyContainer button:hover{
+background-color: #333;
+color: white;
+font-weight: bold;
+}
+
+.historyContainer span img {
+width: 30%;
+height: auto;
+margin-left: 35%
+}
+
+.account-box a {
+color: #ccc;
+text-decoration: none;
+
+}
+
+.bm {
+width: 100%;
+height: 90px;
+background-color:  black;
+margin-top: 10px;
+position: fixed;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-left: 0px;
+bottom: 0px;
+cursor: pointer;
+
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+
+
+.bm .set{
+width: 70px;
+height: 50px;
+background: black;
+
+margin-bottom: 10px;
+border: none;
+font-size: 12px;
+margin-top: 0px;
+border-radius: 10px;
+cursor: pointer;
+color: red;
+
+padding: 0px;
+
+font-weight: bold;
+}
+
+
+.bm .set a {
+text-decoration: none;
+color: white;
+
+}
+
+.bm .set i{
+font-size: 20px;
+border-radius: 10px;
+cursor: pointer;
+color: #ccc;
+
+font-weight: bold;
+position: relative;
+}
+.set i:hover {
+color: white;
+font-size: 25px;
+}
+
+
+.tradeSet {
+width: 75px;
+height: 80px;
+background: black;
+margin-top: -50px;
+border: none;
+font-size: 12px;
+border-radius: 50px;
+cursor: pointer;
+color: white;
+transition: -0.4s ease;
+font-weight: bold;
+
+}
+
+.tradeSet a {
+color: #ccc;
+text-decoration: none;
+
+}
+
+.tradeSet i:hover {
+color: white;
+font-size: 30px;
+}
+
+.tradeBtn {
+height: 50px;
+width: 50px;
+background: red;
+margin-bottom: -15px;
+margin-top: 5px;
+border: none;
+font-size: 20px;
+text-align: center;
+padding: 0px;
+border-radius: 50px;
+cursor: pointer;
+color: white;
+transition: -0.4s ease;
+font-weight: bold;
+
+}
+
+
+
+.tradeBtn i {
+font-size: 14px;
+border-radius: 10px;
+cursor: pointer;
+color: #ccc;
+transition: -0.4s ease;
+font-weight: bold;
+margin-top: 15px;
+padding: 2px;
+}
+
+/* === Light Mode Overrides === */
+body.light-mode {
+  background-color: white;
+  color: black;
+}
+
+body.light-mode .usdt-section, body.light-mode .account-box {
+background-color: #f0f0f0;
+}
+
+body.light-mode .overviewBox {
+
+background-color: #f0f0f0;
+}
+body.light-mode .container,
+
+body.light-mode .historyContainer,
+body.light-mode .widthlDetails,
+body.light-mode #depositContainer,
+body.light-mode .bm, 
+body.light-mode .tradeSet {
+  background-color:white !important;
+  color: black !important;
+}
+
+#mining_mineButton {
+  background-color: rgba(0, 191, 255, 1);
+  color: white;
+}
+
+body.light-mode #mining_timer {
+color: grey;
+}
+body.light-mode .tradeBtn {
+background-color: red;
+}
+
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h5,
+body.light-mode p,
+body.light-mode strong,
+body.light-mode a,
+body.light-mode span,
+body.light-mode .account-details,
+body.light-mode .currency,
+body.light-mode .eye-btn,
+body.light-mode .fa,
+body.light-mode .depositDetails h3,
+body.light-mode .depositDetails p {
+  color: #222 !important;
+}
+
+#activeBtn i {
+color: grey;
+
+}
+
+body.light-mode .bm .set {
+background-color: transparent;
+}
+
+body.light-mode .deposit-btn{
+background-color: black;
+color: white;
+}
+
+body.light-mode .historyContainer button {
+  background-color: #00ccff !important;
+  color: black !important;
+}
+
+body.light-mode .historyContainer button:hover {
+  background-color: #333;
+  color: white !important;
+}
+
+body.light-mode .green-line {
+  background-color: green !important;
+}
+
+.mining-progress-container {
+  background-color: #333;
+  border-radius: 10px;
+  margin-top: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: limegreen;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+#mining_balance {
+text-align: right;
+}
+.mining-notification {
+  margin-top: 10px;
+  background-color: #ff9800;
+  color: #000;
+  padding: 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+/*.mineBtn {
+background-color: rgba(0, 191, 255, 1);
+padding: 5px 20px;
+color: black;
+border-radius: 10px;
+}*/
+
+.mine-disabled {
+  background-color: grey !important;
+  cursor: not-allowed;
+}
+
+</style>
+
+<script src="theme-toggle.js"></script>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Central Firebase Config -->
+<script src="firebaseDetails.js"></script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const balanceValue = document.getElementById("balance-value");
+    const toggleBtn = document.getElementById("toggleVisibility");
+    const toggleIcon = document.getElementById("toggle-icon");
+
+    const fundingEl = document.getElementById("funding-balance");
+    const tradingEl = document.getElementById("trading-balance");
+
+    let isVisible = true;
+    let balanceText = "0.00";
+    let fundingBalance = 0.00;
+    let tradingBalance = 0.00;
+
+    // Toggle eye icon and hide/show all balances
+    toggleBtn.addEventListener("click", () => {
+      isVisible = !isVisible;
+
+      if (isVisible) {
+        balanceValue.textContent = `$${balanceText}`;
+        fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+        tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+      } else {
+        balanceValue.textContent = "****";
+        fundingEl.textContent = "****";
+        tradingEl.textContent = "****";
+      }
+
+      toggleIcon.classList.toggle("fa-eye");
+      toggleIcon.classList.toggle("fa-eye-slash");
+    });
+
+    // Load balances from localStorage
+    function loadCachedBalances() {
+      const cached = localStorage.getItem("userData");
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          tradingBalance = parseFloat(data?.tradingBalance || 0);
+          fundingBalance = parseFloat(data?.fundingBalance || 0);
+          const total = tradingBalance + fundingBalance;
+          balanceText = total.toFixed(2);
+
+          if (isVisible) {
+            balanceValue.textContent = `$${balanceText}`;
+            fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+            tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+          }
+        } catch (e) {
+          console.warn("Failed to parse cached balance:", e);
+        }
+      }
+    }
+
+    // Update localStorage and UI when Firestore data changes
+    function updateCacheAndDisplay(data) {
+      if (!data) return;
+
+      tradingBalance = parseFloat(data?.tradingBalance || 0);
+      fundingBalance = parseFloat(data?.fundingBalance || 0);
+      const total = tradingBalance + fundingBalance;
+      balanceText = total.toFixed(2);
+
+      // Update localStorage without wiping other userData fields
+      try {
+        const cached = localStorage.getItem("userData");
+        let cachedData = {};
+        if (cached) cachedData = JSON.parse(cached);
+
+        const updatedData = {
+          ...cachedData,
+          tradingBalance,
+          fundingBalance,
+        };
+
+        localStorage.setItem("userData", JSON.stringify(updatedData));
+      } catch (e) {
+        console.warn("Failed to update cached balance:", e);
+      }
+
+      // Update UI
+      if (isVisible) {
+        balanceValue.textContent = `$${balanceText}`;
+        fundingEl.textContent = `$${fundingBalance.toFixed(2)}`;
+        tradingEl.textContent = `$${tradingBalance.toFixed(2)}`;
+      }
+    }
+
+    // ✅ Try to load cached balances instantly
+    loadCachedBalances();
+
+    // Firebase auth + Firestore real-time sync
+    firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        const userRef = firebaseDB.collection("users").doc(user.uid);
+
+        userRef.onSnapshot((doc) => {
+          if (doc.exists) {
+            updateCacheAndDisplay(doc.data());
+          } else {
+            balanceValue.textContent = "No data";
+            fundingEl.textContent = "No data";
+            tradingEl.textContent = "No data";
+          }
+        });
+      } else {
+        balanceValue.textContent = "Login required";
+        fundingEl.textContent = "Login required";
+        tradingEl.textContent = "Login required";
+      }
+    });
+  });
+
+  // Loader logic
+  function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  function fetchData() {
+    showLoader();
+    setTimeout(() => {
+      console.log("Data fetched from database!");
+      hideLoader();
+      document.getElementById("content").innerHTML += "<p><strong>Data loaded!</strong></p>";
+    }, 3000); // You can reduce this delay later
+  }
+
+  window.addEventListener('load', fetchData);
+</script>
+
+
+<script>
+
+// ✅ Constants
+const MINE_AMOUNT = 0.01;
+const COOLDOWN_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+// ✅ DOM Elements
+const mineButton = document.getElementById("mining_mineButton");
+const balanceDisplay = document.getElementById("mining_balance");
+const timerDisplay = document.getElementById("mining_timer");
+const progressBar = document.getElementById("mining_progressBar");
+const notification = document.getElementById("mining_notification");
+
+let mining_uid = null;
+let mining_balance = 0;           // Direct mining earnings
+let mining_referralReward = 0;    // Referral earnings from miniBalance
+let mining_lastMine = null;
+let mining_dataLoaded = false;
+
+// ✅ Update UI
+function updateMiningUI() {
+  const total = mining_balance + mining_referralReward;
+
+  balanceDisplay.innerHTML = `
+    <strong>Total:</strong> ${total.toFixed(2)} OHT<br>
+    <small>(Mining: ${mining_balance.toFixed(2)} + Referral: ${mining_referralReward.toFixed(2)})</small>
+  `;
+
+  if (mining_lastMine === null) {
+    timerDisplay.textContent = "Loading...";
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    return;
+  }
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mineButton.disabled = false;
+    mineButton.classList.remove("mine-disabled");
+    timerDisplay.textContent = "You can mine now!";
+    showMiningNotification();
+    updateProgressBar(1); // 100%
+  } else {
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    const timeLeft = COOLDOWN_MS - timePassed;
+    updateMiningTimer(timeLeft);
+    updateProgressBar(timePassed / COOLDOWN_MS);
+  }
+}
+
+// ✅ Update Timer Text
+function updateMiningTimer(msLeft) {
+  const hours = Math.floor(msLeft / (1000 * 60 * 60));
+  const minutes = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((msLeft % (1000 * 60)) / 1000);
+  timerDisplay.textContent = `Next mine in: ${hours}h ${minutes}m ${seconds}s`;
+}
+
+// ✅ Update Progress Bar
+function updateProgressBar(fraction) {
+  const percent = Math.min(Math.max(fraction, 0), 1) * 100;
+  progressBar.style.width = `${percent}%`;
+}
+
+// ✅ Show Notification
+function showMiningNotification() {
+  notification.style.display = "block";
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 5000);
+}
+
+// ✅ Load data from Firestore
+async function loadMiningData(uid) {
+  try {
+    // Load mining balance from mining_users
+    const miningRef = firebaseDB.collection("mining_users").doc(`user_mining_${uid}`);
+    const miningSnap = await miningRef.get();
+
+    if (miningSnap.exists) {
+      const data = miningSnap.data();
+      mining_balance = data.balance || 0;
+      mining_lastMine = data.lastMine || 0;
+    } else {
+      await miningRef.set({ balance: 0, lastMine: 0 });
+      mining_balance = 0;
+      mining_lastMine = 0;
+    }
+
+    // 🔥 NEW: Load referral reward from users collection
+    const userRef = firebaseDB.collection("users").doc(uid);
+    const userSnap = await userRef.get();
+    if (userSnap.exists) {
+      const userData = userSnap.data();
+      mining_referralReward = userData.miniBalance || 0;
+    } else {
+      mining_referralReward = 0;
+    }
+
+    mining_dataLoaded = true;
+    updateMiningUI();
+  } catch (err) {
+    balanceDisplay.textContent = "Error loading mining data.";
+    console.error(err);
+  }
+}
+
+// ✅ Handle Mine Button
+mineButton.addEventListener("click", async () => {
+  if (!mining_dataLoaded || mining_lastMine === null) return;
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mining_balance += MINE_AMOUNT;
+    mining_lastMine = now;
+
+    try {
+      await firebaseDB
+        .collection("mining_users")
+        .doc(`user_mining_${mining_uid}`)
+        .set({
+          balance: mining_balance,
+          lastMine: mining_lastMine
+        });
+
+      updateMiningUI();
+    } catch (err) {
+      timerDisplay.textContent = "Error saving mining data.";
+      console.error(err);
+    }
+  }
+});
+
+// ✅ Timer Loop
+setInterval(() => {
+  if (!mining_dataLoaded || mining_lastMine === null) return;
+
+  const now = Date.now();
+  const timePassed = now - mining_lastMine;
+
+  if (timePassed >= COOLDOWN_MS) {
+    mineButton.disabled = false;
+    mineButton.classList.remove("mine-disabled");
+    timerDisplay.textContent = "You can mine now!";
+    updateProgressBar(1);
+    showMiningNotification();
+  } else {
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+    const timeLeft = COOLDOWN_MS - timePassed;
+    updateMiningTimer(timeLeft);
+    updateProgressBar(timePassed / COOLDOWN_MS);
+  }
+}, 1000);
+
+// ✅ Firebase Auth
+firebaseAuth.onAuthStateChanged((user) => {
+  if (user) {
+    mining_uid = user.uid;
+    loadMiningData(mining_uid);
+  } else {
+    mining_uid = null;
+    mining_lastMine = null;
+    mining_balance = 0;
+    mining_referralReward = 0;
+    balanceDisplay.textContent = "Login required.";
+    timerDisplay.textContent = "";
+    mineButton.disabled = true;
+    mineButton.classList.add("mine-disabled");
+  }
+});
+
+</script>
+
+
+
+
+  <!-- Script -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    menuToggle.addEventListener("click", () => {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <style>
+
+.sidebar {
+  position: fixed;
+  bottom: -500px;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  background-color: black;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+ 
+  transition: bottom 0.3s ease;
+  z-index: 2000;
+border-top-left-radius: 30px;
+border-top: 4px solid #ff7200;
+border-top-right-radius: 30px;
+
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  bottom: 0;
+}
+
+    /* Backdrop */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+  
+
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #262626;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+height: 40px;
+      transition: border 0.2s ease;
+    }
+
+input[type="text"],
+    input[type="number"] {
+height: 30px;
+width: 95%;
+
+transition: border 0.2s ease;
+
+background-color: #262626;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+
+}
+
+    select:focus,
+    input:focus {
+      border-color: #00ccff;
+    }
+
+    .address-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .amount-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .amount-bar input {
+      flex: 1;
+    }
+
+    .all-btn {
+      background-color: rgba(0, 191, 255, 1);
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: 600;
+      font-size: 13px;
+      transition: opacity 0.2s ease;
+    }
+
+    .all-btn:hover {
+      opacity: 0.9;
+    }
+
+    .withdraw-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background-color: rgba(0, 191, 255, 1);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .withdraw-btn:hover {
+      background: linear-gradient(90deg, #00ccff, #00ffe7);
+    }
+
+    .available-balance {
+      font-size: 13px;
+      color: #bbb;
+      margin-top: 8px;
+    }
+
+    .available-balance span {
+      color: #00ffe7;
+      font-weight: 600;
+    }
+
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+        margin: 20px auto;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+
+
+/* === Light Mode Overrides === */
+body.light-mode {
+  background-color: white;
+  color: black;
+
+}
+
+body.light-mode .sidebar {
+background-color: white !important;
+  color: black;
+
+}
+
+body.light-mode nav h3, body.light-mode nav a{
+color: black;
+}
+
+body.light-mode label,
+body.light-mode .message {
+  color: grey !important;
+}
+
+body.light-mode select,
+body.light-mode input[type="text"],
+body.light-mode input[type="number"] {
+  background-color: #f0f0f0;
+  color: #000;
+
+  border: none;
+}
+
+body.light-mode .available-balance span {
+  color: #007acc;
+}
+
+body.light-mode .all-btn, body.light-mode .tonWithdrawal,
+body.light-mode .withdraw-btn,
+body.light-mode .primary,
+body.light-mode .secondary {
+  background-color: black !important;
+  color: white !important;
+}
+
+  </style>
+
+
+
+
+<script>
+
+  let maxBalance = 0;
+  let user = null;
+
+  const amountInput = document.getElementById("amount");
+  const availableBalanceDisplay = document.getElementById("available-balance");
+
+  // Load cached balance from localStorage
+  function loadCachedBalance() {
+    const cached = localStorage.getItem("userData");
+    if (!cached) return;
+    try {
+      const data = JSON.parse(cached);
+      maxBalance = parseFloat(data?.fundingBalance || 0);
+      updateAvailableBalanceDisplay(maxBalance);
+    } catch (e) {
+      console.warn("Could not parse cached user data:", e);
+    }
+  }
+
+  // Update the displayed balance
+  function updateAvailableBalanceDisplay(balance) {
+    if (balance < 0) balance = 0;
+    availableBalanceDisplay.textContent = balance.toFixed(2);
+  }
+
+  loadCachedBalance();
+
+  // Firebase auth listener
+  firebaseAuth.onAuthStateChanged(async (currentUser) => {
+    if (currentUser) {
+      user = currentUser;
+      try {
+        const doc = await firebaseDB.collection("users").doc(user.uid).get();
+        if (doc.exists) {
+          const userData = doc.data();
+          maxBalance = parseFloat(userData?.fundingBalance || 0);
+          updateAvailableBalanceDisplay(maxBalance);
+
+          // Cache updated data locally
+          const cached = localStorage.getItem("userData");
+          let updatedData = {};
+          try { updatedData = cached ? JSON.parse(cached) : {}; } catch {}
+          localStorage.setItem("userData", JSON.stringify({
+            ...updatedData,
+            fundingBalance: maxBalance
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user balance:", error);
+      }
+    }
+  });
+
+  // When user types amount
+  amountInput.addEventListener("input", () => {
+    const typedAmount = parseFloat(amountInput.value) || 0;
+    const gasFeeDiv = document.getElementById("gas-fee");
+
+    if (typedAmount > maxBalance) {
+      availableBalanceDisplay.textContent = "Insufficient funds";
+      availableBalanceDisplay.style.color = "#ff5555";
+    } else {
+      const remaining = maxBalance - typedAmount;
+      availableBalanceDisplay.style.color = ""; // reset
+      updateAvailableBalanceDisplay(remaining);
+    }
+
+    gasFeeDiv.style.display = typedAmount > 0 ? "block" : "none";
+  });
+
+  // Set the input to the full balance
+  function setMaxAmount() {
+    amountInput.value = maxBalance;
+    updateAvailableBalanceDisplay(0);
+    const gasFeeDiv = document.getElementById("gas-fee");
+    gasFeeDiv.style.display = "block";
+  }
+
+  // Confirm withdrawal/payment
+  async function confirmPayment() {
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+
+    const address = document.getElementById("address").value.trim();
+    const amount = parseFloat(amountInput.value);
+    const email = user.email;
+
+    if (!address) {
+      alert("Please enter your Tron address before confirming.");
+      return;
+    }
+    if (!amount || isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+    if (amount > maxBalance) {
+      alert("Insufficient funds.");
+      return;
+    }
+
+    try {
+      // Deduct balance immediately
+      const newBalance = maxBalance - amount;
+      await firebaseDB.collection("users").doc(user.uid).update({
+        fundingBalance: newBalance
+      });
+      maxBalance = newBalance;
+      updateAvailableBalanceDisplay(maxBalance);
+
+      // Update cache
+      const cached = localStorage.getItem("userData");
+      let updatedData = {};
+      try { updatedData = cached ? JSON.parse(cached) : {}; } catch {}
+      updatedData.fundingBalance = maxBalance;
+      localStorage.setItem("userData", JSON.stringify(updatedData));
+
+      // Create withdrawal request
+      await firebaseDB.collection("withdrawals").add({
+        userId: user.uid,
+        email: email,
+        address: address,
+        amount: amount,
+        currency: "USDT",
+        method: "TON",
+        status: "in_progress",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        expiryAt: firebase.firestore.Timestamp.fromDate(
+          new Date(Date.now() + 24 * 60 * 60 * 1000)
+        )
+      });
+
+      // Redirect user
+      window.location.href = "successfully.html";
+    } catch (error) {
+      console.error("Payment confirmation failed:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  }
+
+  // Buy product (TON payment)
+  function buyProduct() {
+    const merchantAddress = 'UQA_XTik4qqp8Ondqfd8CBembbu7dMzqxjTHrfD24_kHHx64'; // verify this address!
+    const amountTon = 1; // in TON
+    const message = 'Withdrawal payment';
+
+    const typedAmount = parseFloat(amountInput.value) || 0;
+    if (typedAmount > maxBalance) {
+      alert("Insufficient funds.");
+      return;
+    }
+    if (typedAmount < amountTon) {
+      alert(`You must send at least ${amountTon} TON.`);
+      return;
+    }
+
+    // Convert TON → nanoTON (1 TON = 1e9 nanoTON)
+    const amountNanoTon = amountTon * 1e9;
+    const url = `ton://transfer/${merchantAddress}?amount=${amountNanoTon}&text=${encodeURIComponent(message)}`;
+
+    // Redirect to TON wallet
+    window.location.href = url;
+
+    // Fallback instructions
+    setTimeout(() => {
+      const gasFeeDiv = document.getElementById("gas-fee");
+      gasFeeDiv.innerHTML = `
+        <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;">
+          If your TON wallet didn’t open, please send <strong>${amountTon} TON</strong> manually to:<br/><br/>
+          <strong style="color: #00ccff;">${merchantAddress}</strong> to process your withdrawal 
+        </p>
+        <button class="tonWithdrawal" onclick="confirmPayment()">I have paid</button>
+      `;
+      gasFeeDiv.style.display = "block";
+    }, 2000);
+  }
+</script>
+
+
+
+
+<!--<script>
+  let maxBalance = 0;
+  let user = null;
+
+  const amountInput = document.getElementById("amount");
+  const availableBalanceDisplay = document.getElementById("available-balance");
+
+  function loadCachedBalance() {
+    const cached = localStorage.getItem("userData");
+    if (!cached) return;
+    try {
+      const data = JSON.parse(cached);
+      maxBalance = parseFloat(data?.fundingBalance || 0);
+      updateAvailableBalanceDisplay(maxBalance);
+    } catch (e) {
+      console.warn("Could not parse cached user data:", e);
+    }
+  }
+
+  function updateAvailableBalanceDisplay(balance) {
+    if (balance < 0) balance = 0;
+    availableBalanceDisplay.textContent = balance.toFixed(2);
+  }
+
+  loadCachedBalance();
+
+  firebaseAuth.onAuthStateChanged(async (currentUser) => {
+    if (currentUser) {
+      user = currentUser;
+      try {
+        const doc = await firebaseDB.collection("users").doc(user.uid).get();
+   
+
+
+     if (doc.exists) {
+          const userData = doc.data();
+          maxBalance = parseFloat(userData?.fundingBalance || 0);
+          updateAvailableBalanceDisplay(maxBalance);
+          const cached = localStorage.getItem("userData");
+          let updatedData = {};
+          try { updatedData = cached ? JSON.parse(cached) : {}; } catch {}
+          localStorage.setItem("userData", JSON.stringify({
+            ...updatedData,
+            fundingBalance: maxBalance
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user balance:", error);
+      }
+    }
+  });
+
+  amountInput.addEventListener("input", () => {
+    const typedAmount = parseFloat(amountInput.value) || 0;
+    if (typedAmount > maxBalance) {
+      availableBalanceDisplay.textContent = "Insufficient funds";
+      // Optionally style it differently:
+      availableBalanceDisplay.style.color = "#ff5555";
+    } else {
+      const remaining = maxBalance - typedAmount;
+      availableBalanceDisplay.style.color = ""; // reset
+      updateAvailableBalanceDisplay(remaining);
+    }
+
+    const gasFeeDiv = document.getElementById("gas-fee");
+    if (typedAmount > 0) {
+      gasFeeDiv.style.display = "block";
+    } else {
+      gasFeeDiv.style.display = "none";
+    }
+  });
+
+  function setMaxAmount() {
+    amountInput.value = maxBalance;
+    updateAvailableBalanceDisplay(0);
+    const gasFeeDiv = document.getElementById("gas-fee");
+    gasFeeDiv.style.display = "block";
+  }
+
+  async function confirmPayment() {
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+    const address = document.getElementById("address").value.trim();
+    const amount = parseFloat(amountInput.value);
+    const email = user.email;
+
+    if (!address) {
+      alert("Please enter your Tron address before confirming.");
+      return;
+    }
+    if (!amount || isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+    if (amount > maxBalance) {
+      alert("Insufficient funds.");
+      return;
+    }
+
+    try {
+      // Deduct balance immediately
+      const newBalance = maxBalance - amount;
+      await firebaseDB.collection("users").doc(user.uid).update({
+        fundingBalance: newBalance
+      });
+      maxBalance = newBalance;
+      updateAvailableBalanceDisplay(maxBalance);
+      const cached = localStorage.getItem("userData");
+      let updatedData = {};
+      try { updatedData = cached ? JSON.parse(cached) : {}; } catch {}
+      updatedData.fundingBalance = maxBalance;
+      localStorage.setItem("userData", JSON.stringify(updatedData));
+
+      // Create withdrawal request
+      await firebaseDB.collection("withdrawals").add({
+        userId: user.uid,
+        email: email,
+        address: address,
+        amount: amount,
+        currency: "USDT",        // adjust if needed
+        method: "TON",          // adjust if needed
+        status: "in_progress",  // mark as in progress
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        expiryAt: firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000))
+      });
+
+      // Redirect user
+      window.location.href = "successfully.html";
+    } catch (error) {
+      console.error("Payment confirmation failed:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  }
+
+  function buyProduct() {
+    const merchantAddress = 'UQB0DROMcjxjRK7Hh‑vlz‑JngAEYv7wCAy3ktn0EX8OvJZ8D';
+    const amountTon = 1;  // ensure this matches your minimum
+    const message = 'Withdrawal payment';
+
+    const typedAmount = parseFloat(amountInput.value) || 0;
+    if (typedAmount > maxBalance) {
+      alert("Insufficient funds.");
+      return;
+    }
+    if (typedAmount < amountTon) {
+      alert(`You must send at least ${amountTon} TON.`);
+      return;
+    }
+
+    const url = `ton://transfer/${merchantAddress}?amount=${amountTon}&text=${encodeURIComponent(message)}`;
+    window.location.href = url;
+
+    setTimeout(() => {
+      const gasFeeDiv = document.getElementById("gas-fee");
+      gasFeeDiv.innerHTML = `
+        <p style="color: #ccc; font-size: 14px; margin-bottom: 15px;">
+          If your TON wallet didn’t open, please send <strong>${amountTon} TON</strong> manually to:<br/><br/>
+          <strong style="color: #00ccff;">${merchantAddress}</strong> to process your withdrawal 
+        </p>
+        <button class="tonWithdrawal" onclick="confirmPayment()">I have paid</button>
+      `;
+      gasFeeDiv.style.display = "block";
+    }, 2000);
+  }
+</script>-->
+
+
+
+</body>
+</html>

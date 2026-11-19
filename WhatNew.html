@@ -1,0 +1,75 @@
+<style>
+.whats-new-hint {
+    position: fixed;
+    bottom: 85px;
+    right: 20px;
+    background: #fff;
+    color: #333;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 9999;
+    animation: hintAppear 0.5s ease;
+}
+
+.whats-new-hint::after {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    right: 22px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    transform: rotate(45deg);
+}
+
+@keyframes hintAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.whats-new-icon {
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #A94A4A;
+    color: white;
+    border: none;
+    font-size: 23px;
+    cursor: pointer;
+    z-index: 9999;
+}
+</style>
+
+<!-- Automatic hint -->
+<div class="whats-new-hint" id="whatsNewHint">
+    ✨ What's New? Check out our latest updates!
+</div>
+
+<!-- Icon -->
+<button class="whats-new-icon" onclick="openWhatsNew()">
+    ✨
+</button>
+
+<script>
+const hint = document.getElementById("whatsNewHint");
+
+// Automatically hide after 5 seconds
+setTimeout(() => {
+    hint.style.display = "none";
+}, 5000);
+
+function openWhatsNew() {
+    // Put your What's New popup opening code here
+}
+</script>

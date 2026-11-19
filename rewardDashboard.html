@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+<title>OHUT Event Center</title>
+<style>
+:root {
+  --bg: #070817;
+  --surface: #0f1126;
+  --card: #151734;
+  --line: #28254b;
+  --purple: #7658f5;
+  --cyan: #00ccff;
+  --gold: #ffd778;
+  --green: #22c55e;
+  --muted: #9f9ec0;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: #04050e;
+  color: #fff;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile App Shell */
+.mobile-app {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% -5%, #2d1f59 0%, transparent 45%), var(--bg);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 42px;
+  position: relative;
+}
+
+/* Light Mode Support */
+body.light-mode {
+  background: #e9ebf5;
+  color: #141226;
+  --bg: #f5f6fc;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --line: #dedbf0;
+  --purple: #5b3df0;
+  --cyan: #0077cc;
+  --gold: #c6860e;
+  --muted: #5d5a78;
+}
+
+body.light-mode .mobile-app {
+  background: radial-gradient(ellipse at 50% -5%, #e0d7ff 0%, transparent 45%), var(--bg);
+}
+
+body.light-mode .top-bar {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom-color: var(--line);
+}
+
+body.light-mode .back-btn {
+  background: #f0effa;
+  color: #141226;
+}
+
+body.light-mode .tab-pill {
+  background: #fff;
+  color: #464363;
+}
+
+body.light-mode .tab-pill.active {
+  background: var(--purple);
+  color: #fff;
+}
+
+/* Sticky Mobile Header */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(7, 8, 23, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.back-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
+.header-title img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  padding: 2px;
+  object-fit: contain;
+}
+
+.header-spacer {
+  width: 34px;
+}
+
+.content {
+  padding: 16px;
+}
+
+/* Mobile Featured Spotlight Card */
+.hero-card {
+  background: linear-gradient(145deg, #241b52 0%, #12142e 70%);
+  border: 1px solid #4c3b94;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+body.light-mode .hero-card {
+  background: linear-gradient(145deg, #ece6ff 0%, #ffffff 80%);
+  border-color: #c4b6f7;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-copy {
+  flex: 1;
+}
+
+.live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34, 197, 94, 0.16);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+body.light-mode .live-tag {
+  color: #15803d;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.hero-copy h1 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.hero-copy h1 em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.hero-copy p {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hero-art {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+.hero-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .hero-bottom {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.hero-reward small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.hero-reward strong {
+  font-size: 13px;
+  color: var(--gold);
+}
+
+.hero-btn {
+  padding: 10px 16px;
+  border-radius: 11px;
+  background: linear-gradient(100deg, #ffe28a, #f2b83d);
+  color: #24163e;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Horizontal Scrollable Filter Pills */
+.tabs-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 14px;
+  scrollbar-width: none;
+}
+
+.tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-pill {
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-pill.active {
+  background: linear-gradient(135deg, #7658f5, #4e36d8);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* Mobile Event Stack */
+.events-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.event-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+
+.event-media {
+  position: relative;
+  width: 100%;
+  height: 155px;
+  background: radial-gradient(circle at 50% 45%, rgba(118, 88, 245, 0.3), #0c0e22 85%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.event-media img.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-media img.contain-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+}
+
+/* Special OHT Coin Listing Emblem Style */
+.coin-listing-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.coin-ring {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(145deg, #ffe28a, #b87527, #ffd778);
+  box-shadow: 0 0 24px rgba(255, 215, 120, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coin-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+  padding: 5px;
+}
+
+.step-chip {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  color: var(--gold);
+  background: rgba(7, 8, 23, 0.78);
+  border: 1px solid rgba(255, 215, 120, 0.35);
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.status-badge.live {
+  background: rgba(20, 83, 45, 0.9);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.status-badge.upcoming {
+  background: rgba(30, 58, 138, 0.9);
+  color: #7dd3fc;
+  border: 1px solid rgba(125, 211, 252, 0.45);
+}
+
+.event-body {
+  padding: 15px;
+}
+
+.event-sub {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+
+.event-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.event-desc {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Listing Roadmap Mini-Steps inside the Upcoming OHT Card */
+.listing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.l-step {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+body.light-mode .l-step {
+  background: #f6f5fc;
+}
+
+.l-step.active-step {
+  border-color: var(--gold);
+  background: rgba(255, 215, 120, 0.1);
+}
+
+.l-step span {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.l-step small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.event-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .event-footer {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.prize-info small {
+  display: block;
+  font-size: 9.5px;
+  color: var(--muted);
+}
+
+.prize-info strong {
+  font-size: 13px;
+  color: var(--gold);
+}
+
+.card-btn {
+  padding: 9px 15px;
+  border-radius: 10px;
+  background: linear-gradient(100deg, #ffe28a, #f2b83d);
+  color: #24163e;
+  font-size: 11.5px;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.card-btn.upcoming-btn {
+  background: rgba(118, 88, 245, 0.22);
+  border: 1px solid rgba(118, 88, 245, 0.5);
+  color: #d8cfff;
+}
+
+body.light-mode .card-btn.upcoming-btn {
+  background: #ece7ff;
+  color: #4b2fe0;
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 24px;
+}
+</style>
+</head>
+<body>
+<audio id="notification-sound" preload="auto">
+  <source src="notification.mp3" type="audio/mpeg" />
+</audio>
+
+<div class="mobile-app">
+  <!-- Mobile Top Header -->
+  <header class="top-bar">
+    <a class="back-btn" href="wallet.html" aria-label="Back to Dashboard"><i class="fas fa-arrow-left"></i></a>
+    <div class="header-title">
+      
+      <span>EVENT CENTER</span>
+    </div>
+    <div class="header-spacer"></div>
+  </header>
+
+  <div class="content">
+    <!-- Featured Live Campaign Card -->
+    <section class="hero-card">
+      <div class="hero-top">
+        <div class="hero-copy">
+          <div class="live-tag"><span class="live-dot"></span> ONGOING EVENT</div>
+          <h1>2M Pioneers <em>Spin</em></h1>
+          <p>Win guaranteed USDT &amp; OHT rewards in 2 quick spins before the pioneer pool fills.</p>
+        </div>
+        <div class="hero-art">
+          <img src="2mp.png" alt="Pioneer Gift Box" onerror="this.src='Ohut Logo.png'">
+        </div>
+      </div>
+      <div class="hero-bottom">
+        <div class="hero-reward">
+          <small>Event Reward</small>
+          <strong>Up to 15 USDT + 1,000 OHT</strong>
+        </div>
+        <a class="hero-btn" href="reward.html" id="heroSpinBtn">Spin Now </a>
+      </div>
+    </section>
+
+    <!-- Category Filter Pills -->
+    <div class="tabs-row" id="mobileTabs">
+      <button class="tab-pill active" data-filter="all" type="button">All Events</button>
+      <button class="tab-pill" data-filter="upcoming" type="button">Upcoming (OHT Listing)</button>
+      <button class="tab-pill" data-filter="live" type="button">Ongoing</button>
+    </div>
+
+    <!-- Mobile Event Cards List -->
+    <div class="events-stack" id="eventsStack"></div>
+
+  </div>
+</div>
+
+<script src="theme-toggle.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script>
+<script src="notifications.js"></script>
+<script>
+/**
+ * ============================================================
+ * INSERT YOUR EVENT PICTURES & DETAILS HERE
+ * - `image`: Insert your picture path (e.g. 'Ohut Logo.png' or 'banner.jpg')
+ * - `isCoinListing`: Displays the glowing OHT Coin Listing Step 1 badge
+ * - `fitCover`: Set to `true` if you insert a full-width rectangular banner image
+ * ============================================================
+ */
+const MOBILE_EVENTS = [
+  {
+    id: 'oht-coin-listing-step1',
+    status: 'upcoming',
+    isCoinListing: true,
+    subLabel: 'Upcoming · Coin Listing Roadmap',
+    title: 'OHT Coin Listing — Step 1',
+    description: 'The first official milestone toward listing OHT on spot markets. Verify your account, hold OHT in your mining balance, and prepare for snapshot verification.',
+    image: 'ohtcoin.jpg',
+    fitCover: false,
+    rewardLabel: 'Milestone',
+    rewardValue: 'Step 1 · Token Readiness',
+    buttonText: 'coming soon...',
+    link: '#'
+  },
+  {
+    id: 'pioneer-rewards-spin',
+    status: 'live',
+    isCoinListing: false,
+    subLabel: 'Ongoing · 2M Pioneer Exclusive',
+    title: 'Pioneer Wheel Rewards',
+    description: 'Complete your 2 pioneer spins to credit USDT directly to your Funding Balance and OHT to your Mining Balance.',
+    image: '2mp.png',
+    fitCover: false,
+    rewardLabel: 'Guaranteed',
+    rewardValue: 'USDT + OHT Spins',
+    buttonText: 'Open Wheel',
+    link: 'reward.html'
+  }
+//   ,
+//   {
+//     id: 'ton-wallet-connect',
+//     status: 'live',
+//     isCoinListing: false,
+//     subLabel: 'Ongoing · Wallet Integration',
+//     title: 'Connect TON Wallet',
+//     description: 'Bind your TON wallet in the Wallet tab to stay eligible for upcoming OHT listing distributions.',
+//     image: 'Ohut Logo.png',
+//     fitCover: false,
+//     rewardLabel: 'Requirement',
+//     rewardValue: 'On-Chain Ready',
+//     buttonText: 'Go to Wallet',
+//     link: 'wallet.html'
+//   }
+];
+
+const eventsStack = document.getElementById('eventsStack');
+const mobileTabs = document.getElementById('mobileTabs');
+let currentFilter = 'all';
+let pioneerClaimed = false;
+
+function renderMobileEvents() {
+  const items = currentFilter === 'all'
+    ? MOBILE_EVENTS
+    : MOBILE_EVENTS.filter(ev => ev.status === currentFilter);
+
+  eventsStack.innerHTML = items.map(ev => {
+    const isUpcoming = ev.status === 'upcoming';
+    const badgeLabel = isUpcoming ? 'Upcoming' : 'Ongoing';
+    const btnText = (ev.id === 'pioneer-rewards-spin' && pioneerClaimed) ? 'Completed' : ev.buttonText;
+
+    const mediaHtml = ev.isCoinListing
+      ? `
+        <div class="coin-listing-showcase">
+          <div class="coin-ring">
+            <img src="${ev.image}" alt="OHT Coin Logo">
+          </div>
+          <span class="step-chip">Step 1 · OHT Listing</span>
+        </div>
+      `
+      : `<img src="${ev.image}" alt="${ev.title}" class="${ev.fitCover ? 'cover-img' : 'contain-img'}" onerror="this.src='Ohut Logo.png'">`;
+
+    const stepsHtml = ev.isCoinListing
+      ? `
+        <div class="listing-steps">
+          <div class="l-step active-step"><span>Step 1</span><small>OHT Snapshot</small></div>
+          <div class="l-step"><span>Step 2</span><small>TON Binding</small></div>
+          <div class="l-step"><span>Step 3</span><small>Spot Listing</small></div>
+        </div>
+      `
+      : '';
+
+    return `
+      <article class="event-card">
+        <div class="event-media">
+          <span class="status-badge ${ev.status}">${badgeLabel}</span>
+          ${mediaHtml}
+        </div>
+        <div class="event-body">
+          <div class="event-sub">${ev.subLabel}</div>
+          <h3 class="event-title">${ev.title}</h3>
+          <p class="event-desc">${ev.description}</p>
+          ${stepsHtml}
+          <div class="event-footer">
+            <div class="prize-info">
+              <small>${ev.rewardLabel}</small>
+              <strong>${ev.rewardValue}</strong>
+            </div>
+            <a class="card-btn ${isUpcoming ? 'upcoming-btn' : ''}" href="${ev.link}">${btnText}</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+mobileTabs.querySelectorAll('.tab-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    mobileTabs.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.getAttribute('data-filter');
+    renderMobileEvents();
+  });
+});
+
+renderMobileEvents();
+
+if (typeof firebaseAuth !== 'undefined' && typeof firebaseDB !== 'undefined') {
+  firebaseAuth.onAuthStateChanged(async user => {
+    if (!user) return;
+    try {
+      const snap = await firebaseDB.collection('users').doc(user.uid).get();
+      if (snap.exists && snap.data().pioneerRewardsClaimed) {
+        pioneerClaimed = true;
+        document.getElementById('heroSpinBtn').textContent = 'Claimed ✓';
+        renderMobileEvents();
+      }
+    } catch (e) {
+      console.error('Event sync error:', e);
+    }
+  });
+}
+</script>
+</body>
+</html>

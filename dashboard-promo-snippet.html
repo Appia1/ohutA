@@ -1,0 +1,109 @@
+
+
+
+<!-- OHUT PIONEER REWARDS ANNOUNCEMENT
+     Paste this block before </body> on your dashboard.
+     Ensure firebaseDetails.js has already initialized firebaseAuth/firebaseDB.
+-->
+<style>
+#pioneerOverlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(3,3,18,.82);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+#pioneerOverlay.show{display:flex;animation:pioneerFade .35s ease}
+@keyframes pioneerFade{from{opacity:0}to{opacity:1}}
+#pioneerModal{width:min(720px,100%);position:relative;overflow:hidden;border:1px solid rgba(151,117,255,.45);border-radius:25px;background:radial-gradient(ellipse at 15% 15%,#38206f 0,transparent 42%),radial-gradient(ellipse at 90% 80%,#271052 0,transparent 42%),linear-gradient(135deg,#09091f,#11102e 55%,#09091d);box-shadow:0 25px 90px #000b,0 0 45px #7448ff35;color:#fff;transform:translateY(18px) scale(.97);animation:pioneerPop .55s cubic-bezier(.2,.85,.25,1) forwards}
+@keyframes pioneerPop{to{transform:translateY(0) scale(1)}}
+#pioneerModal:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 20%,#ffffff0c 48%,transparent 72%);transform:translateX(-100%);animation:pioneerShine 4s ease-in-out infinite}
+@keyframes pioneerShine{55%,100%{transform:translateX(100%)}}
+.pioneer-top{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0;color:#c8baff;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.pioneer-brand{display:flex;align-items:center;gap:8px}.pioneer-brand img{width:28px;height:28px;object-fit:contain;background:#fff;border-radius:50%;padding:3px}
+.pioneer-close{border:0;color:#cfc7ec;background:#ffffff12;width:34px;height:34px;border-radius:50%;font-size:21px;cursor:pointer}
+.pioneer-hero{display:grid;grid-template-columns:1fr 1.05fr 1fr;align-items:center;gap:10px;padding:25px 22px 18px}
+.pioneer-wheel{width:min(100%,170px);aspect-ratio:1;border-radius:50%;padding:8px;margin:auto;position:relative;background:linear-gradient(135deg,#ffe58c,#b77816,#fff0a5,#a35b08);box-shadow:0 0 25px #ffcb5540}
+.pioneer-wheel:before{content:"";position:absolute;inset:8px;border-radius:50%;background:conic-gradient(#21bd85 0 45deg,#f6c84b 45deg 90deg,#7357e8 90deg 135deg,#ee5b79 135deg 180deg,#1a9cc2 180deg 225deg,#f6c84b 225deg 270deg,#8b62e8 270deg 315deg,#20b88a 315deg);border:3px solid #fff0ad}
+.pioneer-wheel:after{content:"";position:absolute;inset:43%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c7,#e2a82f 60%,#8e4d0a);border:3px solid #fff1b7;box-shadow:0 2px 8px #0008}
+.pioneer-wheel i{position:absolute;z-index:2;left:calc(50% - 2px);top:12px;width:4px;height:calc(50% - 12px);background:#fff5cf;transform-origin:bottom;opacity:.8}
+.pioneer-wheel i:nth-child(1){transform:rotate(0deg)}.pioneer-wheel i:nth-child(2){transform:rotate(45deg)}.pioneer-wheel i:nth-child(3){transform:rotate(90deg)}.pioneer-wheel i:nth-child(4){transform:rotate(135deg)}
+.pioneer-message{text-align:center;padding:16px 12px;border:1px solid #ffffff1b;border-radius:15px;background:#09091d99;box-shadow:inset 0 0 25px #8a61ff12}
+.pioneer-kicker{font-size:10px;color:#b9a6ff;letter-spacing:2px;font-weight:800;text-transform:uppercase}
+.pioneer-message h2{font-size:clamp(19px,4vw,29px);line-height:1.15;margin:9px 0;color:#fff}
+.pioneer-message p{font-size:12px;line-height:1.6;color:#c9c5df;margin:0}
+.pioneer-message strong{color:#ffd77a}
+.pioneer-gift{position:relative;text-align:center;min-width:0}
+.pioneer-gift .big{font-size:clamp(55px,11vw,94px);font-weight:1000;line-height:.95;letter-spacing:-5px;color:#ffe18a;text-shadow:0 3px 0 #a65a13,0 0 28px #ffc84a70}
+.pioneer-gift .million{font-size:13px;font-weight:900;letter-spacing:2px;color:#fff0b9;margin-top:7px}
+.pioneer-gift .giftbox{font-size:48px;filter:drop-shadow(0 8px 10px #0008);animation:pioneerFloat 2.5s ease-in-out infinite}
+@keyframes pioneerFloat{50%{transform:translateY(-8px) rotate(2deg)}}
+.pioneer-bottom{padding:0 22px 22px}
+.pioneer-note{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #ffffff17;border-radius:13px;background:#ffffff0b;color:#d7d1ef;font-size:11px;line-height:1.5}
+.pioneer-note b{color:#ffe18a}
+.pioneer-actions{display:flex;gap:10px;margin-top:15px}
+.pioneer-actions button{flex:1;border:0;border-radius:12px;padding:14px 12px;font-weight:800;font-size:13px;cursor:pointer}
+#pioneerCancel{background:#ffffff12;color:#e6e0f6;border:1px solid #ffffff20}
+#pioneerClaim{color:#21133f;background:linear-gradient(100deg,#ffe28a,#f6b943);box-shadow:0 7px 22px #d99b3440}
+#pioneerClaim:active,#pioneerCancel:active{transform:scale(.98)}
+@media(max-width:540px){.pioneer-hero{grid-template-columns:1fr 1fr;gap:13px;padding:20px 15px}.pioneer-wheel{width:125px;grid-row:1}.pioneer-message{grid-column:1/-1;grid-row:2}.pioneer-gift{grid-column:2;grid-row:1}.pioneer-bottom{padding:0 15px 17px}.pioneer-top{padding:15px 15px 0}}
+@media(prefers-reduced-motion:reduce){#pioneerModal,.pioneer-gift .giftbox{animation:none}}
+</style>
+
+<div id="pioneerOverlay" aria-modal="true" role="dialog" aria-labelledby="pioneerHeading">
+  <section id="pioneerModal">
+    <div class="pioneer-top">
+      <div class="pioneer-brand"><img src="assets/oht-logo-transparent.png" alt="OHT logo"> OHUT PIONEER REWARDS</div>
+      <button class="pioneer-close" id="pioneerX" aria-label="Close">×</button>
+    </div>
+    <div class="pioneer-hero">
+      <div class="pioneer-wheel" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="pioneer-message">
+        <div class="pioneer-kicker">A special reward awaits</div>
+        <h2 id="pioneerHeading">Spin the wheel and win!</h2>
+        <p>You’re among the first <strong>2 million pioneers</strong> invited to take part in the OHUT rewards event.</p>
+      </div>
+      <div class="pioneer-gift">
+        <div class="big">2M</div>
+        <div class="million">PIONEERS</div>
+        <div class="giftbox" aria-hidden="true">🎁</div>
+      </div>
+    </div>
+    <div class="pioneer-bottom">
+      <div class="pioneer-note"><span>✨</span><span>Get <b>2 spins</b> — one OHT reward and one USDT reward. Your rewards are added to the matching OHUT balances after each successful spin.</span></div>
+      <div class="pioneer-actions">
+        <button id="pioneerCancel" type="button">Maybe later</button>
+        <button id="pioneerClaim" type="button">Claim Reward&nbsp; →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+<script>
+(function(){
+  const overlay=document.getElementById('pioneerOverlay');
+  if(!overlay) return;
+  const hide=()=>overlay.classList.remove('show');
+  document.getElementById('pioneerCancel').addEventListener('click',hide);
+  document.getElementById('pioneerX').addEventListener('click',hide);
+  document.getElementById('pioneerClaim').addEventListener('click',()=>{
+    window.location.href='rewards.html';
+  });
+  // A dismissal lasts only for this browser tab session. Completion is checked
+  // from Firestore and is permanent for the account.
+  if(typeof firebaseAuth === 'undefined' || typeof firebaseDB === 'undefined') {
+    console.warn('OHUT Firebase is not initialized before the Pioneer Rewards snippet.');
+    return;
+  }
+  firebaseAuth.onAuthStateChanged(async user=>{
+    if(!user || sessionStorage.getItem('ohutPioneerDismissed')==='1') return;
+    try{
+      const snap=await firebaseDB.collection('users').doc(user.uid).get();
+      const state=snap.exists ? (snap.data().pioneerRewards || {}) : {};
+      if(state.completed===true) return;
+      overlay.classList.add('show');
+    }catch(err){console.error('Could not check Pioneer Rewards status:',err);}
+  });
+  const dismiss=()=>{
+    sessionStorage.setItem('ohutPioneerDismissed','1');
+    hide();
+  };
+  document.getElementById('pioneerCancel').addEventListener('click',dismiss);
+  document.getElementById('pioneerX').addEventListener('click',dismiss);
+})();
+</script>

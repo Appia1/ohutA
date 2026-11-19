@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set Send Password</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ======================================================
+   DARK MODE (DEFAULT)
+====================================================== */
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 400px;
+  margin: 40px auto;
+  background-color: #111;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,255,153,0.15);
+}
+
+h2 {
+  text-align: center;
+  color: rgba(0, 191, 255, 1);
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #aaa;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1a1a1a;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  padding: 13px;
+  background-color: rgba(0, 191, 255, 1);
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #00cc77;
+}
+
+.back-btn {
+  color: #ccc;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.message {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+ input::placeholder {
+color: rgba(0, 191, 255, 1);
+font-size: 20px;
+font-weight: bold;
+}
+
+.error { color: #ff4444; }
+.success { color: #00ff99; }
+
+/* ======================================================
+   SUCCESS POPUP
+====================================================== */
+#successPopup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  background-color: #0f0f0f;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #00ff99;
+  box-shadow: 0 0 12px rgba(0,255,153,0.4);
+  width: 80%;
+  max-width: 300px;
+}
+#successPopup i {
+  font-size: 40px;
+  color: #00ff99;
+  margin-bottom: 10px;
+}
+#successPopup p {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+
+/* ======================================================
+   LIGHT MODE
+====================================================== */
+body.light-mode {
+  background-color: white;
+  color: black;
+}
+
+body.light-mode .container {
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.12);
+}
+
+body.light-mode h2 {
+  color: black;
+}
+
+body.light-mode label {
+  color: #444;
+}
+
+body.light-mode input {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: black;
+}
+
+body.light-mode button {
+  background-color: black;
+  color: white;
+}
+body.light-mode button:hover {
+  background-color: #444;
+}
+
+body.light-mode .back-btn {
+  color: black;
+}
+
+body.light-mode #successPopup {
+  background-color: white;
+  border: 1px solid #00c874;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+body.light-mode #successPopup i {
+  color: #00c874;
+}
+body.light-mode #successPopup p {
+  color: black;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <a href="funding.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+
+  <h2>Set Send Password</h2>
+
+  <label for="newPassword">New Password</label>
+  <input type="password" id="newPassword" placeholder="- - - - -" required>
+
+  <label for="confirmPassword">Confirm Password</label>
+  <input type="password" id="confirmPassword" placeholder="- - - - -" required>
+
+  <button id="saveBtn">Save Password</button>
+
+  <div id="message" class="message"></div>
+</div>
+
+
+<!-- SUCCESS POPUP -->
+<div id="successPopup">
+  <i class="fas fa-check-circle"></i>
+  <p>Password Set Successfully!</p>
+</div>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script>
+
+<!-- THEME TOGGLE -->
+<script src="theme-toggle.js"></script>
+
+
+<script>
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser = null;
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+});
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuffer))
+      .map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+/* ========================================
+   SAVE PASSWORD FUNCTION
+======================================== */
+document.getElementById("saveBtn").addEventListener("click", setTransactionPassword);
+
+async function setTransactionPassword() {
+  const msg = document.getElementById("message");
+  msg.innerHTML = "";
+
+  const newPass = document.getElementById("newPassword").value.trim();
+  const confirmPass = document.getElementById("confirmPassword").value.trim();
+
+  if (!currentUser) {
+    msg.innerHTML = "<p class='error'>Please login first.</p>";
+    return;
+  }
+
+  if (newPass.length < 4) {
+    msg.innerHTML = "<p class='error'>Password must be at least 4 characters.</p>";
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    msg.innerHTML = "<p class='error'>Passwords do not match.</p>";
+    return;
+  }
+
+  try {
+    const hashed = await sha256(newPass);
+
+    await db.collection("users").doc(currentUser.uid).update({
+      transactionPassword: hashed
+    });
+
+    // Show success popup
+    const popup = document.getElementById("successPopup");
+    popup.style.display = "block";
+
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      popup.style.display = "none";
+      window.location.href = "wallet.html";
+    }, 2000);
+
+  } catch (err) {
+    msg.innerHTML = "<p class='error'>Error: " + err.message + "</p>";
+  }
+}
+</script>
+
+</body>
+</html>

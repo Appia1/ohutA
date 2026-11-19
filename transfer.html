@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Convert USDT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <style>
+  /* Base Dark Mode */
+
+body {
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #eee;
+  margin: 0 auto;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===== Toast Notification ===== */
+#toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  display: none;
+  z-index: 9999;
+  color: white;
+}
+#toast.success { background: #00c853; }
+#toast.error { background: #ff3d3d; }
+
+.container {
+  background: #000;
+  color: #eee;
+  max-width: 400px;
+  padding: 25px 20px;
+  margin: auto;
+  border-radius: 12px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  margin: 30px 0 12px;
+  font-size: 16px;
+  color: grey;
+  font-weight: 700;
+}
+
+select,
+input {
+  width: 100%;
+  height: 40px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #262626;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+  outline: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+select:focus,
+input:focus {
+  border-color: #00ccff;
+  background-color: #1a1a1a;
+}
+
+.convertBtn {
+  background-color: #00bfff;
+  color: black;
+  padding: 14px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.convertBtn:hover {
+  background-color: grey;
+  color: white;
+}
+
+.balances {
+  margin-top: 30px;
+  background: #222;
+  padding: 20px 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #444;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.balance-row:last-child {
+  border-bottom: none;
+}
+
+/* === Light Mode === */
+
+body.light-mode {
+  background: white;
+  color: #222;
+}
+
+body.light-mode .container {
+  background: white;
+  color: #222;
+}
+
+body.light-mode label {
+  color: #555;
+}
+
+body.light-mode select,
+body.light-mode input {
+  background-color: #f0f0f0;
+  color: #222;
+  border: 0px;
+}
+
+body.light-mode .convertBtn {
+  background-color: black;
+  color: white;
+}
+
+body.light-mode .convertBtn:hover {
+  background-color: #0099cc;
+  color: white;
+}
+
+body.light-mode .balances {
+  background: #f0f0f0;
+  color: #222;
+}
+
+body.light-mode .balance-row {
+  color: #333;
+  border-color: #ddd;
+}
+
+body.light-mode nav h3, 
+body.light-mode .back-button,
+body.light-mode nav a, 
+body.light-mode .history-button {
+  color: black;
+}
+
+.headContainer {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+.navbar {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  color: white;
+}
+
+.history-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  color: white;
+}
+
+.heading {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+}
+nav a {
+  text-decoration: none;
+  color: red;
+}
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+ <nav class="navbar">
+  <a href="wallet.html"><button class="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </button></a>
+
+    <div class="heading"> Transfer </div>
+
+  <a href="transferHistory.html"><button class="history-button">
+      <i class="fas fa-history"></i>
+    </button></a>
+  </nav>
+</div>
+
+<script src="theme-toggle.js"></script>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+<div class="container">
+
+<!-- Toast Message -->
+<div id="toast"></div>
+
+  <form id="convertForm">
+    <label for="convertDirection">Convert Direction:</label>
+    <select id="convertDirection" required>
+      <option value="tradingToFunding">Trading → Funding</option>
+      <option value="fundingToTrading">Funding → Trading</option>
+    </select>
+
+    <label for="convertAmount">Amount (USDT):</label>
+    <input type="number" id="convertAmount" min="0.01" step="0.01" placeholder="Enter amount to convert" required />
+
+    <button type="submit" class="convertBtn">Convert</button>
+  </form>
+
+  <div class="balances">
+    <h3>Your Balances</h3>
+    <div class="balance-row"><strong>Trading Balance:</strong> <span id="tradingBalance">0.00</span> USDT</div>
+    <div class="balance-row"><strong>Funding Balance:</strong> <span id="fundingBalance">0.00</span> USDT</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ========= Toast Function ========= */
+function showToast(message, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = type;
+  toast.style.display = "block";
+
+  setTimeout(() => { toast.style.display = "none"; }, 3000);
+}
+
+/* ========= Firebase ========= */
+const firebaseConfig = {
+  apiKey: "AIzaSyCQW9VLyn_nfgR27PO-3MEirIbZCWRo4_Q",
+  authDomain: "ohut-d7c8d.firebaseapp.com",
+  databaseURL: "https://ohut-d7c8d-default-rtdb.firebaseio.com",
+  projectId: "ohut-d7c8d",
+  storageBucket: "ohut-d7c8d.appspot.com",
+  messagingSenderId: "916521389173",
+  appId: "1:916521389173:web:5cd1b9b0c87d3bf4f87c3c",
+  measurementId: "G-721RMQFD2K"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser = null;
+let tradingBalance = 0;
+let fundingBalance = 0;
+
+function updateBalancesUI() {
+  document.getElementById('tradingBalance').textContent = tradingBalance.toFixed(2);
+  document.getElementById('fundingBalance').textContent = fundingBalance.toFixed(2);
+}
+
+function loadBalances() {
+  if (!currentUser) return;
+
+  db.collection("users").doc(currentUser.uid).get()
+    .then(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        tradingBalance = data.tradingBalance || 0;
+        fundingBalance = data.fundingBalance || 0;
+      } else {
+        tradingBalance = 0;
+        fundingBalance = 0;
+        db.collection("users").doc(currentUser.uid).set({
+          tradingBalance: 0,
+          fundingBalance: 0
+        });
+      }
+      updateBalancesUI();
+    })
+    .catch(err => console.error(err));
+}
+
+function saveBalances() {
+  if (!currentUser) return;
+  return db.collection("users").doc(currentUser.uid).set({
+    tradingBalance,
+    fundingBalance
+  }, { merge: true });
+}
+
+document.getElementById('convertForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const direction = document.getElementById('convertDirection').value;
+  const amount = parseFloat(document.getElementById('convertAmount').value);
+
+  if (isNaN(amount) || amount <= 0) {
+    showToast("Please enter a valid amount greater than 0", "error");
+    return;
+  }
+
+  if (!currentUser) {
+    showToast("User not signed in", "error");
+    return;
+  }
+
+  let from = "";
+  let to = "";
+
+  if (direction === "tradingToFunding") {
+    from = "trading";
+    to = "funding";
+    if (amount > tradingBalance) {
+      showToast("Insufficient trading balance", "error");
+      return;
+    }
+    tradingBalance -= amount;
+    fundingBalance += amount;
+  } else {
+    from = "funding";
+    to = "trading";
+    if (amount > fundingBalance) {
+      showToast("Insufficient funding balance", "error");
+      return;
+    }
+    fundingBalance -= amount;
+    tradingBalance += amount;
+  }
+
+  try {
+    await saveBalances();
+
+    await db.collection("users")
+      .doc(currentUser.uid)
+      .collection("transfers")
+      .add({
+        type: to,
+        direction: `${from}-to-${to}`,
+        amount: amount,
+        balanceAfter: to === "trading" ? tradingBalance : fundingBalance,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+    updateBalancesUI();
+    document.getElementById('convertAmount').value = '';
+
+    showToast("Transfer successful!", "success");
+
+  } catch (err) {
+    showToast("An error occurred. Please try again.", "error");
+  }
+});
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    currentUser = user;
+    loadBalances();
+  } else {
+    showToast("Please login to use this page.", "error");
+    window.location.href = "login.html";
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> History</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+  <style>
+
+/* Base (Dark Mode) */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: white;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.container {
+  background-color: #121212;
+  color: white;
+  padding: 20px;
+  max-width: 420px;
+  margin: 40px auto;
+  border-radius: 12px;
+  /*box-shadow: 0 0 12px rgba(0, 255, 153, 0.3);*/
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.toggle-buttons button {
+  flex: 1;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.toggle-buttons button.active,
+.toggle-buttons button:hover {
+  background-color: #00ff99;
+  color: black;
+  font-weight: bold;
+}
+
+.history-entry {
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border-left: 4px solid #00ff99;
+  box-shadow: 0 2px 5px rgba(0, 255, 153, 0.2);
+}
+
+.history-entry .label {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.history-entry .value {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.date-filter {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.date-filter input {
+
+padding: 8px;
+      border-radius: 6px;
+      background-color: #1f1f1f;
+      color: white;
+      border: 1px solid #444;
+  margin: 10px;
+width: 50px; 
+height: 30px;
+
+}
+.date-filter button {
+border-radius: 10px;
+padding: 10px;
+background-color: #00ff99;
+border: 0px;
+margin-left: 20px;
+font-size: 12px;
+color: black;
+}
+.date-filter input:focus {
+  outline: none;
+  border-color: #00ff99;
+}
+
+/* === Light Mode Overrides === */
+
+body.light-mode {
+  background-color: white;
+  color: #222;
+}
+
+body.light-mode .container {
+  background-color: white;
+  color: #222;
+ 
+}
+
+body.light-mode .toggle-buttons button {
+  background-color: grey;
+  color: white;
+}
+
+body.light-mode .toggle-buttons button.active,
+body.light-mode .toggle-buttons button:hover {
+  background-color: black;
+  color: white;
+}
+
+body.light-mode .history-entry {
+  background-color: #f0f0f0;
+  color: #222;
+  border-left: 4px solid #00cc77;
+  box-shadow: 0 2px 5px rgba(0, 204, 119, 0.2);
+}
+
+body.light-mode .history-entry .label {
+  color: #666;
+}
+
+body.light-mode .date-filter input {
+  background-color: #f0f0f0;
+  color: #222;
+width: 70px;
+  border: 0px;
+}
+
+body.light-mode .date-filter button {
+  background-color: black;
+color: white;
+padding: 6px 8px;
+border-radius: 20px;
+}
+
+body.light-mode .back-button,
+body.light-mode .heading {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="wallet.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> History </div>
+  </nav>
+</div>
+
+<script src="theme-toggle.js"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div class ="container">
+
+  <div class="toggle-buttons">
+    <button id="showTrading" class="active">Trading</button>
+    <button id="showFunding">Funding</button>
+  </div>
+
+  <div class="date-filter">
+    <label>From: <input type="date" id="fromDate"></label>
+    <label>To: <input type="date" id="toDate"></label>
+    <button onclick="loadHistory()">Filter</button>
+  </div>
+
+  <div id="historyList">Loading...</div>
+
+</div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQW9VLyn_nfgR27PO-3MEirIbZCWRo4_Q",
+      authDomain: "ohut-d7c8d.firebaseapp.com",
+      databaseURL: "https://ohut-d7c8d-default-rtdb.firebaseio.com",
+      projectId: "ohut-d7c8d",
+      storageBucket: "ohut-d7c8d.appspot.com",
+      messagingSenderId: "916521389173",
+      appId: "1:916521389173:web:5cd1b9b0c87d3bf4f87c3c"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let currentType = "trading"; // default view
+
+    document.getElementById('showTrading').addEventListener('click', () => {
+      currentType = "trading";
+      toggleButtons("trading");
+      loadHistory();
+    });
+
+    document.getElementById('showFunding').addEventListener('click', () => {
+      currentType = "funding";
+      toggleButtons("funding");
+      loadHistory();
+    });
+
+    function toggleButtons(activeType) {
+      document.getElementById('showTrading').classList.remove('active');
+      document.getElementById('showFunding').classList.remove('active');
+      document.getElementById(`show${capitalize(activeType)}`).classList.add('active');
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function loadHistory() {
+      const list = document.getElementById('historyList');
+      list.innerHTML = "Loading...";
+
+      if (!currentUser) {
+        list.innerHTML = "Please sign in.";
+        return;
+      }
+
+      const fromDateVal = document.getElementById('fromDate').value;
+      const toDateVal = document.getElementById('toDate').value;
+
+      let query = db.collection("users")
+        .doc(currentUser.uid)
+        .collection("transfers")
+        .where("type", "==", currentType)
+        .orderBy("timestamp", "desc");
+
+      // Apply date filter if available
+      if (fromDateVal) {
+        const fromDate = new Date(fromDateVal);
+        fromDate.setHours(0, 0, 0, 0);
+        query = query.where("timestamp", ">=", fromDate);
+      }
+
+      if (toDateVal) {
+        const toDate = new Date(toDateVal);
+        toDate.setHours(23, 59, 59, 999);
+        query = query.where("timestamp", "<=", toDate);
+      }
+
+      query.get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            list.innerHTML = "<p>No transfer history found.</p>";
+            return;
+          }
+
+          list.innerHTML = "";
+
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const entry = document.createElement("div");
+            entry.className = "history-entry";
+            const date = data.timestamp?.toDate().toLocaleString() || "No Date";
+
+            entry.innerHTML = `
+              <div class="value">${data.direction.replace("-", " → ").toUpperCase()}</div>
+              <div class="label">Amount: ${data.amount} USDT</div>
+              <div class="label">Balance After: ${data.balanceAfter} USDT</div>
+              <div class="label">Date: ${date}</div>
+              <div class="label">Type: ${capitalize(data.type)}</div>
+            `;
+            list.appendChild(entry);
+          });
+        })
+    
+.catch(error => {
+  console.error("Error loading history:", error);
+  document.getElementById('historyList').innerHTML = "<p>Error loading history: " + error.message + "</p>";
+});
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        loadHistory();
+      } else {
+        document.getElementById('historyList').innerHTML = "Please login to view history.";
+      }
+    });
+  </script>
+</body>
+</html>

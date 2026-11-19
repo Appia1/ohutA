@@ -1,0 +1,209 @@
+/* Base styles (Dark Mode) */
+
+h1 {
+  font-size: 16px;
+}
+
+h2 {
+  color: #ff7200;
+}
+
+p {
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0c0c0c;
+  color: white;
+  padding: 0px;
+}
+
+.container {
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+  background-color: transparent;
+}
+
+.subContainer {
+  background-color: #222;
+  height: 100%;
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.subContainer input {
+  background-color: #333;
+  color: white;
+  border: none;
+  width: 100%;
+}
+
+.subContainer button {
+  background-color: #111111;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.subContainer button:hover {
+  background-color: grey;
+  color: white;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;  /* fixed missing colon */
+}
+
+.imgContainer img {
+  height: 150px;
+  width: 150px;
+  border-radius: 20px;
+}
+
+.pTag {
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.depositBtn {
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: rgba(0, 191, 255, 1);
+  color: black;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+/*
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: relative;
+}
+
+nav i {
+  color: white;
+  position: absolute;
+  left: 20px;
+  font-size: 16px;
+  padding: 0px;
+  margin-top: -5px;
+}
+
+nav h3 {
+  text-align: center;
+}*/
+
+/* === Light Mode Overrides === */
+
+body.light-mode {
+  background-color: white;
+  color: #000;
+}
+
+body.light-mode h2 {
+  color: #ff7200; /* keep same highlight color */
+}
+
+body.light-mode .subContainer {
+  background-color: white;
+}
+
+body.light-mode .subContainer input {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+body.light-mode .subContainer button {
+  background-color: #eee;
+  color: #000;
+}
+
+body.light-mode .subContainer button:hover {
+  background-color: #ccc;
+  color: #000;
+}
+
+body.light-mode .imgContainer img {
+  /* optional: slight border for clarity */
+  border: 2px solid #ccc;
+}
+
+body.light-mode .pTag {
+  color: #333;
+}
+
+body.light-mode .depositBtn {
+  background-color: black;
+  color: white;
+}
+
+/*body.light-mode nav {
+  background-color: white;
+}
+
+body.light-mode nav i,
+body.light-mode nav h3 {
+  color: black;
+}
+
+*/
+
+body.light-mode .back-button,
+body.light-mode .heading {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+         font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  

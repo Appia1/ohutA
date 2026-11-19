@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="keywords" content="HTML, CSS">
+<meta http-equiv="X-UA-Compatible" content="1e=edge" >
+
+   <title> Home </title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+<link rel="stylesheet" href="nav.css">
+
+</head>
+<body>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+
+<div class="GeneralcontainerBox" style="max-width: 400px;">
+
+<div class="containerBox">
+
+ <div class="container"style="padding: 20px;">
+
+<!--<i class="notification-icon" data-count="3"></i>-->
+
+  <div class="notification-wrapper" id="notification-icon" title="View Notifications">
+    <img src="https://img.icons8.com/ios-glyphs/30/000000/appointment-reminders.png" alt="Notifications">
+    <span class="notification-count" id="notification-count">0</span>
+  </div>
+
+<div class="logo"><img src="Ohut Logo.png"/></div>
+
+<p id="pcontainer">Account ID:</p> <div id="email-container">
+    <span id="user-email">Loading email...</span>
+    <button id="copy-btn"> <i class="fa fa-copy"></i> </button>
+  </div>
+<div class="infoBox">
+
+  <marquee direction="left" scrollamount="5"><p id="announcement"> </p> </marquee>
+
+</div>
+
+
+<div class="AcctBln">
+
+</div>
+
+<div class="blurBackground">
+<p class="blurP1"> Welcome to Ohut </p>
+<p class="blurP"><u> Exchange </u> </p>
+
+<button class="createBtn"id="logout-btn" > Logout </button>
+
+
+</div> 
+
+
+
+<h6>Quick Access </h6>
+
+<div class="viewLog">
+
+
+<a href="deposit.html">
+<div class="imgBox">
+<i class="fas fa-download"></i> Deposit <span> <i class="fas fa-angle-right"> </i> </span>
+</div> </a>
+
+<a href="withdrawal.html"> <div class="imgBox">
+<i class="fas fa-wallet"></i> Withdrawal <span> <i class="fas fa-angle-right"> </i> </span>
+</div> </a>
+
+<a href="referral.html"> 
+<div class="imgBox">
+<i class="fas fa-users"></i> Invite friends <span> <i class="fas fa-angle-right"> </i> </span>
+</div></a>
+
+<a href="support.html"> <div class="imgBox">
+<i class="fas fa-headset"></i> Support <span> <i class="fas fa-angle-right"> </i> </span>
+</div> </a>
+
+
+</div>
+
+</div>
+<div style="padding: 20px;">
+<div class="sliderBox">
+  <div class="slider">
+    <img src="IMG_1.JPEG" alt="Image 1">
+    <img src="IMG_5.JPEG" alt="Image 2">
+    <img src="IMG_3.JPEG" alt="Image 3">
+    <img src="IMG_2.JPEG" alt="Image 4">
+
+    <div class="dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+</div>
+<h6>Markets</h6>
+
+  <table id="cryptoTable">
+    <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Name</th>
+        <th>Price (USD)</th>
+        <th>24h Change (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Crypto data will be inserted here dynamically -->
+    </tbody>
+  </table>
+
+</div>
+
+
+</div></div></div>
+
+
+
+
+
+
+<div class="bm">
+  <button class="set active">
+    <a href="dashboard.html">
+      <i class="fa fa-home"></i>
+      <span>Home</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Markets.html">
+      <i class="fa fa-chart-line"></i>
+      <span>Market</span>
+    </a>
+  </button>
+
+  <button class="tradeSet">
+    <a href="trade.html">
+      <div class="tradeBtn">
+        <i class="fa fa-long-arrow-up"></i>
+        <i class="fa fa-long-arrow-down"></i>
+      </div>
+      <span>Trade</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="wallet.html">
+      <i class="fa-solid fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Profile.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </button>
+</div>
+
+<!-- Floating Image -->
+<a href="referral.html"><div id="floatingImage">
+
+  <img src="Invite.png" alt="Floating Icon">
+
+<div style="background: white; width: 100%; height: 40px; margin-top: 15px;"></div>
+</div> </a>
+
+</div>
+
+</div>
+
+<div id="congratsPopup" style="display:none;">
+  <div class="flashlight"></div>
+  <div class="popup">
+    <div class="icon-wrapper">
+      <img src="Ohut Logo.png" alt="Icon" />
+    </div>
+    <div class="title-divider">— Congratulations!  —</div>
+    <div class="headline">You’ve Earned $10!</div>
+    <div class="body-text">
+      You’re one of the first 1,000 pioneers to join us.  
+      <b>$10 has been added</b> to your trading balance.
+    </div>
+    <div class="close">×</div>
+  </div>
+</div>
+
+<style>
+
+  /* Floating image container */
+  #floatingImage {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    cursor: grab;
+
+z-index: 1000;
+
+    transition: transform 0.2s ease;
+  }
+
+  #floatingImage:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+
+  #floatingImage img {
+    width: 100%;
+    height: auto;
+
+position: absolute;
+
+  }
+
+.infoBox {
+color: white;
+font-size: 12px;
+margin-bottom: 20px;
+/*height: 30px;*/
+
+background: linear-gradient(to right, black, #00ccff, black);
+border: none;
+
+border-radius: 10px;
+padding: 2px;
+}
+
+
+.infoBox p {
+color: white;
+padding: 0px;
+margin: 0px;
+}
+
+.emailBox {
+color: white;
+margin-bottom: 50px;
+text-align: center;
+}
+.logoback img{
+width: 200px;
+height: auto;
+margin-bottom: -20px;
+}
+
+.logo img {
+width: 100px;
+height: auto;
+position: relative;
+margin-left: -20px;
+position: absolute;
+margin-top: -30px;
+
+}
+
+
+
+/*Account Balance*/
+.AcctBln {
+width: 100%;
+height: 150px;
+background-image: url(IMG_2473.JPG);
+background-size: cover;
+filter: blur(5px);
+border-radius: 10px;
+color: white;
+margin-top: -10px;
+padding: 0px;
+
+}
+
+.blurBackground {
+margin-top: -130px;
+position: relative;
+margin-bottom: 80px;
+}
+.containerBox {
+width: 100%;
+
+}
+.blurP {
+position: relative;
+padding-left: 20px;
+color: white;
+font-size: 30px;
+font-weight: bold;
+transform: scaleY(1.8);
+
+  -webkit-text-stroke: 1.5px #ffff;
+margin-bottom: -30px; 
+
+}
+
+.blurP1 {
+position: relative;
+padding-left: 20px;
+color: white;
+font-size: 16.5px;
+margin-bottom: -30px;
+font-weight: bold;
+}
+
+.AcctBln h1 {
+padding-left: 20px;
+font-size: 20px
+font-weight: bold;
+margin-top: -10px;
+padding-top: 0px;
+
+}
+
+.createBtn {
+padding: 10px;
+border-radius: 10px;
+font-size: 14px;
+position: absolute;
+margin-top: 0px;
+color: #333;
+font-weight: bold;
+right: 10%;
+border: 0px;
+}
+
+h6 {
+font-size: 18px;
+padding-top: 20px;
+
+padding-bottom: 20px;
+
+margin: 0px;
+color: #ccc;
+}
+
+.marketHeading {
+
+font-size: 18px;
+padding-top: 20px;
+padding-left: 20px;
+padding-bottom: 20px;
+margin: 0px;
+color: #ccc;
+
+}
+
+.viewLog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+width: 100%;
+
+margin-top: 0px;
+border-radius: 10px;
+
+}
+.viewLog a {
+color: black;
+text-decoration: none;
+font-weight: bold;
+}
+.imgBox {
+padding: 15px;
+border-radius: 10px;
+font-size: 14px;
+background-color: rgba(0, 191, 255, 1);
+box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+
+}
+
+ .imgBox a {
+text-decoration: none;
+font-weight: bold;
+color: black;
+font-size: 14px;
+text-decoration: none;
+
+}
+
+.imgBox span i {
+float: right;
+}
+
+body {
+font-family: Arial, sans-serif;
+height: 100hv;
+width: 100%;
+padding: 0px;
+margin: 0px;
+background-color: black;
+margin-bottom: 70px;
+}
+
+.sliderBox {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.slider {
+  position: relative;
+
+  width: 100%;
+  height: 60vh; /* Responsive height */
+  max-height: 300px; /* Prevent it from getting too big on large screens */
+ aspect-ratio: 16 / 9;
+  background: #000; /* Fallback background */
+}
+
+.slider img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+border-radius: 10px;
+}
+
+.slider img.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dot.active {
+  background: #fff;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .slider {
+    height: 40vh;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider {
+    height: 30vh;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+.del {
+height: 100px;
+}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+   padding-left: 10px;
+font-weight: bold;
+
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+
+    }
+    th {
+      background-color: transparent;
+      color: #ecf0f1;
+    }
+    td {
+      background-color: #111111;
+      color: #ecf0f1;
+    }
+    td.price {
+      font-size: 1.5em;
+    }
+    td.change {
+      font-size: 1.2em;
+    }
+    td.positive-change {
+      color: #27ae60;
+    }
+    td.negative-change {
+      color: #e74c3c;
+    }
+    td img {
+      width: 40px; /* Logo size */
+      height: auto;
+    }
+    /* Responsive Table */
+    @media (max-width: 991px) {
+      table {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 767px) {
+      table {
+        font-size: 12px;
+      }
+    }
+
+#pcontainer {
+color: red;
+margin-left: 100px;
+font-size: 12px;
+}
+    #email-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+     margin-top: -20px;
+margin-bottom: 20px;
+font-size: 10px;
+color: grey;
+margin-left: 100px;
+    }
+
+  #email-container i {
+color: white;
+}
+
+
+    #copy-btn {
+      cursor: pointer;
+      padding: 5px 5px;
+      border: none;
+      background-color: #444;
+     
+      border-radius: 20px;
+    }
+#copy-btn:hover{
+background-color: grey;
+color: black;
+
+} 
+
+/* === Light Mode Overrides === */
+
+body.light-mode {
+  background-color: white;
+  color: black;
+}
+body.light-mode .AcctBln,
+body.light-mode td,
+body.light-mode th {
+  background-color: white !important;
+  color: black !important;
+}
+
+body.light-mode .infoBox p {
+color: black;
+}
+
+body.light-mode .infoBox {
+  background: linear-gradient(to right, white, #00ccff, white);
+}
+
+body.light-mode .notification-icon {
+  background-color: #ccc;
+  color: black;
+}
+
+body.light-mode  h6 {
+color: black;
+}
+
+body.light-mode .dot {
+  background: rgba(0, 0, 0, 0.6);
+}
+body.light-mode .dot.active {
+  background: #000;
+}
+
+body.light-mode #copy-btn {
+  background-color: #ccc;
+  color: black;
+}
+
+body.light-mode .imgBox {
+ background-color: #fofofo;
+box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+/*
+body.light-mode #activeBtnn {
+color: green;
+}*/
+
+    /* Notification icon container */
+   .notification-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+background-color: #ccc;
+border-radius: 30px;
+padding: 4px 6px;
+float: right;
+margin-right: 20px;
+    }
+
+
+
+
+/* Hover effect */
+.notification-wrapper:hover {
+  transform: scale(1.08);
+}
+
+/* Bell Icon */
+.notification-wrapper img {
+  width: 26px;
+  height: 26px;
+}
+
+/* Notification Count Badge */
+.notification-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #ff3b30; /* iOS-style red */
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  display: none; /* hidden when count is zero */
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.2;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+}
+
+/* Smooth badge pop-in animation */
+.notification-count.show {
+  animation: pop 0.25s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Dashboard Popup Overlay */
+
+/* Dashboard Popup Overlay */
+#congratsPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5); /* dim background */
+  z-index: 9999;
+}
+
+/* Flashlight Glow Effect */
+#congratsPopup .flashlight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+      from 0deg,
+      rgba(0, 150, 255, 0.8),
+      rgba(0, 0, 0, 0) 40%
+  );
+  filter: blur(20px);
+  animation: rotateFlash 4s linear infinite;
+  z-index: 0;
+  opacity: 1;
+}
+
+@keyframes rotateFlash {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Popup Box */
+#congratsPopup .popup {
+  max-width: 400px;
+width: 80%;
+margin-left: 10%;
+  background: #0e0f11;
+  border-radius: 22px;
+
+top: 150px;
+
+  text-align: center;
+  color: #fff;
+  position: relative;
+  box-shadow: 0 0 18px rgba(0, 170, 255, 0.6);
+  z-index: 2; /* above the flashlight glow */
+}
+
+/* Icon at the top */
+#congratsPopup .icon-wrapper {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0e0f11;
+  padding: 10px;
+  border-radius: 50%;
+
+}
+
+#congratsPopup .icon-wrapper img {
+  width: 75px;
+  height: 75px;
+  background: white;
+  border-radius: 50%;
+ 
+}
+
+/* Text sections */
+#congratsPopup .title-divider {
+  margin-top: 40px;
+  font-size: 14px;
+  opacity: 0.6;
+padding-top: 50px;
+  letter-spacing: 1px;
+}
+
+#congratsPopup .headline {
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 18px;
+
+  line-height: 1.4;
+}
+
+#congratsPopup .body-text {
+  margin-top: 14px;
+  font-size: 15px;
+padding: 10px 10px 30px;
+  opacity: 0.85;
+  line-height: 1.45;
+}
+
+/* Close Button */
+#congratsPopup .close {
+  position: absolute;
+  bottom: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2a2a2a;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+#congratsPopup .close:hover {
+  opacity: 1;
+}
+
+/* Optional: Button inside popup (if needed) */
+#congratsPopup .btn {
+  display: block;
+  width: 100%;
+  margin-top: 28px;
+  padding: 13px 0;
+  border-radius: 14px;
+  background: linear-gradient(to right, #3a63ff, #5edbff);
+  font-size: 16px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+#congratsPopup .btn:hover {
+  opacity: 0.9;
+}
+
+</style>
+
+<script src="theme-toggle.js"></script>
+
+
+
+<script>
+
+let images = document.querySelectorAll('.slider img');
+let dots = document.querySelectorAll('.dot');
+let currentImage = 0;
+
+function slideImage() {
+    images[currentImage].classList.remove('active');
+    dots[currentImage].classList.remove('active');
+    currentImage = (currentImage + 1) % images.length;
+    images[currentImage].classList.add('active');
+    dots[currentImage].classList.add('active');
+}
+
+images[0].classList.add('active');
+dots[0].classList.add('active');
+
+setInterval(slideImage, 3000);
+
+
+</script>
+
+
+ <script>
+    async function fetchCryptoData() {
+      try {
+        // Fetch data for the top 10 coins by market cap (limit to 10)
+        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1');
+        
+        // Ensure the response is valid
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        
+        const data = await response.json();
+
+        // Get the table body element
+        const cryptoTableBody = document.querySelector('#cryptoTable tbody');
+        cryptoTableBody.innerHTML = ''; // Clear existing data
+
+        // Loop through the top 10 coins and create rows
+        data.forEach((coin, index) => {
+          // Create a new row for each coin
+          const row = document.createElement('tr');
+
+          // Coin Logo
+          const logo = document.createElement('td');
+          const logoImage = document.createElement('img');
+          logoImage.src = coin.image; // Use the logo image URL from the API
+          logo.appendChild(logoImage);
+
+          // Coin Name
+          const name = document.createElement('td');
+          name.textContent = coin.name;
+
+          // Coin Price
+          const price = document.createElement('td');
+          price.classList.add('price');
+          price.textContent = `$${coin.current_price.toFixed(2)}`;
+
+          // Coin 24h Change
+          const change = document.createElement('td');
+          change.classList.add('change');
+          const changeText = `${coin.price_change_percentage_24h.toFixed(2)}%`;
+          if (coin.price_change_percentage_24h < 0) {
+            change.classList.add('negative-change');
+          } else {
+            change.classList.add('positive-change');
+          }
+          change.textContent = changeText;
+
+          // Append all data to the row
+          row.appendChild(logo);
+          row.appendChild(name);
+          row.appendChild(price);
+          row.appendChild(change);
+
+          // Append the row to the table body
+          cryptoTableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching crypto data:', error);
+        document.querySelector('#cryptoTable tbody').innerHTML = '<tr><td colspan="4">Failed to load data. Please try again later.</td></tr>';
+      }
+    }
+
+    // Fetch data every 30 seconds to keep it updated
+    setInterval(fetchCryptoData, 20000); // 30000 ms = 30 seconds
+
+    // Initial fetch when the page loads
+    fetchCryptoData();
+  </script>
+
+
+
+
+
+
+
+
+<!-- Firebase compat SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="floating.js"></script>
+<!-- Firebase Config & Initialization -->
+
+<script src="firebaseDetails.js"></script>
+
+<script>
+  
+let currentUserEmail = "";
+let unsubscribeNotifications = null; 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const auth = window.firebaseAuth;
+    const db = window.firebaseDB;
+
+    const emailSpan = document.getElementById('user-email');
+    const copyBtn = document.getElementById('copy-btn');
+    const announcementElement = document.getElementById("announcement");
+
+    // Show loader if needed
+    function showLoader() {
+      const ld = document.getElementById('loader');
+      const ov = document.getElementById('overlay');
+      if (ld) ld.style.display = 'block';
+      if (ov) ov.style.display = 'block';
+    }
+
+    function hideLoader() {
+      const ld = document.getElementById('loader');
+      const ov = document.getElementById('overlay');
+      if (ld) ld.style.display = 'none';
+      if (ov) ov.style.display = 'none';
+    }
+
+    // LocalStorage Helpers
+    function cacheUserData(data) {
+      try {
+        localStorage.setItem("userData", JSON.stringify(data));
+      } catch (e) {
+        console.warn("Could not cache user data:", e);
+      }
+    }
+
+    function getCachedUserData() {
+      try {
+        const str = localStorage.getItem("userData");
+        return str ? JSON.parse(str) : null;
+      } catch (e) {
+        console.warn("Error parsing cached userData:", e);
+        return null;
+      }
+    }
+
+    function cacheAnnouncement(message) {
+      try {
+        localStorage.setItem("announcement", message);
+      } catch (e) {
+        console.warn("Could not cache announcement:", e);
+      }
+    }
+
+    function getCachedAnnouncement() {
+      try {
+        return localStorage.getItem("announcement");
+      } catch (e) {
+        console.warn("Could not load cached announcement:", e);
+        return null;
+      }
+    }
+
+    // UI Helpers
+    function displayUserEmail(email) {
+      if (emailSpan) {
+        emailSpan.textContent = email || "Email not found.";
+      }
+    }
+
+    function displayAnnouncement(message) {
+      if (announcementElement) {
+        announcementElement.textContent = message || "No announcement.";
+      }
+    }
+
+    // Fetch user data from Firestore
+    async function fetchUserDataFromFirebase(uid) {
+      try {
+        const doc = await db.collection("users").doc(uid).get();
+        if (doc.exists) {
+          const data = doc.data();
+          cacheUserData(data);
+          return data;
+        } else {
+          console.warn("User doc not found in Firestore for uid:", uid);
+          return null;
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        return null;
+      }
+    }
+
+    // Fetch announcement from Firestore
+    async function fetchAnnouncement() {
+      try {
+        const docSnap = await db.collection("announcements").doc("public").get();
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          if (data?.message) {
+            displayAnnouncement(data.message);
+            cacheAnnouncement(data.message);
+          }
+        } else {
+          console.warn("No announcement doc found");
+        }
+      } catch (err) {
+        console.error("Error fetching announcement:", err);
+      }
+    }
+
+    // Load announcement from cache immediately
+    const cachedAnnouncement = getCachedAnnouncement();
+    if (cachedAnnouncement) {
+      displayAnnouncement(cachedAnnouncement);
+    } else {
+      displayAnnouncement("Loading announcement...");
+    }
+
+    // Fetch latest announcement from Firebase after page loads
+    fetchAnnouncement();
+
+    //Load email from localStorage immediately (before Firebase auth)
+    const cached = getCachedUserData();
+    if (cached?.email) {
+      displayUserEmail(cached.email);
+    } else {
+      displayUserEmail("Loading...");
+    }
+
+
+function startNotificationListener(userEmail) {
+
+    if (unsubscribeNotifications) {
+        unsubscribeNotifications();
+    }
+
+    unsubscribeNotifications = firebase.firestore()
+        .collection("messages")
+        .where("to", "in", ["all", userEmail])
+        .onSnapshot((snapshot) => {
+
+            let unreadCount = 0;
+
+            snapshot.forEach((doc) => {
+
+                const data = doc.data();
+
+                // Private message
+                if (
+                    data.to === userEmail &&
+                    data.read === false
+                ) {
+                    unreadCount++;
+                }
+
+                // Broadcast message
+                if (data.to === "all") {
+
+                    const readBy = data.readBy || [];
+
+                    if (!readBy.includes(userEmail)) {
+                        unreadCount++;
+                    }
+
+                }
+
+            });
+
+            const badge = document.getElementById("notification-count");
+
+            if (!badge) return;
+
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = "flex";
+            } else {
+                badge.style.display = "none";
+            }
+
+        }, (error) => {
+            console.error(error);
+        });
+
+}
+
+    // Firebase Auth Listener to fetch fresh data free
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const uid = user.uid;
+
+ currentUserEmail = user.email;
+startNotificationListener(currentUserEmail);
+
+        // Fetch fresh data from Firestore
+        const fresh = await fetchUserDataFromFirebase(uid);
+
+
+if (
+  fresh &&
+  (
+    fresh.kycStatus?.toLowerCase() === "verified" ||
+    fresh.kycStatus?.toLowerCase() === "approved"
+  ) &&
+  !fresh.kycCongratsShown
+) {
+
+  showCongratsPopup();
+
+  await db.collection("users")
+    .doc(uid)
+    .update({
+      kycCongratsShown: true
+    });
+
+}
+
+        if (fresh?.email && fresh.email !== cached?.email) {
+          displayUserEmail(fresh.email);
+        }
+
+      } else {
+        displayUserEmail("No user is logged in.");
+        localStorage.removeItem("userData");
+      }
+    });
+
+    // Copy to Clipboard
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const email = emailSpan?.textContent || "";
+        if (email && !email.includes("No user") && !email.includes("Loading")) {
+          navigator.clipboard.writeText(email)
+            .then(() => alert('Email copied to clipboard!'))
+            .catch((err) => {
+              console.error("Clipboard write failed:", err);
+              alert('Failed to copy email.');
+            });
+        }
+      });
+    }
+
+    // Optional Simulated Loader
+    function fetchData() {
+      showLoader();
+      setTimeout(() => {
+        console.log("Data loaded (simulated).");
+        hideLoader();
+        const cnt = document.getElementById("content");
+        if (cnt) {
+          cnt.innerHTML += "<p><strong>Data loaded!</strong></p>";
+        }
+      }, 3000);
+    }
+
+    window.addEventListener('load', fetchData);
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await firebase.auth().signOut(); // Sign out from Firebase
+          localStorage.clear(); //Clear all cached data
+          alert("You have been signed out.");
+
+          // Redirect to login page (change if needed)
+          window.location.href = "index.html";
+        } catch (error) {
+          console.error("Logout failed:", error);
+          alert("Failed to log out. Try again.");
+        }
+      });
+    }
+
+});
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const notificationIcon = document.getElementById("notification-icon");
+
+    notificationIcon.addEventListener("click", async () => {
+
+        if (!currentUserEmail) return;
+
+        try {
+
+            const db = firebase.firestore();
+
+            const snapshot = await db
+                .collection("messages")
+                .where("to", "in", ["all", currentUserEmail])
+                .get();
+
+            const batch = db.batch();
+
+            snapshot.forEach((doc) => {
+
+                const data = doc.data();
+
+                // Private message
+                if (data.to === currentUserEmail && !data.read) {
+                    batch.update(doc.ref, {
+                        read: true
+                    });
+                }
+
+                // Broadcast message
+                if (data.to === "all") {
+
+                    const readBy = data.readBy || [];
+
+                    if (!readBy.includes(currentUserEmail)) {
+                        batch.update(doc.ref, {
+                            readBy: firebase.firestore.FieldValue.arrayUnion(currentUserEmail)
+                        });
+                    }
+                }
+
+            });
+
+            await batch.commit();
+
+            // Hide badge immediately
+            const badge = document.getElementById("notification-count");
+            badge.textContent = "0";
+            badge.style.display = "none";
+
+            // Go to messages page
+            window.location.href = "messages.html";
+
+        } catch (error) {
+            console.error("Notification error:", error);
+        }
+
+    });
+
+});
+
+// ⭐ Show popup UI
+function showCongratsPopup() {
+  const popup = document.getElementById("congratsPopup");
+  popup.style.display = "block";
+
+  popup.querySelector(".close").addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+}
+
+</script>
+
+</body>
+</html>
+
+
+

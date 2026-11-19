@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Transfer History</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* --------------------------------------------------
+   DARK MODE (DEFAULT)
+-------------------------------------------------- */
+body {
+  background-color: black;
+  color: #f1f1f1;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: left;
+}
+
+h2 {
+  text-align: center;
+  color: #00ff99;
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  color: rgba(0, 191, 255, 1);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Filters Section */
+.filters {
+  background-color: transparent;
+ border: 0px;
+  margin-bottom: 20px;
+
+}
+
+.filters label {
+  color: #aaa;
+  font-size: 14px;
+font-weight: bold;
+ padding: 10px;
+}
+
+.filters select {
+  width: 100%;
+height: 30px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1a1a1a;
+  color: white;
+font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.filters input {
+  width: 100px;
+height: 30px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1a1a1a;
+  color: white;
+font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.filterBtn {
+  width: 100px;
+  padding: 10px;
+  background-color: rgba(0, 191, 255, 1);
+  border: none;
+  color: black;
+margin-left: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+font-size: 14px;
+  cursor: pointer;
+}
+.filterBtn:hover {
+  background-color: grey;
+}
+
+/* History Entries */
+.history-entry {
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border-left: 4px solid rgba(0, 191, 255, 1);
+  text-align: left;
+}
+
+.value {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.label {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 3px;
+}
+
+.empty {
+  text-align: left;
+  color: #777;
+  margin-top: 30px;
+}
+
+.error {
+  color: #ff4444;
+}
+
+.loader {
+  text-align: left;
+  margin-top: 20px;
+}
+
+/* Floating Copy Icon */
+.copy-icon {
+  cursor: pointer;
+  color: #00ccff;
+}
+
+/* --------------------------------------------------
+   LIGHT MODE
+-------------------------------------------------- */
+body.light-mode {
+  background-color: white;
+  color: #222;
+}
+
+body.light-mode .back-btn {
+  color: #007bff;
+}
+
+body.light-mode h2 {
+  color: #007bff;
+}
+
+body.light-mode .filters {
+  background-color: white;
+ 
+}
+
+body.light-mode .filters label {
+  color: #444;
+}
+
+body.light-mode .filters input,
+body.light-mode .filters select {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: black;
+}
+
+body.light-mode .filterBtn {
+  background-color: black;
+  color: white;
+}
+body.light-mode .filterBtn:hover {
+  background-color: grey;
+}
+
+/* Light Mode History Card */
+body.light-mode .history-entry {
+  background-color: white;
+  border-left-color: black;
+  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+body.light-mode .label {
+  color: #555;
+}
+
+body.light-mode .empty {
+  color: #777;
+}
+
+body.light-mode .copy-icon {
+  color: #007bff;
+}
+
+body.light-mode .back-button,
+body.light-mode .heading {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="funding.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> History </div>
+  </nav>
+</div>
+
+
+<div class="container">
+
+  <div class="filters">
+<div style="width: 100%; display: flex;
+justify-content: center; font-size: 14px;
+align-items: center; margin-bottom: 20px;">    <label for="typeSelect">Type</label>
+    <select id="typeSelect">
+      <option value="all">All</option>
+      <option value="funding">Funding</option>
+      <option value="trading">Trading</option>
+    </select>
+
+  </div>
+
+<div style="width: 100%; display: flex;
+justify-content: center; font-size: 14px;
+align-items: center;">
+    <label for="fromDate">From</label>
+    <input type="date" id="fromDate">
+
+    <label for="toDate">To</label>
+    <input type="date" id="toDate">
+
+    <button class="filterBtn" onclick="loadHistory()"> Filter</button>
+  </div>
+
+</div>
+
+  <div id="historyList" class="loader">Loading...</div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script src="firebaseDetails.js"></script>
+
+<script>
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser = null;
+
+// Wait for login
+auth.onAuthStateChanged(user => {
+  if (user) {
+    currentUser = user;
+    loadHistory();
+  } else {
+    document.getElementById("historyList").innerHTML =
+      "<p class='empty'>Please log in to view your history.</p>";
+  }
+});
+
+async function loadHistory() {
+  const list = document.getElementById("historyList");
+  list.innerHTML = "<p>Loading...</p>";
+
+  if (!currentUser) {
+    list.innerHTML = "<p class='empty'>Not logged in.</p>";
+    return;
+  }
+
+  const type = document.getElementById("typeSelect").value;
+  const fromDateVal = document.getElementById("fromDate").value;
+  const toDateVal = document.getElementById("toDate").value;
+
+  let query = db.collection("users")
+    .doc(currentUser.uid)
+    .collection("transfers")
+    .orderBy("timestamp", "desc");
+
+  if (type !== "all") query = query.where("type", "==", type);
+
+  if (fromDateVal) {
+    const d = new Date(fromDateVal);
+    d.setHours(0,0,0,0);
+    query = query.where("timestamp", ">=", d);
+  }
+
+  if (toDateVal) {
+    const d = new Date(toDateVal);
+    d.setHours(23,59,59,999);
+    query = query.where("timestamp", "<=", d);
+  }
+
+  try {
+    const snapshot = await query.get();
+
+    if (snapshot.empty) {
+      list.innerHTML = "<p class='empty'>No transactions found.</p>";
+      return;
+    }
+
+    list.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const date = data.timestamp?.toDate().toLocaleString() || "No date";
+
+      const entry = document.createElement("div");
+      entry.className = "history-entry";
+
+      const color = data.direction === "Sent" ? "#ff4444" : "#00ff99";
+
+      entry.innerHTML = `
+        <div class="value" style="color:${color};">${data.direction}</div>
+        <div class="label">Amount: ${data.amount} USDT</div>
+        <div class="label">Balance After: ${data.balanceAfter ?? "N/A"} USDT</div>
+        ${data.to ? `<div class="label">To: ${data.to}</div>` : ""}
+        ${data.from ? `<div class="label">From: ${data.from}</div>` : ""}
+        <div class="label">Type: ${data.type?.toUpperCase() ?? "N/A"}</div>
+        <div class="label">Date: ${date}</div>
+
+        <div class="label copy-icon"
+          onclick="navigator.clipboard.writeText('${doc.id}'); alert('Transaction ID copied!');">
+          Transaction ID: ${doc.id} <i class="fa fa-copy"></i>
+        </div>
+      `;
+
+      list.appendChild(entry);
+    });
+
+  } catch (error) {
+    list.innerHTML = `<p class='empty error'>Error loading history: ${error.message}</p>`;
+  }
+}
+</script>
+
+<!-- THEME TOGGLE -->
+<script src="theme-toggle.js"></script>
+
+</body>
+</html>

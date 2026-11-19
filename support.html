@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Support Center | Ohut</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: black;
+      color: #333;
+    }
+    .support-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 10px;
+      /*box-shadow: 0 0 12px rgba(0,0,0,0.1);*/
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #e74c3c;
+    }
+    input[type="email"], textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    input[type="email"]:focus, textarea:focus {
+      outline: none;
+      border-color: #e74c3c;
+      box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+    }
+    button {
+      padding: 14px 22px;
+      border: none;
+      background-color: rgba(0, 191, 255, 1);
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background-color: #c0392b;
+    }
+    h3 {
+      margin-top: 35px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #e74c3c;
+      padding-bottom: 8px;
+      color: #e74c3c;
+    }
+    .message-card {
+      background: #fefefe;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+       
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .message-card p {
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+    .message-status {
+      color: #888;
+      margin-bottom: 12px;
+    }
+    .admin-reply {
+      margin-top: 15px;
+      background: #f0f3f5;
+      padding: 12px 15px;
+      border-radius: 7px;
+      font-size: 15px;
+      color: #444;
+      border-left: 4px solid #e74c3c;
+      white-space: pre-line;
+      text-align: left;
+    }
+    .no-messages {
+      text-align: right;
+      color: #999;
+      margin-top: 20px;
+    }
+
+
+
+      .footer {
+      background-color: #032B44;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+
+:root {
+  --bg-color: #fff;
+  --text-color: #333;
+  --container-bg: #fff;
+  --input-bg: #f9f9f9;
+  --input-border: #ccc;
+  --card-bg: #fefefe;
+  --card-border: #ddd;
+  --admin-reply-bg: #f0f3f5;
+  --highlight-color: #e74c3c;
+  --button-bg: rgba(0, 191, 255, 1);
+  --header-bg: black;
+  --header-text: white;
+  --footer-bg: #032B44;
+  --footer-text: #fff;
+}
+
+body {
+  /* Defaults to dark mode */
+  --bg-color: #000;
+  --text-color: #eee;
+  --container-bg: #111;
+  --input-bg: #1a1a1a;
+  --input-border: #333;
+  --card-bg: #1f1f1f;
+  --card-border: #444;
+  --admin-reply-bg: #2a2a2a;
+  --highlight-color: #ff6b6b;
+  --button-bg: #00bfff;
+  --header-bg: #000;
+  --header-text: #fff;
+  --footer-bg: #111;
+  --footer-text: #ccc;
+}
+
+body.light-mode {
+  --bg-color: #fff;
+  --text-color: #333;
+  --container-bg: #fff;
+  --input-bg: #f9f9f9;
+  --input-border: #ccc;
+  --card-bg: #fefefe;
+  --card-border: #ddd;
+  --admin-reply-bg: #f0f3f5;
+  --highlight-color: #e74c3c;
+  --button-bg: black;
+  --header-bg: white;
+  --header-text: black;
+  --footer-bg: #032B44;
+  --footer-text: #fff;
+}
+
+
+/* Apply variables */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.support-container {
+  background: var(--container-bg);
+  color: var(--text-color);
+}
+
+input[type="email"], textarea {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+}
+
+.message-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.admin-reply {
+  background: var(--admin-reply-bg);
+  border-left: 4px solid var(--highlight-color);
+  color: var(--text-color);
+}
+
+h2, h3 {
+  color: var(--highlight-color);
+}
+
+button {
+  background-color: var(--button-bg);
+  color: #fff;
+}
+
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+}
+
+body.light-mode nav {
+    background-color: white;
+
+  }
+
+body.light-mode .back-button {
+color: black;
+}
+
+    .headContainer {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+margin-bottom: 50px;
+    }
+
+    .navbar {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ccc;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+         font-size: 20px;
+font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+color: white;
+    }
+
+    .heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none; /* So the centered heading doesn't block back button clicks */
+    }
+  </style>
+</head>
+<body>
+
+<div class="headContainer">
+
+  <nav class="navbar">
+   <a href="dashboard.html"> <button class="back-button">&larr; </button></a>
+    <div class="heading"> Support Chat </div>
+  </nav>
+</div>
+
+  
+
+<div class="support-container">
+  <textarea id="userMessage" placeholder="Write your message..." rows="5" required></textarea>
+  <button id="sendBtn">Send Message</button>
+
+  <h3>Your Previous Messages:</h3>
+  <div id="messagesContainer" class="no-messages"></div>
+</div>
+
+ 
+
+
+
+<script src="theme-toggle.js"></script>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  serverTimestamp,
+  orderBy,
+  doc,
+  updateDoc,
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCQW9VLyn_nfgR27PO-3MEirIbZCWRo4_Q",
+  authDomain: "ohut-d7c8d.firebaseapp.com",
+  databaseURL: "https://ohut-d7c8d-default-rtdb.firebaseio.com",
+  projectId: "ohut-d7c8d",
+  storageBucket: "ohut-d7c8d.appspot.com",
+  messagingSenderId: "916521389173",
+  appId: "1:916521389173:web:5cd1b9b0c87d3bf4f87c3c",
+  measurementId: "G-721RMQFD2K"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Elements
+const sendBtn = document.getElementById("sendBtn");
+const messageInput = document.getElementById("userMessage");
+const messagesContainer = document.getElementById("messagesContainer");
+
+let currentUserEmail = null;
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, (m) => {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[m];
+  });
+}
+
+async function loadUserMessages(email) {
+  messagesContainer.innerHTML = "Loading messages...";
+  try {
+    const q = query(
+      collection(db, "supportMessages"),
+      where("email", "==", email),
+      orderBy("submittedAt", "desc")
+    );
+    const snap = await getDocs(q);
+
+    messagesContainer.innerHTML = "";
+    if (snap.empty) {
+      messagesContainer.innerHTML =
+        "<p class='no-messages'>No messages yet.</p>";
+      return;
+    }
+
+    for (const docSnap of snap.docs) {
+      const data = docSnap.data();
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "message-card";
+      msgDiv.innerHTML = `
+        <p><strong>You:</strong><br>${escapeHTML(data.message)}</p>
+        <p class="message-status"><em>Status:</em> ${data.status?.toUpperCase() || "PENDING"}</p>
+        <div id="replies-${docSnap.id}">Loading replies...</div>
+      `;
+      messagesContainer.appendChild(msgDiv);
+      await loadReplies(docSnap.id);
+    }
+  } catch (error) {
+  console.error("Error loading messages:", error);
+  messagesContainer.innerHTML = `
+    <p class='no-messages'>Error loading messages:</p>
+    <pre style="color:red;background:#111;padding:10px;border-radius:5px;white-space:pre-wrap;">
+${error.message || error.toString()}
+    </pre>
+  `;
+}
+
+}
+
+async function loadReplies(messageId) {
+  const container = document.getElementById(`replies-${messageId}`);
+  if (!container) {
+    // Show error in UI
+    const msgDiv = document.createElement("div");
+    msgDiv.textContent = `Replies container not found for messageId: ${messageId}`;
+    msgDiv.style.color = "red";
+    messagesContainer.appendChild(msgDiv);
+    return;
+  }
+
+  try {
+    const q = query(
+      collection(db, "supportReplies"),
+      where("messageId", "==", messageId),
+      orderBy("repliedAt", "asc")
+    );
+    const snap = await getDocs(q);
+
+    // Show how many replies found
+    const info = document.createElement("div");
+    info.textContent = `Found ${snap.size} replies for message ${messageId}`;
+    info.style.color = "#0f0";
+    container.appendChild(info);
+
+    if (snap.empty) {
+      container.innerHTML = "<p><em>No reply yet.</em></p>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    snap.forEach((d) => {
+      const r = d.data();
+      const div = document.createElement("div");
+      div.className = "admin-reply";
+      div.innerHTML = `<strong>Admin reply:</strong><br>${escapeHTML(
+        r.replyMessage || r.reply || "(No reply text)"
+      )}`;
+      container.appendChild(div);
+    });
+  } catch (error) {
+    // Show error message in the UI
+    container.innerHTML = `<p style="color:red;">Error loading replies for ${messageId}: ${error.message}</p>`;
+  }
+}
+
+sendBtn.addEventListener("click", async () => {
+  const message = messageInput.value.trim();
+
+  if (!currentUserEmail) {
+    alert("You must be logged in to send a message.");
+    return;
+  }
+
+  if (!message) {
+    alert("Please enter your message.");
+    return;
+  }
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Sending...";
+
+  try {
+    await addDoc(collection(db, "supportMessages"), {
+      email: currentUserEmail,
+      message: message,
+      status: "pending",
+      submittedAt: serverTimestamp(),
+    });
+
+    alert("Message sent successfully.");
+    messageInput.value = "";
+    loadUserMessages(currentUserEmail);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    alert("Failed to send message.");
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send Message";
+  }
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUserEmail = user.email;
+    sendBtn.disabled = false;
+    loadUserMessages(currentUserEmail);
+  } else {
+    currentUserEmail = null;
+    sendBtn.disabled = true;
+    alert("Please log in to use support chat.");
+    messagesContainer.innerHTML =
+      "<p class='no-messages'>You must be logged in to view messages.</p>";
+  }
+});
+
+</script>
+
+
+</body>
+</html>

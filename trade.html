@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="keywords" content="HTML, CSS">
+<meta http-equiv="X-UA-Compatible" content="1e=edge" >
+
+   <title> Trade </title>
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" >
+
+<link rel="stylesheet" href="nav.css">
+
+</head>
+<body>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+
+<div class="GeneralcontainerBox" style="max-width: 400px;">
+
+     <div class="container">
+
+<div class="chartContainer">
+
+
+
+  <div class="widget-wrapper">
+    <div class="tradingview-widget-container">
+      <div id="tradingview_btc"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+      <script> 
+function createTradingViewWidget(theme) {
+  const container = document.getElementById("tradingview_btc");
+
+  if (!container) return;
+
+  container.innerHTML = ""; // clear previous widget
+
+  new TradingView.widget({
+    autosize: true,
+    symbol: "BINANCE:BTCUSDT",
+    interval: "1",
+    timezone: "Etc/UTC",
+    theme: theme, // dynamic
+    style: "1",
+    locale: "en",
+    toolbar_bg: "#f1f3f6",
+    enable_publishing: false,
+    hide_top_toolbar: false,
+    withdateranges: true,
+    save_image: false,
+    container_id: "tradingview_btc"
+  });
+}
+
+      </script>
+    </div>
+  </div>
+
+     
+     </div>
+     
+  
+     
+     
+     <div class="allBox">
+     
+     
+     
+<div class="box1">
+<h3>ROUND START </h3>
+<h4>PLACE YOUR ORDER NOW</h4>
+
+<div class="box2">
+<div class="leftBox"><i class="fa fa-long-arrow-down"></i> 75% </div>
+<div class="centerBox"> <i class="fa fa-chart-line"></i> </div>
+ <div class="rightBox"> <i class="fa fa-long-arrow-up"></i>  75% </div>
+</div>
+
+<p>No. JH500005 <span> No. JH500006 </span> </p>
+</div>
+
+<hr>
+
+<div class="boxGroup" style="padding-left: 20px; padding-right: 50px; padding-bottom: 0px;"> <p>Available Balance <span id="balance"> Loading … </span> </p> </div>
+
+<div class="boxGroup">
+
+<!--<p>Balance <span id="balance"> Loading … USDT</span> </p>-->
+
+ <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px;">
+<p style="width: 100px;">Order value:</p>
+ <div> <input type="range" id="riskSlider" min="0" max="100" value="5" style="width: 170px;"> </div>
+ <p id="riskValue" style="width: 100px;">$0.00</p>
+
+</div>
+
+<div class="btnGroup1">
+<button id="sellBtn" class="down"></i> Sell </button>
+<button id="buyBtn"  class="up"> Buy </button>
+</div>
+
+ <div id="manualStatus" style="margin-top:15px;"></div>
+
+</div>
+
+
+
+<div class="boxGroup">
+
+
+<div class="btnGroup">
+
+<button class="orders" id="masterSignalBtn"> Master Signal </button>
+</div>
+
+
+<div id="tradeDisplayBox" class="boxGroup3" style="display: none">
+
+<div>
+<div class="usdtBox"style="margin-top: 20px;"><img src="Usdt.PNG" style="width: 30px; height: 30px;"/> <div id="tradeAmountPreview" style="display: none">$0.00</div>
+<span>USDT</span> </div>
+
+<button id="AmtPercent" class="AmtPercent">5%</button>
+
+</div>
+
+<audio id="tradeSound" src="trade-placed.mp3" preload="auto"></audio>
+
+<div id="timer"></div>
+
+  <div id="status"></div>
+
+  <button id="tradeBtn" onclick="placeTrade()" disabled>Place Trade</button>
+
+
+
+
+
+
+</div>
+
+</div></div></div></div>
+
+
+<div class="bm">
+  <button class="set">
+    <a href="dashboard.html">
+      <i class="fa fa-home"></i>
+      <span>Home</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Markets.html">
+      <i class="fa fa-chart-line"></i>
+      <span>Market</span>
+    </a>
+  </button>
+
+  <button class="tradeSet active">
+    <a href="trade.html">
+      <div class="tradeBtn">
+        <i class="fa fa-long-arrow-up"></i>
+        <i class="fa fa-long-arrow-down"></i>
+      </div>
+      <span>Trade</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="wallet.html">
+      <i class="fa-solid fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+  </button>
+
+  <button class="set">
+    <a href="Profile.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </button>
+</div>
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+
+}
+
+#tradeAmountPreview {
+color: white;
+}
+ #balance {
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+    #tradeBtn {
+      padding: 10px;
+      font-size: 14px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+border-radius: 10px;
+      cursor: pointer;
+width: 40%;
+margin-left: 30%;
+margin-top: 20px;
+    }
+     #tradeBtn:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+    #status {
+     
+      font-size: 14px;
+color: #ff7200;
+
+  text-align: center;
+
+    }
+    #timer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #ccc;
+
+      display: inline-block;
+     text-align: center;
+    }
+
+
+
+body {
+background-color: black;
+
+margin-bottom: 100px;
+}
+
+.container {
+
+margin:0px;
+
+width: 100%;
+height: auto;
+
+}
+
+.chartContainer {
+margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+margin-bottom: 10px;
+      
+}
+
+
+    .widget-wrapper {
+      width: 90%;
+      max-width: 400px;
+      aspect-ratio: 3 / 4;
+      margin: 20px;
+      position: relative;
+    }
+
+    .tradingview-widget-container {
+      width: 100%;
+      height: 400px;
+    }
+
+    #tradingview_btc {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    @media (max-width: 480px) {
+      .widget-wrapper {
+        aspect-ratio: 3 / 3;
+      }
+    }
+
+.box1 {
+width: 100%;
+height: auto;
+background-color: #111111;
+border-radius: 10px;
+padding: 10px;
+}
+.box1 p {
+color:  #ccc;
+font-size: 12px;
+font-weight: bold;
+}
+.box1 p span {
+float: right;
+}
+.box2 {
+display: flex;
+height: 40px;
+justify-content: center;
+align-items: center;
+gap: 25%;
+background: Linear-gradient(to right, red, black, green);
+font-weight: bold;
+border-radius: 10px;
+color: white;
+margin-bottom: 10px;
+}
+h3 {
+color: green;
+font-size: 14px;
+}
+
+h4 {
+color: white;
+font-size: 14px;
+margin-bottom: 10px;
+}
+
+.boxGroup {
+width: 100%;
+height: auto;
+background-color: #111111;
+border-radius: 10px;
+padding: 10px;
+margin-top: 10px;
+
+}
+
+.boxGroup p {
+color:  white;
+font-size: 12px;
+font-weight: bold;
+margin-bottom: 10px;
+}
+.boxGroup p span {
+float: right;
+color: orange;
+}
+
+.boxGroup .down {
+width: 150px;
+height: 40px;
+font-size: 16px;
+background-color: red;
+border-radius: 10px;
+color: white;
+border: none;
+font-weight: bold;
+}
+.boxGroup .up {
+width: 150px;
+height: 40px;
+font-size: 16px;
+background-color: green;
+border-radius: 10px;
+color: white;
+border: none;
+font-weight: bold;
+}
+
+.btnGroup1 {
+display: flex;
+justify-content: center;
+align-items: center;
+/*width: 100%;*/
+gap: 20px;
+}
+
+.btnGroup {
+display: flex;
+justify-content: center;
+align-items: center;
+
+}
+.usdtBox {
+/*display: flex;
+justify-content: center;
+align-items: center;*/
+width: 100%;
+height: 30px ;
+background-color: black;
+border-radius: 10px;
+padding: 0px;
+margin-bottom: 10px;
+}
+
+.usdtBox img {
+width: 30px;
+height: 30px;
+border-radius: 40px;
+position: absolute;
+}
+#tradeAmountPreview {
+position: absolute;
+
+padding: 7px;
+
+margin-left: 50px;
+}
+
+
+.usdtBox span {
+color: #ccc;
+font-size: 12px;
+float: right;
+padding: 10px;
+}
+
+.AmtPercent {
+width: 100%;
+padding: 5px;
+text-align: center;
+color: white;
+border: 0.5px solid #ccc;
+border-radius: 10px;
+background-color: #222;
+font-size: 12px;
+font-weight: bold;
+margin-bottom: 10px;
+}
+
+.AmtPercent:hover {
+background-color: #2F4F2F;
+}
+
+
+.boxGroup .orders {
+width: 100%;
+height: 40px;
+font-size: 14px;
+
+background-color: rgba(0, 191, 255, 1);
+
+border-radius: 10px;
+color: white;
+border: none;
+font-weight: bold;
+}
+
+.boxGroup .orders:hover{
+background-color: #2F4F2F;
+}
+.btnGroup2 {
+width: 100%;
+height: 40px;
+background-color: #333;
+padding: 5px;
+border-radius: 10px;
+margin-top: 10px;
+}
+
+.activeOrders {
+height: 30px;
+width: 100px;
+color: #ccc;
+background-color: #222;
+border-radius: 10px;
+border: none;
+}
+
+.activeOrders:hover{
+color: #ffff00;
+font-weight: bold;
+}
+
+.boxGroup3 {
+display: flex;
+justify-content: center;
+align-items: center;
+background: #;
+margin-bottom: 100px;
+}
+
+
+.boxGroup3 img {
+width: 100px;
+height: 100px;
+
+}
+
+
+
+
+
+
+
+
+.allBox{
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax( 270px, 1fr));
+gap:15px;
+}
+
+
+
+
+
+ 
+  /* Toggle Button */
+  .toggle-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 9999;
+    padding: 8px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  body.light-mode .toggle-btn {
+    background-color: #ddd;
+    color: #000;
+  }
+
+  /* Light Mode Overrides */
+  body.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  body.light-mode .chartContainer {
+    background-color: #f5f5f5;
+    color: #000;
+  }
+
+  body.light-mode .box1,
+  body.light-mode .boxGroup {
+    background-color: #f9f9f9;
+    color: #000;
+  }
+
+  body.light-mode .box1 p,
+  body.light-mode .boxGroup p {
+    color: #333;
+  }
+
+  body.light-mode .boxGroup p span {
+    color: #d2691e; /* brownish orange */
+  }
+
+  body.light-mode .usdtBox {
+    background-color: #e0e0e0;
+  }
+
+  body.light-mode .AmtPercent {
+    background-color: #eee;
+    border-color: #999;
+    color: #000;
+  }
+
+  body.light-mode .AmtPercent:hover {
+    background-color: #ccc;
+  }
+
+  body.light-mode .boxGroup .orders {
+    background-color: #00bfff;
+    color: #000;
+  }
+
+  body.light-mode .boxGroup .orders:hover {
+    background-color: #008080;
+  }
+
+  body.light-mode .down {
+    background-color: #ff4d4d;
+    color: #fff;
+  }
+
+  body.light-mode .up {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+
+  body.light-mode .details,
+  body.light-mode #tradeAmountPreview,
+  body.light-mode #status,
+  body.light-mode #timer {
+    color: #000;
+  }
+
+#manualTradeSection {
+  background: #111;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+input[type="range"] {
+  accent-color: #00c853;
+
+}
+#manualStatus {
+padding-left: 20px;
+font-size: 14px;
+color: white; }
+
+  body.light-mode #manualStatus {
+color: black;
+}
+
+</style>
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const isLight = savedTheme === 'light';
+
+  if (isLight) {
+    document.body.classList.add('light-mode');
+  }
+
+  // Wait for TradingView script to load before using it
+  const waitForTV = setInterval(() => {
+    if (window.TradingView) {
+      createTradingViewWidget(isLight ? 'light' : 'dark');
+      clearInterval(waitForTV);
+    }
+  }, 100);
+
+  const toggleBtn = document.getElementById('toggle-theme');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+
+      const isLightNow = document.body.classList.contains('light-mode');
+      localStorage.setItem('theme', isLightNow ? 'light' : 'dark');
+
+      // Re-create widget with updated theme
+      createTradingViewWidget(isLightNow ? 'light' : 'dark');
+    });
+  }
+});
+
+
+</script>
+
+
+<script>
+
+    const masterSignalBtn = document.getElementById("masterSignalBtn");
+    const tradeDisplayBox = document.getElementById("tradeDisplayBox");
+
+    masterSignalBtn.addEventListener("click", () => {
+      tradeDisplayBox.style.display = "block";
+     
+    });
+
+const AmtPercent = document.getElementById("AmtPercent");
+
+    AmtPercent.addEventListener("click", () => {
+      tradeAmountPreview.style.display = "block";
+     
+    });
+
+</script>
+
+
+<!-- Firebase Core SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="firebaseDetails.js"></script>
+
+<script>
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const tradeBtn = document.getElementById("tradeBtn");
+const statusDiv = document.getElementById("status");
+const balanceDiv = document.getElementById("balance");
+const timerDiv = document.getElementById("timer");
+
+let currentUser = null;
+let userDocRef = null;
+let balance = 0.00;
+let tradeSignals = [];
+let tradeIndex = 0;
+let tradesLastHour = [];
+let activeTrade = false;
+let gracePeriodTimer = null;
+let activeTradeInterval = null;
+let nextTradeWindow = null;
+let tradeInProgressStartTime = null;
+let currentTradeAmount = null;
+let lastOrderId = null;
+let lastDirection = null;
+let gracePeriodEndTime = null;
+let tradeUsedInGrace = false;
+
+// --- AUTH ---
+auth.signInAnonymously().catch(console.error);
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    currentUser = user;
+    userDocRef = db.collection("users").doc(user.uid);
+
+    userDocRef.get().then(doc => {
+      const now = Date.now();
+
+      if (doc.exists) {
+        const data = doc.data();
+        balance = parseFloat(data.tradingBalance) || 0;
+        tradeSignals = data.tradeSignals ?? generateAndStoreSignals();
+        tradeIndex = data.tradeIndex ?? 0;
+        tradesLastHour = data.tradeTimestamps ?? [];
+        nextTradeWindow = data.nextTradeWindow ?? now;
+        gracePeriodEndTime = data.gracePeriodEndTime ?? null;
+        tradeUsedInGrace = data.tradeUsedInGrace ?? false;
+        activeTrade = data.activeTrade ?? false;
+        tradeInProgressStartTime = data.tradeInProgressStartTime ?? null;
+        currentTradeAmount = data.currentTradeAmount ?? null;
+        lastOrderId = data.lastOrderId ?? null;
+        lastDirection = data.lastDirection ?? null;
+
+        updateBalanceDisplay();
+        cleanTradeTimestamps();
+
+        // 🧩 Check if a previous trade expired while user was away
+        checkAndFinalizeTradeOnLoad(data);
+
+        // Resume or continue the normal cycle
+        if (activeTrade && tradeInProgressStartTime) {
+          resumeActiveTrade();
+        } else if (gracePeriodEndTime && now < gracePeriodEndTime && !tradeUsedInGrace) {
+          startGracePeriod(nextTradeWindow);
+        } else {
+          const startTime = (nextTradeWindow && nextTradeWindow > now) ? nextTradeWindow : now;
+          startGracePeriod(startTime);
+        }
+
+      } else {
+        // --- New user setup ---
+        const now = Date.now();
+        balance = 0.00;
+        tradeSignals = generateAndStoreSignals();
+        tradeIndex = 0;
+        tradesLastHour = [];
+        nextTradeWindow = now;
+        gracePeriodEndTime = now + 2 * 60 * 1000;
+        tradeUsedInGrace = false;
+        activeTrade = false;
+
+        userDocRef.set({
+          tradingBalance: balance,
+          tradeSignals,
+          tradeIndex,
+          tradeTimestamps: [],
+          nextTradeWindow,
+          gracePeriodEndTime,
+          tradeUsedInGrace,
+          activeTrade: false,
+          tradeInProgressStartTime: null,
+          currentTradeAmount: null,
+          lastOrderId: null,
+          lastDirection: null
+        }, { merge: true });
+
+        updateBalanceDisplay();
+        startGracePeriod(nextTradeWindow);
+      }
+    });
+  } else {
+    statusDiv.textContent = "⚠️ Not signed in.";
+  }
+});
+
+// --- UI Updates ---
+function updateBalanceDisplay() {
+  balanceDiv.textContent = `$${balance.toFixed(2)} `;
+  const tradeAmount = balance * 0.05;
+  document.getElementById("tradeAmountPreview").textContent =
+    `$${tradeAmount.toFixed(2)}`;
+}
+
+// --- Utilities ---
+function generateAndStoreSignals() {
+  const results = Array(10).fill("lose");
+  let winCount = 0;
+  while (winCount < 7) {
+    const i = Math.floor(Math.random() * 10);
+    if (results[i] === "lose") {
+      results[i] = "win";
+      winCount++;
+    }
+  }
+  if (userDocRef) userDocRef.set({ tradeSignals: results }, { merge: true });
+  return results;
+}
+
+function cleanTradeTimestamps() {
+  const now = Date.now();
+  tradesLastHour = tradesLastHour.filter(t => now - t < 60 * 60 * 1000);
+}
+
+function isTradeAllowed() {
+  cleanTradeTimestamps();
+  const now = Date.now();
+  const tradesLast10Min = tradesLastHour.filter(t => now - t < 10 * 60 * 1000);
+  return tradesLastHour.length < 10 && tradesLast10Min.length < 2;
+}
+
+function generateOrderId() {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const prefix = letters[Math.floor(Math.random() * 26)] + letters[Math.floor(Math.random() * 26)];
+  const numbers = Date.now().toString().padEnd(18, '0').slice(0, 18);
+  return prefix + numbers;
+}
+
+function getRandomDirection() {
+  return Math.random() < 0.5 ? 'buy' : 'sell';
+}
+
+// --- Place Trade ---
+function placeTrade() {
+  const now = Date.now();
+  if (!isTradeAllowed() || activeTrade || tradeIndex >= tradeSignals.length || tradeUsedInGrace) {
+    statusDiv.innerHTML = "⛔ Trade not allowed now.";
+    return;
+  }
+
+  if (now > gracePeriodEndTime) {
+    statusDiv.innerHTML = "⌛ Signal period over — wait for next window.";
+    tradeBtn.disabled = true;
+    return;
+  }
+
+  if (balance <= 0 || isNaN(balance)) {
+    statusDiv.innerHTML = "🚫 Insufficient balance. Please fund your account.";
+    tradeBtn.disabled = true;
+    return;
+  }
+
+  const originalBalance = balance;
+  const tradeAmount = originalBalance * 0.05;
+  const orderId = generateOrderId();
+  const direction = getRandomDirection();
+
+  balance -= tradeAmount;
+  updateBalanceDisplay();
+
+  activeTrade = true;
+  document.getElementById("tradeSound").play().catch(console.error);
+  tradeBtn.disabled = true;
+  tradesLastHour.push(now);
+
+  nextTradeWindow = now + 10 * 60 * 1000;
+  gracePeriodEndTime = null;
+  tradeUsedInGrace = true;
+
+  tradeInProgressStartTime = now;
+  currentTradeAmount = tradeAmount;
+  lastOrderId = orderId;
+  lastDirection = direction;
+
+  // Save immediately in case user closes tab
+  userDocRef.set({
+    tradeUsedInGrace: true,
+    gracePeriodEndTime: null,
+    activeTrade: true,
+    tradeInProgressStartTime: now,
+    currentTradeAmount: tradeAmount,
+    lastOrderId: orderId,
+    lastDirection: direction
+  }, { merge: true });
+
+  saveTradeData(orderId, direction);
+  activeTradeCountdown(60 * 1000, tradeAmount, orderId, direction, originalBalance);
+
+  statusDiv.innerHTML = `📈 Trade placed. Waiting 60 seconds...<br>📄 Order ID: <strong>${orderId}</strong><br>📍Direction: <strong>${direction.toUpperCase()}</strong>`;
+}
+
+// --- Countdown & Result ---
+function activeTradeCountdown(duration, tradeAmount, orderId, direction, originalBalance) {
+  if (activeTradeInterval) clearInterval(activeTradeInterval);
+  let remaining = Math.floor(duration / 1000);
+
+  timerDiv.textContent = `⏱️ Trade result in: ${remaining}s`;
+
+  activeTradeInterval = setInterval(() => {
+    remaining--;
+    if (remaining > 0) {
+      timerDiv.textContent = `⏱️ Trade result in: ${remaining}s`;
+    } else {
+      clearInterval(activeTradeInterval);
+      timerDiv.textContent = "";
+      finishTrade(tradeAmount, orderId, direction, originalBalance);
+    }
+  }, 1000);
+}
+
+// --- Finalize Trade ---
+function finishTrade(tradeAmount, orderId, direction, originalBalance) {
+  const result = tradeSignals[tradeIndex];
+  tradeIndex++;
+
+  if (tradeIndex >= tradeSignals.length) {
+    tradeSignals = generateAndStoreSignals();
+    tradeIndex = 0;
+  }
+
+  let profit = 0;
+  if (result === "win") {
+    profit = originalBalance * 0.12;
+    balance += profit;
+  } else {
+    balance -= tradeAmount;
+  }
+
+  updateBalanceDisplay();
+
+  // Save to trade history
+  db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("tradeHistory")
+    .add({
+      orderId,
+      direction,
+      currency: "BTC/USDT",
+      openTime: tradeInProgressStartTime,
+      closeTime: Date.now(),
+      profit: result === "win" ? profit : -tradeAmount,
+      result,
+      balance,
+      type: "Master Signal"
+    })
+    .then(() => console.log("✅ Auto trade saved:", orderId))
+    .catch(err => console.error("❌ Error saving trade:", err));
+
+  // Update Firestore balance & trade state
+  userDocRef.set({
+    tradingBalance: balance,
+    lastOrderId: orderId,
+    lastDirection: direction,
+    tradeIndex,
+    activeTrade: false,
+    tradeInProgressStartTime: null,
+    currentTradeAmount: null,
+  }, { merge: true });
+
+  // UI result
+  statusDiv.innerHTML = `
+    📄 Order ID: <strong>${orderId}</strong><br/>
+    📍 Direction: <strong>${direction.toUpperCase()}</strong><br/>
+    ${
+      result === "win"
+        ? `✅ Trade Result: <strong>WIN</strong> 🎉 → +$${profit.toFixed(2)}`
+        : `❌ Trade Result: <strong>LOSS</strong> → -$${tradeAmount.toFixed(2)}`
+    }
+  `;
+
+  activeTrade = false;
+  tradeInProgressStartTime = null;
+  currentTradeAmount = null;
+  scheduleNextTradeCycle();
+}
+
+// --- Resume or Auto-Finalize if Expired ---
+function resumeActiveTrade() {
+  const now = Date.now();
+  const elapsed = now - tradeInProgressStartTime;
+
+  if (elapsed < 60 * 1000) {
+    const remaining = 60 * 1000 - elapsed;
+    tradeBtn.disabled = true;
+    activeTradeCountdown(remaining, currentTradeAmount, lastOrderId, lastDirection, balance);
+  } else {
+    console.log("💡 Trade expired while user was away — finishing now...");
+    finishTrade(currentTradeAmount, lastOrderId, lastDirection, balance);
+  }
+}
+
+// 🧩 Detect and finalize any unfinished trade when user returns
+function checkAndFinalizeTradeOnLoad(data) {
+  const now = Date.now();
+  if (!data.tradeInProgressStartTime) return;
+
+  const start = data.tradeInProgressStartTime;
+  const duration = 60 * 1000;
+  const end = start + duration;
+
+  if (now >= end && data.activeTrade) {
+    console.log("💡 Detected unfinished trade — finalizing...");
+    currentTradeAmount = data.currentTradeAmount;
+    lastOrderId = data.lastOrderId;
+    lastDirection = data.lastDirection;
+    balance = data.tradingBalance || 0;
+    finishTrade(currentTradeAmount, lastOrderId, lastDirection, balance);
+  }
+}
+
+// --- Grace Period ---
+function startGracePeriod(startTime) {
+  if (gracePeriodTimer) clearInterval(gracePeriodTimer);
+  if (activeTradeInterval) clearInterval(activeTradeInterval);
+
+  const now = Date.now();
+  const graceEnd = startTime + 2 * 60 * 1000;
+
+  nextTradeWindow = startTime;
+  gracePeriodEndTime = graceEnd;
+  tradeUsedInGrace = false;
+
+  userDocRef.set({
+    nextTradeWindow,
+    gracePeriodEndTime,
+    tradeUsedInGrace: false
+  }, { merge: true });
+
+  gracePeriodTimer = setInterval(() => {
+    const now = Date.now();
+    const allowed = isTradeAllowed();
+
+    if (activeTrade || !allowed || tradeIndex >= tradeSignals.length) {
+      tradeBtn.disabled = true;
+      clearInterval(gracePeriodTimer);
+      timerDiv.textContent = "⛔ Cannot trade now";
+      return;
+    }
+
+    if (now < startTime) {
+      tradeBtn.disabled = true;
+      const remaining = Math.floor((startTime - now) / 1000);
+      timerDiv.textContent = `⏳ Next signal in: ${remaining}s`;
+    } else if (now <= graceEnd && !tradeUsedInGrace) {
+      tradeBtn.disabled = false;
+      const remaining = Math.floor((graceEnd - now) / 1000);
+      timerDiv.textContent = `✅ Signal period: ${remaining}s`;
+    } else {
+      tradeBtn.disabled = true;
+      timerDiv.textContent = "⌛ Grace period over — wait for next window";
+      clearInterval(gracePeriodTimer);
+    }
+  }, 1000);
+}
+
+// --- Save Trade Data ---
+function saveTradeData(orderId = null, direction = null) {
+  if (!userDocRef) return;
+  const data = {
+    tradingBalance: balance,
+    tradeIndex,
+    tradeTimestamps: tradesLastHour,
+    nextTradeWindow,
+    gracePeriodEndTime,
+    tradeUsedInGrace,
+    activeTrade,
+    tradeInProgressStartTime,
+    currentTradeAmount,
+  };
+  if (orderId) data.lastOrderId = orderId;
+  if (direction) data.lastDirection = direction;
+
+  userDocRef.set(data, { merge: true }).catch(err => {
+    console.error("Error saving trade data:", err);
+  });
+}
+
+// --- Schedule Next Cycle ---
+function scheduleNextTradeCycle() {
+  const now = Date.now();
+  nextTradeWindow = now + 10 * 60 * 1000;
+  gracePeriodEndTime = nextTradeWindow + 2 * 60 * 1000;
+
+  userDocRef.set({
+    nextTradeWindow,
+    gracePeriodEndTime,
+    tradeUsedInGrace: false
+  }, { merge: true });
+
+  const delay = nextTradeWindow - now;
+
+  setTimeout(() => {
+    startGracePeriod(nextTradeWindow);
+    setTimeout(() => {
+      scheduleNextTradeCycle();
+    }, 2 * 60 * 1000);
+  }, delay);
+}
+
+// --- Loader UI ---
+function showLoader() {
+  document.getElementById('loader').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+function hideLoader() {
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+function fetchData() {
+  showLoader();
+  setTimeout(() => {
+    console.log("Data fetched from database!");
+    hideLoader();
+    document.getElementById("content").innerHTML += "<p><strong>Data loaded!</strong></p>";
+  }, 3000);
+}
+window.addEventListener('load', fetchData);
+</script>
+
+<script>
+// === Manual Trade Section Elements ===
+const buyBtn = document.getElementById("buyBtn");
+const sellBtn = document.getElementById("sellBtn");
+const riskSlider = document.getElementById("riskSlider");
+const riskValue = document.getElementById("riskValue");
+const manualTimer = document.getElementById("manualTimer");
+const manualStatus = document.getElementById("manualStatus");
+
+// === Manual Trade Variables ===
+let manualTradeActive = false;
+let manualTradeInterval = null;
+
+// === Handle Manual Trade Start ===
+function handleManualTrade(direction) {
+  if (manualTradeActive) {
+    manualStatus.innerHTML = "⚠️ Trade already running!";
+    return;
+  }
+
+  const now = Date.now();
+  const orderId = generateOrderId();
+  const riskPercent = parseFloat(riskSlider.value);
+  const amount = balance * (riskPercent / 100);
+
+  if (amount <= 0 || balance < amount) {
+    manualStatus.innerHTML = "🚫 Insufficient balance or invalid amount.";
+    return;
+  }
+
+  // Deduct balance for trade
+  balance -= amount;
+  updateBalanceDisplay();
+  updateManualBalance();
+  manualTradeActive = true;
+
+  // 🔊 Play sound for manual trade (NEW)
+  document.getElementById("tradeSound").play().catch(console.error);
+
+  // Save trade to Firestore (activeTrades + user doc)
+  db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("activeTrades")
+    .doc(orderId)
+    .set({
+      orderId,
+      direction,
+      openTime: now,
+      duration: 120000, // 2 minutes
+      endTime: now + 120000,
+      amount,
+      balanceAtStart: balance + amount,
+      active: true,
+    })
+    .catch(console.error);
+
+  userDocRef
+    .set(
+      {
+        manualTrade: {
+          orderId,
+          direction,
+          amount,
+          startTime: now,
+          duration: 120000,
+          active: true,
+        },
+        tradingBalance: balance,
+      },
+      { merge: true }
+    )
+    .catch(console.error);
+
+  startManualCountdown(orderId, direction, amount, now, 120000);
+}
+
+// === Start or Resume Manual Countdown ===
+function startManualCountdown(orderId, direction, amount, startTime, duration) {
+  if (manualTradeInterval) clearInterval(manualTradeInterval);
+
+  const tradeEndTime = startTime + duration;
+  manualTradeActive = true;
+
+  manualStatus.innerHTML = `
+    📄 Order ID: <strong>${orderId}</strong><br>
+    📍 Direction: <strong>${direction.toUpperCase()}</strong><br>
+    🕒 Trade in progress — closing in <strong>2 minutes</strong>...
+  `;
+
+  manualTradeInterval = setInterval(() => {
+    const now = Date.now();
+    const remaining = Math.max(0, Math.floor((tradeEndTime - now) / 1000));
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+
+    manualTimer.textContent = `⏱️ Time Remaining: ${minutes}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+
+    if (remaining <= 0) {
+      clearInterval(manualTradeInterval);
+      finishManualTrade(orderId, direction, amount);
+    }
+  }, 1000);
+}
+
+// === Finish Manual Trade ===
+function finishManualTrade(orderId, direction, amount) {
+  const now = Date.now();
+  const openTime = now - 120000;
+  const result = Math.random() < 0.5 ? "win" : "lose";
+  let profit = 0;
+
+  if (result === "win") {
+    profit = amount * 0.8;
+    balance += amount + profit;
+  }
+
+  updateBalanceDisplay();
+  updateManualBalance();
+
+  db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("tradeHistory")
+    .add({
+      orderId,
+      direction,
+      balance,
+      currency: "BTC/USDT",
+      openTime,
+      closeTime: now,
+      profit: result === "win" ? profit : -amount,
+      result,
+      type: "User Signal"
+    })
+    .then(() => console.log("✅ Manual trade saved to history:", orderId))
+    .catch(console.error);
+
+  db.collection("users")
+    .doc(auth.currentUser.uid)
+    .collection("activeTrades")
+    .doc(orderId)
+    .delete()
+    .catch(console.error);
+
+  if (userDocRef) {
+    userDocRef.set({
+      tradingBalance: balance,
+      manualTrade: firebase.firestore.FieldValue.delete(),
+    }, { merge: true }).catch(console.error);
+  }
+
+  manualStatus.innerHTML = `
+    📄 Order ID: <strong>${orderId}</strong><br>
+    📍 Direction: <strong>${direction.toUpperCase()}</strong><br>
+    ${
+      result === "win"
+        ? `✅ Trade Result: <strong>WIN</strong> 🎉 +$${profit.toFixed(2)}`
+        : `❌ Trade Result: <strong>LOSS</strong> -$${amount.toFixed(2)}`
+    }
+  `;
+  manualTimer.textContent = "";
+  manualTradeActive = false;
+}
+
+// === Resume Manual Trade After Refresh ===
+function resumeManualTrade(trade) {
+  const { orderId, direction, amount, startTime, duration } = trade;
+  const elapsed = Date.now() - startTime;
+  const remaining = duration - elapsed;
+
+  if (remaining <= 0) {
+    finishManualTrade(orderId, direction, amount);
+    return;
+  }
+
+  startManualCountdown(orderId, direction, amount, startTime, duration);
+}
+
+// === Restore Active Trade on Page Load ===
+auth.onAuthStateChanged((user) => {
+  if (!user) return;
+  const ref = db.collection("users").doc(user.uid);
+  ref.get().then((doc) => {
+    if (!doc.exists) return;
+    const data = doc.data();
+
+    if (data.manualTrade && data.manualTrade.active) {
+      const trade = data.manualTrade;
+      const now = Date.now();
+      const endTime = trade.startTime + trade.duration;
+
+      if (now >= endTime) {
+        finishManualTrade(trade.orderId, trade.direction, trade.amount);
+      } else {
+        resumeManualTrade(trade);
+      }
+    }
+  });
+});
+
+// === Local Storage for Risk Slider Memory ===
+const savedRisk = localStorage.getItem("manualRiskPercent");
+if (savedRisk) {
+  riskSlider.value = savedRisk;
+}
+riskSlider.addEventListener("input", () => {
+  const amount = balance * (riskSlider.value / 100);
+  riskValue.textContent = `$${amount.toFixed(2)}`;
+  localStorage.setItem("manualRiskPercent", riskSlider.value);
+});
+
+// === Manual UI Update Function ===
+function updateManualBalance() {
+  const amount = balance * (riskSlider.value / 100);
+  riskValue.textContent = `$${amount.toFixed(2)}`;
+}
+
+// === Event Listeners ===
+buyBtn.addEventListener("click", () => handleManualTrade("buy"));
+sellBtn.addEventListener("click", () => handleManualTrade("sell"));
+
+// === Save Balance on Page Close ===
+window.addEventListener("beforeunload", () => {
+  if (userDocRef && !isNaN(balance)) {
+    userDocRef.set({ tradingBalance: balance }, { merge: true });
+  }
+});
+</script>
+
+</body>
+</html>
+
