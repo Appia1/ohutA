@@ -24,7 +24,7 @@
 
 body {
   margin: 0;
-  background: radial-gradient(ellipse at 50% -10%, #30205d 0, transparent 42%), var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
   min-height: 100vh;
@@ -40,7 +40,7 @@ body.light-mode {
   --text: #141226;
   --muted: #5b5875;
   --nav-border: rgba(20, 18, 38, 0.14);
-  background: radial-gradient(ellipse at 50% -10%, #dcd3ff 0, transparent 45%), var(--bg);
+  background: var(--bg);
   color: var(--text);
 }
 
@@ -220,7 +220,7 @@ body.light-mode .panel {
   padding: 9px;
   border-radius: 50%;
   background: linear-gradient(145deg, #fff4c4 0%, #b87527 18%, #ffe7a0 34%, #895018 53%, #f5cd72 72%, #8d531a 88%, #ffeab0 100%);
-  box-shadow: 0 0 0 2px #5c3515, 0 0 0 5px #d7a34c, 0 0 34px #3e331e35, 0 16px 30px #000a;
+  box-shadow: 0 0 0 2px #5c3515, 0 0 0 5px #d7a34c;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -244,7 +244,7 @@ body.light-mode .panel {
   overflow: hidden;
   transform: rotate(0deg);
   transition: transform 5.4s cubic-bezier(.12, .72, .08, 1);
-  filter: drop-shadow(0 3px 5px #0008);
+  filter: none;
 }
 
 #wheel svg {
